@@ -1,0 +1,71 @@
+services:
+  # ─── KinnectAI API ───────────────────────────────────────
+  api:
+    build: .
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      neo4j:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ─── PostgreSQL ──────────────────────────────────────────
+  postgres:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: kinnect
+      POSTGRES_PASSWORD: kinnect_dev_password
+      POSTGRES_DB: kinnectai
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./migrations:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kinnect -d kinnectai"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ─── Neo4j (biological graph) ────────────────────────────
+  neo4j:
+    image: neo4j:5.20-community
+    environment:
+      NEO4J_AUTH: neo4j/kinnect_neo4j_password
+      NEO4J_PLUGINS: '["apoc"]'
+    ports:
+      - "7474:7474"   # Browser UI
+      - "7687:7687"   # Bolt protocol
+    volumes:
+      - neo4j_data:/data
+      - neo4j_logs:/logs
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:7474"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+
+  # ─── Redis (Kin Score cache) ─────────────────────────────
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  postgres_data:
+  neo4j_data:
+  neo4j_logs:
+  redis_data:
