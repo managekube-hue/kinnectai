@@ -1,49 +1,47 @@
 package dna
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
-	"net/http"
 	"time"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/segmentio/kafka-go"
 )
 
 type Service struct {
-	db                *pgxpool.Pool
-	sequencingAPIKey  string
-	sequencingBaseURL string
-	httpClient        *http.Client
+	db          *pgxpool.Pool
+	kafkaWriter *kafka.Writer
 }
 
-func NewService(db *pgxpool.Pool, apiKey, baseURL string) *Service {
+func NewService(db *pgxpool.Pool, kafkaWriter *kafka.Writer) *Service {
 	return &Service{
-		db:                db,
-		sequencingAPIKey:  apiKey,
-		sequencingBaseURL: baseURL,
-		httpClient:        &http.Client{Timeout: 30 * time.Second},
+		db:          db,
+		kafkaWriter: kafkaWriter,
 	}
 }
 
 type SubmitKitRequest struct {
 	KitSource string `json:"kit_source" binding:"required,oneof=sequencing_com kinnect_kit 23andme ancestry myheritage"`
-	KitID     string `json:"kit_id"     binding:"required"`
+	KitID     string `json:"kit_id" binding:"required"`
 }
 
 type DNAStatusResponse struct {
 	UserID           uuid.UUID `json:"user_id"`
 	KitSource        string    `json:"kit_source"`
 	ProcessingStatus string    `json:"processing_status"`
-	HasploGroupM     string    `json:"haplogroup_maternal,omitempty"`
-	HasploGroupP     string    `json:"haplogroup_paternal,omitempty"`
+	HaploGroupM      string    `json:"haplogroup_maternal,omitempty"`
+	HaploGroupP      string    `json:"haplogroup_paternal,omitempty"`
 	SubmittedAt      time.Time `json:"submitted_at"`
 }
 
-// SubmitKit registers a DNA kit for processing via Sequencing.com.
 func (s *Service) SubmitKit(ctx context.Context, userID uuid.UUID, req SubmitKitRequest) (*DNAStatusResponse, error) {
+	if s.kafkaWriter == nil {
+		return nil, fmt.Errorf("submit kit: kafka writer is not configured")
+	}
+
 	profileID := uuid.New()
 	now := time.Now().UTC()
 
@@ -57,9 +55,8 @@ func (s *Service) SubmitKit(ctx context.Context, userID uuid.UUID, req SubmitKit
 		return nil, fmt.Errorf("submit kit: db insert: %w", err)
 	}
 
-	// Trigger Sequencing.com API call (async in production via Kafka; sync stub here)
-	if req.KitSource == "sequencing_com" && s.sequencingAPIKey != "" {
-		go s.triggerSequencingProcessing(context.Background(), userID, req.KitID)
+	if err := s.enqueueProcessingEvent(ctx, profileID, userID, req); err != nil {
+		return nil, fmt.Errorf("submit kit: enqueue event: %w", err)
 	}
 
 	return &DNAStatusResponse{
@@ -70,7 +67,6 @@ func (s *Service) SubmitKit(ctx context.Context, userID uuid.UUID, req SubmitKit
 	}, nil
 }
 
-// GetStatus returns the current DNA processing status for a user.
 func (s *Service) GetStatus(ctx context.Context, userID uuid.UUID) (*DNAStatusResponse, error) {
 	var resp DNAStatusResponse
 	err := s.db.QueryRow(ctx, `
@@ -83,45 +79,41 @@ func (s *Service) GetStatus(ctx context.Context, userID uuid.UUID) (*DNAStatusRe
 		LIMIT 1`,
 		userID,
 	).Scan(&resp.UserID, &resp.KitSource, &resp.ProcessingStatus,
-		&resp.HasploGroupM, &resp.HasploGroupP, &resp.SubmittedAt)
+		&resp.HaploGroupM, &resp.HaploGroupP, &resp.SubmittedAt)
 	if err != nil {
 		return nil, fmt.Errorf("get dna status: %w", err)
 	}
 	return &resp, nil
 }
 
-// triggerSequencingProcessing calls Sequencing.com API to begin analysis.
-// Runs asynchronously; updates processing_status when complete.
-func (s *Service) triggerSequencingProcessing(ctx context.Context, userID uuid.UUID, kitID string) {
-	payload, _ := json.Marshal(map[string]string{
-		"kit_id": kitID,
-		"app_id": "kinnectai",
+func (s *Service) enqueueProcessingEvent(ctx context.Context, profileID, userID uuid.UUID, req SubmitKitRequest) error {
+	payload, err := json.Marshal(map[string]interface{}{
+		"profile_id":   profileID.String(),
+		"user_id":      userID.String(),
+		"kit_source":   req.KitSource,
+		"kit_id":       req.KitID,
+		"submitted_at": time.Now().UTC().Format(time.RFC3339),
 	})
-
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost,
-		s.sequencingBaseURL+"/v1/analysis/start", bytes.NewBuffer(payload))
 	if err != nil {
-		fmt.Printf("sequencing api: request build error: %v\n", err)
-		return
-	}
-	req.Header.Set("Authorization", "Bearer "+s.sequencingAPIKey)
-	req.Header.Set("Content-Type", "application/json")
-
-	resp, err := s.httpClient.Do(req)
-	if err != nil {
-		fmt.Printf("sequencing api: call error: %v\n", err)
-		return
-	}
-	defer resp.Body.Close()
-
-	status := "processing"
-	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusAccepted {
-		status = "error"
+		return fmt.Errorf("marshal kafka event: %w", err)
 	}
 
-	s.db.Exec(ctx, `
-		UPDATE dna_profiles SET processing_status = $1, updated_at = NOW()
-		WHERE user_id = $2`,
-		status, userID,
-	)
+	message := kafka.Message{
+		Key:   []byte(userID.String()),
+		Value: payload,
+		Time:  time.Now().UTC(),
+	}
+
+	if err := s.kafkaWriter.WriteMessages(ctx, message); err != nil {
+		if _, updateErr := s.db.Exec(ctx, `
+			UPDATE dna_profiles SET processing_status = 'error', updated_at = NOW()
+			WHERE id = $1`,
+			profileID,
+		); updateErr != nil {
+			return fmt.Errorf("kafka enqueue failed: %w; additionally failed to update profile status: %v", err, updateErr)
+		}
+		return fmt.Errorf("kafka enqueue failed: %w", err)
+	}
+
+	return nil
 }

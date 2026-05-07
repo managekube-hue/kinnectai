@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
 
@@ -21,6 +22,7 @@ import (
 	"github.com/kinnectai/backend/pkg/config"
 	"github.com/kinnectai/backend/pkg/database"
 	"github.com/kinnectai/backend/pkg/middleware"
+	"github.com/segmentio/kafka-go"
 )
 
 func main() {
@@ -71,20 +73,38 @@ func main() {
 
 	slog.Info("getstream client initialized")
 
+	kafkaBrokers := strings.Split(strings.TrimSpace(cfg.KafkaBrokers), ",")
+	if len(kafkaBrokers) == 0 || kafkaBrokers[0] == "" {
+		slog.Error("kafka brokers are required")
+		os.Exit(1)
+	}
+
+	kafkaWriter := kafka.NewWriter(kafka.WriterConfig{
+		Brokers:  kafkaBrokers,
+		Topic:    cfg.KafkaTopicDNAKits,
+		Balancer: &kafka.LeastBytes{},
+		Async:    true,
+	})
+	defer func() {
+		if err := kafkaWriter.Close(); err != nil {
+			slog.Warn("failed to close kafka writer", "err", err)
+		}
+	}()
+
 	// ── Services ─────────────────────────────────────────────────────────────
-	authSvc   := auth.NewService(pg, streamClient, cfg.JWTSecret, cfg.JWTExpiryHours)
-	userSvc   := user.NewService(pg)
-	graphSvc  := graph.NewService(pg, neo4jDriver, redisClient)
-	feedSvc   := feed.NewService(pg, streamClient)
-	dnaSvc    := dna.NewService(pg, cfg.SequencingAPIKey, cfg.SequencingBaseURL)
-	mediaSvc  := media.NewService(streamClient, cfg.GetStreamAPIKey, cfg.GetStreamAppID)
+	authSvc := auth.NewService(pg, streamClient, cfg.JWTSecret, cfg.JWTExpiryHours)
+	userSvc := user.NewService(pg)
+	graphSvc := graph.NewService(pg, neo4jDriver, redisClient)
+	feedSvc := feed.NewService(pg, streamClient)
+	dnaSvc := dna.NewService(pg, kafkaWriter)
+	mediaSvc := media.NewService(streamClient, cfg.GetStreamAPIKey, cfg.GetStreamAppID)
 
 	// ── Handlers ─────────────────────────────────────────────────────────────
-	authHandler  := auth.NewHandler(authSvc)
-	userHandler  := user.NewHandler(userSvc)
+	authHandler := auth.NewHandler(authSvc)
+	userHandler := user.NewHandler(userSvc)
 	graphHandler := graph.NewHandler(graphSvc)
-	feedHandler  := feed.NewHandler(feedSvc)
-	dnaHandler   := dna.NewHandler(dnaSvc)
+	feedHandler := feed.NewHandler(feedSvc)
+	dnaHandler := dna.NewHandler(dnaSvc)
 	mediaHandler := media.NewHandler(mediaSvc)
 
 	// ── Router ───────────────────────────────────────────────────────────────

@@ -9,8 +9,8 @@ import (
 )
 
 type Config struct {
-	Port    string
-	Env     string
+	Port string
+	Env  string
 
 	JWTSecret      string
 	JWTExpiryHours int
@@ -30,14 +30,17 @@ type Config struct {
 	RedisPassword string
 	RedisDB       int
 
-	AstraDBID    string
-	AstraRegion  string
+	AstraDBID     string
+	AstraRegion   string
 	AstraKeyspace string
-	AstraToken   string
+	AstraToken    string
 
 	GetStreamAPIKey string
 	GetStreamSecret string
 	GetStreamAppID  string
+
+	KafkaBrokers      string
+	KafkaTopicDNAKits string
 
 	SequencingAPIKey  string
 	SequencingBaseURL string
@@ -59,8 +62,8 @@ func Load() (*Config, error) {
 	_ = godotenv.Load()
 
 	cfg := &Config{
-		Port:    getEnv("PORT", "8080"),
-		Env:     getEnv("ENV", "development"),
+		Port: getEnv("PORT", "8080"),
+		Env:  getEnv("ENV", "development"),
 
 		JWTSecret:      requireEnv("JWT_SECRET"),
 		JWTExpiryHours: getEnvInt("JWT_EXPIRY_HOURS", 72),
@@ -88,6 +91,9 @@ func Load() (*Config, error) {
 		GetStreamAPIKey: requireEnv("GETSTREAM_API_KEY"),
 		GetStreamSecret: requireEnv("GETSTREAM_SECRET"),
 		GetStreamAppID:  getEnv("GETSTREAM_APP_ID", ""),
+
+		KafkaBrokers:      getEnv("KAFKA_BROKERS", "localhost:9092"),
+		KafkaTopicDNAKits: getEnv("KAFKA_TOPIC_DNA_KITS", "dna-kit-submissions"),
 
 		SequencingAPIKey:  getEnv("SEQUENCING_API_KEY", ""),
 		SequencingBaseURL: getEnv("SEQUENCING_BASE_URL", "https://api.sequencing.com"),

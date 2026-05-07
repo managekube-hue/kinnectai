@@ -1,0 +1,8 @@
+fastapi==0.104.1
+uvicorn==0.24.0
+pydantic==2.5.2
+numpy==1.26.2
+psycopg2-binary==2.9.9
+neo4j==5.22.0
+cassandra-driver==3.27.2
+pgvector==0.2.4
