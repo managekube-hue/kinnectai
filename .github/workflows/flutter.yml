@@ -14,8 +14,8 @@ jobs:
     - uses: subosito/flutter-action@v2
       with:
         flutter-version: '3.19.0'
-    - run: flutter pub get
-    - run: flutter test
+    - run: cd apps/mobile && flutter pub get
+    - run: cd apps/mobile && flutter test
 
   build-android:
     runs-on: ubuntu-latest
@@ -24,8 +24,8 @@ jobs:
     - uses: subosito/flutter-action@v2
       with:
         flutter-version: '3.19.0'
-    - run: flutter pub get
-    - run: flutter build apk --release
+    - run: cd apps/mobile && flutter pub get
+    - run: cd apps/mobile && flutter build apk --release
 
   build-ios:
     runs-on: macos-latest
@@ -34,8 +34,8 @@ jobs:
     - uses: subosito/flutter-action@v2
       with:
         flutter-version: '3.19.0'
-    - run: flutter pub get
-    - run: flutter build ios --release --no-codesign
+    - run: cd apps/mobile && flutter pub get
+    - run: cd apps/mobile && flutter build ios --release --no-codesign
 
   build-desktop:
     runs-on: ubuntu-latest
@@ -44,6 +44,6 @@ jobs:
     - uses: subosito/flutter-action@v2
       with:
         flutter-version: '3.19.0'
-    - run: flutter config --enable-linux-desktop
-    - run: flutter pub get
-    - run: flutter build linux --release
+    - run: cd apps/mobile && flutter config --enable-linux-desktop
+    - run: cd apps/mobile && flutter pub get
+    - run: cd apps/mobile && flutter build linux --release

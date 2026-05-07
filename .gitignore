@@ -3,3 +3,6 @@
 tmp/
 bin/
 dist/
+
+# Ignore local Visual Studio workspace snapshots
+.vs/

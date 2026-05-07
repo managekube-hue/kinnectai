@@ -10,13 +10,13 @@ Biological kinship social platform — Go backend + Flutter mobile/desktop front
 | Relational DB | PostgreSQL 16 + pgvector | Users, memories, kin scores, DNA embeddings |
 | Graph DB | Neo4j 5.x + APOC | Biological relationship graph, shortest-path CR |
 | Cache | Redis 7 | Kin Score cache (10-min TTL) |
-| Event Store | DataStax Astra (Cassandra) | Behavioral events (Layers 4–5) |
-| Feeds + CDN | GetStream | The Line feed + Bloom/video CDN |
+| Event Store | DataStax Astra (Cassandra) | Behavioral events (Layers 4–5) |- **Object Storage** | AWS S3 / MinIO | Media originals, vault files, raw genomic assets || Feeds + CDN | GetStream | The Line feed + Bloom/video CDN |
 
 ## Project Structure
 
-- `backend/` - Go backend services
-- `apps/kinnectai_app/` - Flutter mobile/desktop app
+- `apps/mobile/` - Flutter mobile/desktop app
+- `services/go/feed-service/` - Go backend feed service
+- `services/python/kernel-service/` - Python kernel inference service skeleton
 - `docs/` - Documentation
 - `scripts/` - Development scripts
 - `.github/` - CI/CD workflows
@@ -25,15 +25,15 @@ Biological kinship social platform — Go backend + Flutter mobile/desktop front
 
 ### Backend
 
-1. `cd backend`
-2. `cp .env.example .env` and fill secrets
+1. `cd services/go/feed-service`
+2. `cp ../../.env.example .env` and fill secrets
 3. `docker compose up postgres neo4j redis -d`
 4. Apply Neo4j constraints: Open http://localhost:7474, login, run `scripts/neo4j_constraints.cypher`
 5. `go mod download && go run ./cmd/api`
 
 ### Frontend
 
-1. `cd apps/kinnectai_app`
+1. `cd apps/mobile`
 2. `flutter pub get`
 3. `flutter run` (for mobile) or `flutter run -d linux` (for desktop)
 
@@ -81,7 +81,7 @@ cp .env.example .env
 ### 2. Start databases
 
 ```bash
-docker compose up postgres neo4j redis -d
+docker compose up postgres neo4j redis cassandra minio -d
 ```
 
 Wait for all health checks to pass (~30s).

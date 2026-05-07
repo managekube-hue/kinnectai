@@ -15,8 +15,8 @@ jobs:
       uses: actions/setup-go@v4
       with:
         go-version: '1.22'
-    - run: go mod download
-    - run: go test ./...
+    - run: cd services/go/feed-service && go mod download
+    - run: cd services/go/feed-service && go test ./...
 
   build:
     runs-on: ubuntu-latest
@@ -26,4 +26,4 @@ jobs:
       uses: actions/setup-go@v4
       with:
         go-version: '1.22'
-    - run: go build ./cmd/api
+    - run: cd services/go/feed-service && go build ./cmd/api
