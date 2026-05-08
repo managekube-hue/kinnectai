@@ -8,6 +8,7 @@ class AppRoutePolicy {
     '/register',
     '/email-signup',
     '/phone-signup',
+    '/kin-score-required',
     '/',
   };
 
@@ -46,7 +47,10 @@ class AppRoutePolicy {
     }
 
     if (!passesKinScoreGate(uri)) {
-      return '/line';
+      final required = uri.queryParameters['required_kin_score'] ??
+          uri.queryParameters['requiredKinScore'];
+      final scoreParam = required != null ? '?score=$required' : '';
+      return '/kin-score-required$scoreParam';
     }
 
     return null;

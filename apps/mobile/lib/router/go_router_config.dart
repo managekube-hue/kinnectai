@@ -12,12 +12,14 @@ import '../screens/business_tools_screen.dart';
 import '../screens/comment_thread_screen.dart';
 import '../screens/content_preferences_screen.dart';
 import '../screens/data_export_screen.dart';
+import '../screens/deep_link_handler_screen.dart';
 import '../screens/discovery_page_screen.dart';
 import '../screens/email_signup_screen.dart';
 import '../screens/family_pairing_screen.dart';
 import '../screens/guidelines_screen.dart';
 import '../screens/help_center_screen.dart';
 import '../screens/kin_score_detail_screen.dart';
+import '../screens/kin_score_required_screen.dart';
 import '../screens/kinship_alert_map_screen.dart';
 import '../screens/legal_document_screen.dart';
 import '../screens/line_screen.dart';
@@ -315,6 +317,22 @@ class AppGoRouter {
         builder: (BuildContext context, GoRouterState state) {
           final target = state.uri.queryParameters['target'] ?? '';
           return KinScoreDetailScreen(targetUserId: target);
+        },
+      ),
+      GoRoute(
+        path: '/kinnect/:path(.*)',
+        builder: (BuildContext context, GoRouterState state) {
+          final path = state.pathParameters['path'];
+          return DeepLinkHandler(path: path);
+        },
+      ),
+      GoRoute(
+        path: '/kin-score-required',
+        builder: (BuildContext context, GoRouterState state) {
+          final requiredScore = double.tryParse(
+            state.uri.queryParameters['score'] ?? '',
+          );
+          return KinScoreRequiredScreen(requiredScore: requiredScore);
         },
       ),
       GoRoute(

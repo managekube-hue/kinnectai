@@ -112,14 +112,25 @@ void main() {
       expect(result, '/vault/mem_9');
     });
 
-    test('redirects failed kin-score gate to line', () {
+    test('redirects failed kin-score gate to kin-score-required', () {
       final result = AppRoutePolicy.resolveRedirect(
         uri: Uri.parse('https://app.kinnectai.app/room/123?required_kin_score=0.8&kin_score=0.2'),
         matchedLocation: '/room/123',
         isLoggedIn: true,
       );
 
-      expect(result, '/line');
+      expect(result, '/kin-score-required?score=0.8');
+    });
+
+    test('kin-score-required is a public route', () {
+      final result = AppRoutePolicy.resolveRedirect(
+        uri: Uri.parse('/kin-score-required'),
+        matchedLocation: '/kin-score-required',
+        isLoggedIn: false,
+      );
+
+      // Should NOT redirect to /welcome because it is public
+      expect(result, isNot('/welcome'));
     });
   });
 }
