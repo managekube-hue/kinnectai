@@ -123,14 +123,18 @@ class DiscoveryBloc extends Bloc<DiscoveryEvent, DiscoveryState> {
     }
 
     try {
-      final filters = event.filters ?? (current is DiscoveryLoaded ? current.filters : const <String, dynamic>{});
+      final filters =
+          event.filters ??
+          (current is DiscoveryLoaded
+              ? current.filters
+              : const <String, dynamic>{});
       final cursor = isLoadMore ? current.nextCursor : null;
       final response = await _feedRepository.fetchDiscoveryCandidates(
         cursor: cursor,
         filters: filters,
       );
 
-        final merged = isLoadMore
+      final merged = isLoadMore
           ? [...current.candidates, ...response.items]
           : response.items;
 
@@ -139,12 +143,14 @@ class DiscoveryBloc extends Bloc<DiscoveryEvent, DiscoveryState> {
         return;
       }
 
-      emit(DiscoveryLoaded(
-        candidates: merged,
-        hasMore: response.hasMore,
-        nextCursor: response.nextCursor,
-        filters: filters,
-      ));
+      emit(
+        DiscoveryLoaded(
+          candidates: merged,
+          hasMore: response.hasMore,
+          nextCursor: response.nextCursor,
+          filters: filters,
+        ),
+      );
     } catch (error) {
       emit(DiscoveryError(error.toString()));
     }

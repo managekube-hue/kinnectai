@@ -33,7 +33,7 @@ class _GedcomImportScreenState extends State<GedcomImportScreen> {
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 32),
-            
+
             // File upload area
             GestureDetector(
               onTap: () {},
@@ -63,11 +63,8 @@ class _GedcomImportScreenState extends State<GedcomImportScreen> {
               ),
             ),
             const SizedBox(height: 32),
-            
-            ElevatedButton(
-              onPressed: () {},
-              child: const Text('Import'),
-            ),
+
+            ElevatedButton(onPressed: () {}, child: const Text('Import')),
             const SizedBox(height: 8),
             OutlinedButton(
               onPressed: () => Navigator.of(context).pop(),

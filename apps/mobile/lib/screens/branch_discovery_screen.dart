@@ -28,10 +28,7 @@ class _BranchDiscoveryScreenState extends State<BranchDiscoveryScreen> {
         itemCount: 12,
         itemBuilder: (context, index) {
           return GestureDetector(
-            onTap: () => Navigator.pushNamed(
-              context,
-              '/branch/${index + 1}',
-            ),
+            onTap: () => Navigator.pushNamed(context, '/branch/${index + 1}'),
             child: Container(
               decoration: BoxDecoration(
                 color: KinnectColors.darkCard,

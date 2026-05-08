@@ -22,15 +22,16 @@ void main() {
   blocTest<TreeGraphBloc, TreeGraphState>(
     'load subgraph emits loading then loaded',
     build: () {
-      when(() => repository.loadSubgraph(any(), depthLimit: any(named: 'depthLimit')))
-          .thenAnswer((_) async => graph);
+      when(
+        () => repository.loadSubgraph(
+          any(),
+          depthLimit: any(named: 'depthLimit'),
+        ),
+      ).thenAnswer((_) async => graph);
       return TreeGraphBloc(repository);
     },
     act: (bloc) => bloc.add(const LoadSubgraph('root_1')),
-    expect: () => [
-      isA<TreeGraphLoading>(),
-      isA<TreeGraphLoaded>(),
-    ],
+    expect: () => [isA<TreeGraphLoading>(), isA<TreeGraphLoaded>()],
   );
 
   blocTest<TreeGraphBloc, TreeGraphState>(
@@ -39,7 +40,11 @@ void main() {
     seed: () => TreeGraphLoaded(graph: graph),
     act: (bloc) => bloc.add(const CenterOnNode('n1')),
     expect: () => [
-      isA<TreeGraphLoaded>().having((s) => s.centerNodeId, 'centerNodeId', 'n1'),
+      isA<TreeGraphLoaded>().having(
+        (s) => s.centerNodeId,
+        'centerNodeId',
+        'n1',
+      ),
     ],
   );
 }

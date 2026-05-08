@@ -4,10 +4,7 @@ import '../theme/colors.dart';
 class StrandDetailScreen extends StatefulWidget {
   final String strandId;
 
-  const StrandDetailScreen({
-    super.key,
-    required this.strandId,
-  });
+  const StrandDetailScreen({super.key, required this.strandId});
 
   @override
   State<StrandDetailScreen> createState() => _StrandDetailScreenState();
@@ -49,10 +46,7 @@ class _StrandDetailScreenState extends State<StrandDetailScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Members',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
+                Text('Members', style: Theme.of(context).textTheme.titleLarge),
                 const SizedBox(height: 12),
                 ...List.generate(
                   5,

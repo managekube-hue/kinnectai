@@ -4,18 +4,21 @@ import '../models/dtos/memory_box_item_dto.dart';
 import 'memory_box_repository.dart';
 
 class MemoryBoxRepositoryImpl implements MemoryBoxRepository {
-  MemoryBoxRepositoryImpl({
-    required Dio dio,
-    this.basePath = '/v1',
-  }) : _dio = dio;
+  MemoryBoxRepositoryImpl({required Dio dio, this.basePath = '/v1'})
+    : _dio = dio;
 
   final Dio _dio;
   final String basePath;
 
   @override
   Future<List<MemoryBoxItemDTO>> fetchVault() async {
-    final response = await _dio.get<Map<String, dynamic>>('$basePath/memory-box/vault');
-    final data = (response.data?['data'] as Map<String, dynamic>?) ?? response.data ?? <String, dynamic>{};
+    final response = await _dio.get<Map<String, dynamic>>(
+      '$basePath/memory-box/vault',
+    );
+    final data =
+        (response.data?['data'] as Map<String, dynamic>?) ??
+        response.data ??
+        <String, dynamic>{};
     final items = (data['items'] as List?) ?? const <dynamic>[];
 
     return items
@@ -26,7 +29,10 @@ class MemoryBoxRepositoryImpl implements MemoryBoxRepository {
 
   @override
   Future<void> sealMemory(String memoryId) async {
-    await _dio.post<void>('$basePath/memories/seal', data: {'memory_id': memoryId});
+    await _dio.post<void>(
+      '$basePath/memories/seal',
+      data: {'memory_id': memoryId},
+    );
   }
 
   @override

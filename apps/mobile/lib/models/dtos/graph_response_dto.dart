@@ -50,10 +50,7 @@ class GraphEdgeDTO extends Equatable {
 }
 
 class GraphResponseDTO extends Equatable {
-  const GraphResponseDTO({
-    required this.nodes,
-    required this.edges,
-  });
+  const GraphResponseDTO({required this.nodes, required this.edges});
 
   final List<GraphNodeDTO> nodes;
   final List<GraphEdgeDTO> edges;

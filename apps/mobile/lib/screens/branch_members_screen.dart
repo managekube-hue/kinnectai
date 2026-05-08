@@ -4,10 +4,7 @@ import '../theme/colors.dart';
 class BranchMembersScreen extends StatefulWidget {
   final String branchId;
 
-  const BranchMembersScreen({
-    super.key,
-    required this.branchId,
-  });
+  const BranchMembersScreen({super.key, required this.branchId});
 
   @override
   State<BranchMembersScreen> createState() => _BranchMembersScreenState();

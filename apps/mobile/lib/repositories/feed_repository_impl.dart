@@ -6,10 +6,7 @@ import '../models/dtos/paginated_response.dart';
 import 'feed_repository.dart';
 
 class FeedRepositoryImpl implements FeedRepository {
-  FeedRepositoryImpl({
-    required Dio dio,
-    this.basePath = '/v1',
-  }) : _dio = dio;
+  FeedRepositoryImpl({required Dio dio, this.basePath = '/v1'}) : _dio = dio;
 
   final Dio _dio;
   final String basePath;
@@ -29,8 +26,13 @@ class FeedRepositoryImpl implements FeedRepository {
       },
     );
 
-    final data = (response.data?['data'] as Map<String, dynamic>?) ?? response.data ?? <String, dynamic>{};
-    final meta = (response.data?['meta'] as Map<String, dynamic>?) ?? const <String, dynamic>{};
+    final data =
+        (response.data?['data'] as Map<String, dynamic>?) ??
+        response.data ??
+        <String, dynamic>{};
+    final meta =
+        (response.data?['meta'] as Map<String, dynamic>?) ??
+        const <String, dynamic>{};
 
     return PaginatedResponse<MemoryDTO>(
       items: ((data['items'] as List?) ?? const <dynamic>[])
@@ -58,8 +60,13 @@ class FeedRepositoryImpl implements FeedRepository {
       },
     );
 
-    final data = (response.data?['data'] as Map<String, dynamic>?) ?? response.data ?? <String, dynamic>{};
-    final meta = (response.data?['meta'] as Map<String, dynamic>?) ?? const <String, dynamic>{};
+    final data =
+        (response.data?['data'] as Map<String, dynamic>?) ??
+        response.data ??
+        <String, dynamic>{};
+    final meta =
+        (response.data?['meta'] as Map<String, dynamic>?) ??
+        const <String, dynamic>{};
 
     return PaginatedResponse<DiscoveryCandidateDTO>(
       items: ((data['items'] as List?) ?? const <dynamic>[])

@@ -29,10 +29,7 @@ void main() {
       return MemoryBoxCubit(repository);
     },
     act: (cubit) => cubit.loadVault(),
-    expect: () => [
-      isA<MemoryBoxLoading>(),
-      isA<MemoryBoxLoaded>(),
-    ],
+    expect: () => [isA<MemoryBoxLoading>(), isA<MemoryBoxLoaded>()],
   );
 
   blocTest<MemoryBoxCubit, MemoryBoxState>(

@@ -24,7 +24,9 @@ class KinScoreDTO extends Equatable {
       relationshipLabel: (json['relationship_label'] ?? '').toString(),
       primarySignal: (json['primary_signal'] ?? '').toString(),
       confidencePercent: (json['confidence_percent'] as num?)?.toInt() ?? 0,
-      lastUpdated: DateTime.tryParse((json['last_updated'] ?? '').toString()) ?? DateTime.fromMillisecondsSinceEpoch(0),
+      lastUpdated:
+          DateTime.tryParse((json['last_updated'] ?? '').toString()) ??
+          DateTime.fromMillisecondsSinceEpoch(0),
     );
   }
 
@@ -41,11 +43,11 @@ class KinScoreDTO extends Equatable {
 
   @override
   List<Object?> get props => [
-        userId,
-        score,
-        relationshipLabel,
-        primarySignal,
-        confidencePercent,
-        lastUpdated,
-      ];
+    userId,
+    score,
+    relationshipLabel,
+    primarySignal,
+    confidencePercent,
+    lastUpdated,
+  ];
 }

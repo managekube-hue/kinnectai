@@ -58,18 +58,12 @@ sealed class TreeGraphState extends Equatable {
 class TreeGraphLoading extends TreeGraphState {}
 
 class TreeGraphLoaded extends TreeGraphState {
-  const TreeGraphLoaded({
-    required this.graph,
-    this.centerNodeId,
-  });
+  const TreeGraphLoaded({required this.graph, this.centerNodeId});
 
   final GraphResponseDTO graph;
   final String? centerNodeId;
 
-  TreeGraphLoaded copyWith({
-    GraphResponseDTO? graph,
-    String? centerNodeId,
-  }) {
+  TreeGraphLoaded copyWith({GraphResponseDTO? graph, String? centerNodeId}) {
     return TreeGraphLoaded(
       graph: graph ?? this.graph,
       centerNodeId: centerNodeId ?? this.centerNodeId,
@@ -126,12 +120,20 @@ class TreeGraphBloc extends Bloc<TreeGraphEvent, TreeGraphState> {
 
     try {
       final expanded = await _repository.expandNode(event.nodeId);
-      final mergedNodes = <GraphNodeDTO>{...current.graph.nodes, ...expanded.nodes}.toList();
-      final mergedEdges = <GraphEdgeDTO>{...current.graph.edges, ...expanded.edges}.toList();
+      final mergedNodes = <GraphNodeDTO>{
+        ...current.graph.nodes,
+        ...expanded.nodes,
+      }.toList();
+      final mergedEdges = <GraphEdgeDTO>{
+        ...current.graph.edges,
+        ...expanded.edges,
+      }.toList();
 
-      emit(current.copyWith(
-        graph: GraphResponseDTO(nodes: mergedNodes, edges: mergedEdges),
-      ));
+      emit(
+        current.copyWith(
+          graph: GraphResponseDTO(nodes: mergedNodes, edges: mergedEdges),
+        ),
+      );
     } catch (error) {
       emit(TreeGraphError(error.toString()));
     }

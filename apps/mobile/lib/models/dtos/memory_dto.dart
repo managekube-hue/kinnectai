@@ -44,7 +44,9 @@ class MemoryDTO extends Equatable {
       thumbnailUrl: json['thumbnail_url']?.toString(),
       crScore: (json['cr_score'] as num?)?.toDouble() ?? 0.0,
       isEcho: json['is_echo'] as bool? ?? false,
-      createdAt: DateTime.tryParse((json['created_at'] ?? '').toString()) ?? DateTime.fromMillisecondsSinceEpoch(0),
+      createdAt:
+          DateTime.tryParse((json['created_at'] ?? '').toString()) ??
+          DateTime.fromMillisecondsSinceEpoch(0),
       strandIds: ((json['strand_ids'] as List?) ?? const <dynamic>[])
           .map((e) => e.toString())
           .toList(),
@@ -96,20 +98,20 @@ class MemoryDTO extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        creatorId,
-        type,
-        mediaUrl,
-        thumbnailUrl,
-        crScore,
-        isEcho,
-        createdAt,
-        strandIds,
-        branchId,
-        caption,
-        pulseCount,
-        commentCount,
-      ];
+    id,
+    creatorId,
+    type,
+    mediaUrl,
+    thumbnailUrl,
+    crScore,
+    isEcho,
+    createdAt,
+    strandIds,
+    branchId,
+    caption,
+    pulseCount,
+    commentCount,
+  ];
 
   static MemoryType _memoryTypeFromValue(dynamic value) {
     final raw = value?.toString().toLowerCase();

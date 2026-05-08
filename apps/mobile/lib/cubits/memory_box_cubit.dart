@@ -14,10 +14,7 @@ sealed class MemoryBoxState extends Equatable {
 class MemoryBoxLoading extends MemoryBoxState {}
 
 class MemoryBoxLoaded extends MemoryBoxState {
-  const MemoryBoxLoaded({
-    required this.items,
-    required this.storageUsed,
-  });
+  const MemoryBoxLoaded({required this.items, required this.storageUsed});
 
   final List<MemoryBoxItemDTO> items;
   final double storageUsed;
@@ -48,10 +45,12 @@ class MemoryBoxCubit extends Cubit<MemoryBoxState> {
     emit(MemoryBoxLoading());
     try {
       final items = await _repository.fetchVault();
-      emit(MemoryBoxLoaded(
-        items: items,
-        storageUsed: _calculateStorageUsed(items),
-      ));
+      emit(
+        MemoryBoxLoaded(
+          items: items,
+          storageUsed: _calculateStorageUsed(items),
+        ),
+      );
     } catch (error) {
       emit(MemoryBoxError(error.toString()));
     }
@@ -94,7 +93,9 @@ class MemoryBoxCubit extends Cubit<MemoryBoxState> {
       return 0.0;
     }
 
-    final sealedCount = items.where((item) => item.status != MemoryBoxStatus.draft).length;
+    final sealedCount = items
+        .where((item) => item.status != MemoryBoxStatus.draft)
+        .length;
     return (sealedCount / items.length).clamp(0.0, 1.0);
   }
 }

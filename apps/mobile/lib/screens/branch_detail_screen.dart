@@ -4,10 +4,7 @@ import '../theme/colors.dart';
 class BranchDetailScreen extends StatefulWidget {
   final String branchId;
 
-  const BranchDetailScreen({
-    super.key,
-    required this.branchId,
-  });
+  const BranchDetailScreen({super.key, required this.branchId});
 
   @override
   State<BranchDetailScreen> createState() => _BranchDetailScreenState();
@@ -31,11 +28,7 @@ class _BranchDetailScreenState extends State<BranchDetailScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(
-                  Icons.account_tree,
-                  size: 48,
-                  color: KinnectColors.amber,
-                ),
+                Icon(Icons.account_tree, size: 48, color: KinnectColors.amber),
                 const SizedBox(height: 16),
                 Text(
                   'Branch Title',

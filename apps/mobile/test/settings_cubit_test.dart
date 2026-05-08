@@ -27,16 +27,15 @@ void main() {
       return SettingsCubit(repository);
     },
     act: (cubit) => cubit.load(),
-    expect: () => [
-      isA<SettingsLoading>(),
-      isA<SettingsLoaded>(),
-    ],
+    expect: () => [isA<SettingsLoading>(), isA<SettingsLoaded>()],
   );
 
   blocTest<SettingsCubit, SettingsState>(
     'toggle push emits saving/saved/loaded',
     build: () {
-      when(() => repository.togglePush(false)).thenAnswer((_) async => settings.copyWith(pushEnabled: false));
+      when(
+        () => repository.togglePush(false),
+      ).thenAnswer((_) async => settings.copyWith(pushEnabled: false));
       return SettingsCubit(repository);
     },
     act: (cubit) => cubit.togglePush(false),

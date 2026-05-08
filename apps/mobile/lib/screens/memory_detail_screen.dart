@@ -4,10 +4,7 @@ import '../theme/colors.dart';
 class MemoryDetailScreen extends StatefulWidget {
   final String memoryId;
 
-  const MemoryDetailScreen({
-    super.key,
-    required this.memoryId,
-  });
+  const MemoryDetailScreen({super.key, required this.memoryId});
 
   @override
   State<MemoryDetailScreen> createState() => _MemoryDetailScreenState();
@@ -32,11 +29,7 @@ class _MemoryDetailScreenState extends State<MemoryDetailScreen> {
               color: Colors.black,
               height: 300,
               child: Center(
-                child: Icon(
-                  Icons.image,
-                  color: KinnectColors.amber,
-                  size: 80,
-                ),
+                child: Icon(Icons.image, color: KinnectColors.amber, size: 80),
               ),
             ),
             Padding(
@@ -57,14 +50,14 @@ class _MemoryDetailScreenState extends State<MemoryDetailScreen> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  
+
                   // Description
                   Text(
                     'Memory description would appear here.',
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                   const SizedBox(height: 24),
-                  
+
                   // Action buttons
                   Row(
                     children: [

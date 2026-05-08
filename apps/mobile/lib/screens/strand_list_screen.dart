@@ -26,10 +26,7 @@ class _StrandListScreenState extends State<StrandListScreen> {
             subtitle: const Text('Family lineage strand'),
             leading: Icon(Icons.account_tree, color: Colors.grey[400]),
             trailing: const Icon(Icons.chevron_right),
-            onTap: () => Navigator.pushNamed(
-              context,
-              '/strand/${index + 1}',
-            ),
+            onTap: () => Navigator.pushNamed(context, '/strand/${index + 1}'),
           );
         },
       ),

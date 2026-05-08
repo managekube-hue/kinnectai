@@ -45,12 +45,12 @@ class DiscoveryCandidateDTO extends Equatable {
 
   @override
   List<Object?> get props => [
-        userId,
-        displayName,
-        connectionScore,
-        relationshipGuess,
-        primarySignal,
-        avatarUrl,
-        previewMediaUrl,
-      ];
+    userId,
+    displayName,
+    connectionScore,
+    relationshipGuess,
+    primarySignal,
+    avatarUrl,
+    previewMediaUrl,
+  ];
 }

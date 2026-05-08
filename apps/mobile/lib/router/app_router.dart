@@ -85,7 +85,7 @@ class AppRouter {
   static const String kinScoreDetail = '/kin-score';
   static const String voiceprintCapture = '/voiceprint-capture';
   static const String timeWellbeing = '/time-wellbeing';
-  
+
   // Settings routes
   static const String settings = '/settings';
   static const String activityCenter = '/settings/activity-center';
@@ -109,7 +109,7 @@ class AppRouter {
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     final args = settings.arguments as Map<String, dynamic>?;
-    
+
     switch (settings.name) {
       // ============= Auth Routes =============
       case '/splash':
@@ -141,7 +141,9 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const TreeGraphScreen());
       case rootProfile:
         final userId = args?['userId'] as String?;
-        return MaterialPageRoute(builder: (_) => RootProfileScreen(userId: userId));
+        return MaterialPageRoute(
+          builder: (_) => RootProfileScreen(userId: userId),
+        );
 
       // ============= Main Feeds =============
       case repostStitch:
@@ -155,26 +157,36 @@ class AppRouter {
       case pulseInbox:
         return MaterialPageRoute(builder: (_) => const PulseInboxScreen());
       case marketplace:
-        return MaterialPageRoute(builder: (_) => const AncestralMarketplaceScreen());
+        return MaterialPageRoute(
+          builder: (_) => const AncestralMarketplaceScreen(),
+        );
 
       // ============= Memory & Content =============
       case '/memory-box':
         return MaterialPageRoute(builder: (_) => const MemoryBoxScreen());
       case comments:
         final memoryId = args?['memoryId'] as String?;
-        return MaterialPageRoute(builder: (_) => CommentThreadScreen(memoryId: memoryId ?? ''));
+        return MaterialPageRoute(
+          builder: (_) => CommentThreadScreen(memoryId: memoryId ?? ''),
+        );
       case kinScoreDetail:
         final targetUserId = args?['targetUserId'] as String? ?? '';
-        return MaterialPageRoute(builder: (_) => KinScoreDetailScreen(targetUserId: targetUserId));
+        return MaterialPageRoute(
+          builder: (_) => KinScoreDetailScreen(targetUserId: targetUserId),
+        );
 
       // ============= Creation Tools =============
       case voiceprintCapture:
-        return MaterialPageRoute(builder: (_) => const VoiceprintCaptureScreen());
+        return MaterialPageRoute(
+          builder: (_) => const VoiceprintCaptureScreen(),
+        );
       case timeWellbeing:
         return MaterialPageRoute(builder: (_) => const TimeWellbeingScreen());
       case rewindCreator:
         final memoryId = args?['memoryId'] as String? ?? '';
-        return MaterialPageRoute(builder: (_) => RewindCreatorScreen(memoryId: memoryId));
+        return MaterialPageRoute(
+          builder: (_) => RewindCreatorScreen(memoryId: memoryId),
+        );
       case branchSubgraph:
         final branchId = args?['branchId'] as String?;
         return MaterialPageRoute(
@@ -199,16 +211,22 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const PrivacySettingsScreen());
       case '/settings/notifications':
       case notificationsSettings:
-        return MaterialPageRoute(builder: (_) => const NotificationsSettingsScreen());
+        return MaterialPageRoute(
+          builder: (_) => const NotificationsSettingsScreen(),
+        );
       case '/settings/account':
       case accountSettings:
         return MaterialPageRoute(builder: (_) => const AccountSettingsScreen());
       case '/settings/security':
       case securitySettings:
-        return MaterialPageRoute(builder: (_) => const SecuritySettingsScreen());
+        return MaterialPageRoute(
+          builder: (_) => const SecuritySettingsScreen(),
+        );
       case '/settings/content-preferences':
       case contentPreferences:
-        return MaterialPageRoute(builder: (_) => const ContentPreferencesScreen());
+        return MaterialPageRoute(
+          builder: (_) => const ContentPreferencesScreen(),
+        );
       case '/settings/business-tools':
       case businessTools:
         return MaterialPageRoute(builder: (_) => const BusinessToolsScreen());
@@ -242,7 +260,9 @@ class AppRouter {
       // ============= Family & Kinship =============
       case '/steward-agreement':
       case stewardAgreement:
-        return MaterialPageRoute(builder: (_) => const StewardAgreementScreen());
+        return MaterialPageRoute(
+          builder: (_) => const StewardAgreementScreen(),
+        );
       case '/kinship-alert-map':
       case kinshipAlertMap:
         return MaterialPageRoute(builder: (_) => const KinshipAlertMapScreen());
@@ -279,12 +299,18 @@ class AppRouter {
           if (parts.length >= 3) {
             final memoryId = parts[2];
             if (parts.length >= 4 && parts[3] == 'comments') {
-              return MaterialPageRoute(builder: (_) => CommentThreadScreen(memoryId: memoryId));
+              return MaterialPageRoute(
+                builder: (_) => CommentThreadScreen(memoryId: memoryId),
+              );
             }
             if (parts.length >= 4 && parts[3] == 'edit') {
-              return MaterialPageRoute(builder: (_) => MemoryEditScreen(memoryId: memoryId));
+              return MaterialPageRoute(
+                builder: (_) => MemoryEditScreen(memoryId: memoryId),
+              );
             }
-            return MaterialPageRoute(builder: (_) => MemoryDetailScreen(memoryId: memoryId));
+            return MaterialPageRoute(
+              builder: (_) => MemoryDetailScreen(memoryId: memoryId),
+            );
           }
         }
 
@@ -293,7 +319,9 @@ class AppRouter {
           final parts = settings.name!.split('/');
           if (parts.length >= 3) {
             final strandId = parts[2];
-            return MaterialPageRoute(builder: (_) => StrandDetailScreen(strandId: strandId));
+            return MaterialPageRoute(
+              builder: (_) => StrandDetailScreen(strandId: strandId),
+            );
           }
         }
 
@@ -303,16 +331,22 @@ class AppRouter {
           if (parts.length >= 3) {
             final branchId = parts[2];
             if (parts.length >= 4 && parts[3] == 'members') {
-              return MaterialPageRoute(builder: (_) => BranchMembersScreen(branchId: branchId));
+              return MaterialPageRoute(
+                builder: (_) => BranchMembersScreen(branchId: branchId),
+              );
             }
-            return MaterialPageRoute(builder: (_) => BranchDetailScreen(branchId: branchId));
+            return MaterialPageRoute(
+              builder: (_) => BranchDetailScreen(branchId: branchId),
+            );
           }
         }
 
         // Legal routes
         if (settings.name?.startsWith('/legal/') ?? false) {
           final documentType = settings.name!.split('/').last;
-          return MaterialPageRoute(builder: (_) => LegalDocumentScreen(documentType: documentType));
+          return MaterialPageRoute(
+            builder: (_) => LegalDocumentScreen(documentType: documentType),
+          );
         }
 
         // Unknown route fallback
@@ -322,7 +356,10 @@ class AppRouter {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text('Route Not Found', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  const Text(
+                    'Route Not Found',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
                   const SizedBox(height: 16),
                   Text('Route: ${settings.name}'),
                   const SizedBox(height: 16),
@@ -356,7 +393,11 @@ class AppRouter {
     );
   }
 
-  static void showShareSheet(BuildContext context, String memoryId, String memoryUrl) {
+  static void showShareSheet(
+    BuildContext context,
+    String memoryId,
+    String memoryUrl,
+  ) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -365,16 +406,26 @@ class AppRouter {
     );
   }
 
-  static void showPulseReactionSheet(BuildContext context, String memoryId, Function(bool) onPulseToggle) {
+  static void showPulseReactionSheet(
+    BuildContext context,
+    String memoryId,
+    Function(bool) onPulseToggle,
+  ) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
-      builder: (_) => PulseReactionSheet(memoryId: memoryId, onPulseToggle: onPulseToggle),
+      builder: (_) =>
+          PulseReactionSheet(memoryId: memoryId, onPulseToggle: onPulseToggle),
     );
   }
 
-  static void showCommentComposerSheet(BuildContext context, String memoryId, Function(String) onSubmit, {String? replyToCommentId}) {
+  static void showCommentComposerSheet(
+    BuildContext context,
+    String memoryId,
+    Function(String) onSubmit, {
+    String? replyToCommentId,
+  }) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -387,7 +438,12 @@ class AppRouter {
     );
   }
 
-  static void showKinshipBadgeSheet(BuildContext context, double kinScore, String relationshipType, String targetUserId) {
+  static void showKinshipBadgeSheet(
+    BuildContext context,
+    double kinScore,
+    String relationshipType,
+    String targetUserId,
+  ) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -400,6 +456,3 @@ class AppRouter {
     );
   }
 }
-
-
-

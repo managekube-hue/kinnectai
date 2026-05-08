@@ -4,18 +4,21 @@ import '../models/dtos/settings_state_dto.dart';
 import 'settings_repository.dart';
 
 class SettingsRepositoryImpl implements SettingsRepository {
-  SettingsRepositoryImpl({
-    required Dio dio,
-    this.basePath = '/v1',
-  }) : _dio = dio;
+  SettingsRepositoryImpl({required Dio dio, this.basePath = '/v1'})
+    : _dio = dio;
 
   final Dio _dio;
   final String basePath;
 
   @override
   Future<SettingsStateDTO> loadSettings() async {
-    final response = await _dio.get<Map<String, dynamic>>('$basePath/user/preferences');
-    final data = (response.data?['data'] as Map<String, dynamic>?) ?? response.data ?? <String, dynamic>{};
+    final response = await _dio.get<Map<String, dynamic>>(
+      '$basePath/user/preferences',
+    );
+    final data =
+        (response.data?['data'] as Map<String, dynamic>?) ??
+        response.data ??
+        <String, dynamic>{};
     return SettingsStateDTO.fromJson(data);
   }
 
@@ -26,7 +29,10 @@ class SettingsRepositoryImpl implements SettingsRepository {
       data: {'push_enabled': enabled},
     );
 
-    final data = (response.data?['data'] as Map<String, dynamic>?) ?? response.data ?? <String, dynamic>{};
+    final data =
+        (response.data?['data'] as Map<String, dynamic>?) ??
+        response.data ??
+        <String, dynamic>{};
     return SettingsStateDTO.fromJson(data);
   }
 
@@ -43,7 +49,10 @@ class SettingsRepositoryImpl implements SettingsRepository {
       },
     );
 
-    final data = (response.data?['data'] as Map<String, dynamic>?) ?? response.data ?? <String, dynamic>{};
+    final data =
+        (response.data?['data'] as Map<String, dynamic>?) ??
+        response.data ??
+        <String, dynamic>{};
     return SettingsStateDTO.fromJson(data);
   }
 

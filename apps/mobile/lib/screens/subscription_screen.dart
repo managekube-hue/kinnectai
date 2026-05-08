@@ -21,12 +21,9 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          Text(
-            'Current Plan',
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
+          Text('Current Plan', style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 16),
-          
+
           Container(
             decoration: BoxDecoration(
               color: KinnectColors.darkCard,
@@ -45,7 +42,10 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: KinnectColors.amber,
                         borderRadius: BorderRadius.circular(20),
@@ -65,13 +65,13 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
             ),
           ),
           const SizedBox(height: 24),
-          
+
           Text(
             'Available Plans',
             style: Theme.of(context).textTheme.titleLarge,
           ),
           const SizedBox(height: 16),
-          
+
           // Free Plan
           Container(
             decoration: BoxDecoration(
@@ -82,10 +82,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Free',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
+                Text('Free', style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: 8),
                 const Text('• Basic features'),
                 const SizedBox(height: 8),
@@ -97,7 +94,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
             ),
           ),
           const SizedBox(height: 16),
-          
+
           // Premium Plan
           Container(
             decoration: BoxDecoration(

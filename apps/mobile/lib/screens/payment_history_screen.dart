@@ -34,7 +34,9 @@ class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
               ),
               child: const Icon(Icons.receipt, size: 20),
             ),
-            tileColor: index.isEven ? KinnectColors.darkCard.withOpacity(0.3) : null,
+            tileColor: index.isEven
+                ? KinnectColors.darkCard.withOpacity(0.3)
+                : null,
           );
         },
       ),

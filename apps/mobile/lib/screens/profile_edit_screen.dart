@@ -37,7 +37,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              
+
               Center(
                 child: TextButton.icon(
                   onPressed: () {},
@@ -46,7 +46,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                 ),
               ),
               const SizedBox(height: 24),
-              
+
               // Name field
               TextField(
                 decoration: InputDecoration(
@@ -59,7 +59,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              
+
               // Bio field
               TextField(
                 maxLines: 3,
@@ -73,7 +73,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              
+
               // Location field
               TextField(
                 decoration: InputDecoration(
@@ -86,7 +86,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                 ),
               ),
               const SizedBox(height: 24),
-              
+
               ElevatedButton(
                 onPressed: () => Navigator.of(context).pop(),
                 child: const Text('Save Profile'),

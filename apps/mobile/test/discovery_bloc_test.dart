@@ -42,10 +42,7 @@ void main() {
       return DiscoveryBloc(repository);
     },
     act: (bloc) => bloc.add(const FetchCandidates()),
-    expect: () => [
-      isA<DiscoveryLoading>(),
-      isA<DiscoveryLoaded>(),
-    ],
+    expect: () => [isA<DiscoveryLoading>(), isA<DiscoveryLoaded>()],
   );
 
   blocTest<DiscoveryBloc, DiscoveryState>(

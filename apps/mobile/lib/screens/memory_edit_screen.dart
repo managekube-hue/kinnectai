@@ -4,10 +4,7 @@ import '../theme/colors.dart';
 class MemoryEditScreen extends StatefulWidget {
   final String memoryId;
 
-  const MemoryEditScreen({
-    super.key,
-    required this.memoryId,
-  });
+  const MemoryEditScreen({super.key, required this.memoryId});
 
   @override
   State<MemoryEditScreen> createState() => _MemoryEditScreenState();
@@ -42,7 +39,7 @@ class _MemoryEditScreenState extends State<MemoryEditScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              
+
               // Description field
               TextField(
                 maxLines: 5,
@@ -57,7 +54,7 @@ class _MemoryEditScreenState extends State<MemoryEditScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              
+
               // Tags field
               TextField(
                 decoration: InputDecoration(
@@ -71,14 +68,14 @@ class _MemoryEditScreenState extends State<MemoryEditScreen> {
                 ),
               ),
               const SizedBox(height: 24),
-              
+
               // Save button
               ElevatedButton(
                 onPressed: () => Navigator.of(context).pop(),
                 child: const Text('Save Changes'),
               ),
               const SizedBox(height: 8),
-              
+
               // Delete button
               OutlinedButton(
                 onPressed: () => Navigator.of(context).pop(),
