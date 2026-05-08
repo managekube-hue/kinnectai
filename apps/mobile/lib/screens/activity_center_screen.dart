@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import '../router/app_nav.dart';
 import '../theme/colors.dart';
 
 class ActivityCenterScreen extends StatefulWidget {
@@ -67,7 +68,7 @@ class _ActivityCenterScreenState extends State<ActivityCenterScreen> with Single
     return ListView(
       children: [
         _buildListItem('Screen time', 'Daily and weekly usage stats', Icons.timer, false, () {
-          Navigator.pushNamed(context, '/time-wellbeing');
+          AppNav.push(context, '/time-wellbeing');
         }),
         _buildListItem('Daily time limit', 'Set maximum daily usage', Icons.alarm, false, () {}),
         _buildListItem('Break reminders', 'Timed nudges during sessions', Icons.pause_circle, false, () {}),
@@ -122,3 +123,6 @@ class _ActivityCenterScreenState extends State<ActivityCenterScreen> with Single
     );
   }
 }
+
+
+

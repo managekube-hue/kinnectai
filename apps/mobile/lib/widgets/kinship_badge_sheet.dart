@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import '../router/app_nav.dart';
 import '../theme/colors.dart';
 
 class KinshipBadgeSheet extends StatelessWidget {
@@ -82,9 +83,7 @@ class KinshipBadgeSheet extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () {
                     Navigator.pop(context);
-                    Navigator.pushNamed(
-                      context,
-                      '/kin-score',
+                    AppNav.push(context, '/kin-score',
                       arguments: {'targetUserId': targetUserId},
                     );
                   },
@@ -139,3 +138,7 @@ class KinshipBadgeSheet extends StatelessWidget {
     return KinnectColors.grey60;
   }
 }
+
+
+
+

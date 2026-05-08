@@ -3,11 +3,13 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  connectivity_plus
   firebase_auth
   firebase_core
   flutter_secure_storage_windows
   permission_handler_windows
   record_windows
+  sqlite3_flutter_libs
   url_launcher_windows
 )
 

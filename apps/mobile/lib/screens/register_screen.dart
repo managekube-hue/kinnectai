@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import '../router/app_nav.dart';
 import 'package:provider/provider.dart';
 import '../services/auth_service.dart';
 
@@ -40,7 +41,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       );
       
       if (mounted) {
-        Navigator.pushReplacementNamed(context, '/home');
+        AppNav.go(context, '/home');
       }
     } catch (e) {
       if (mounted) {
@@ -189,3 +190,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 }
+
+
+

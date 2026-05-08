@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import '../router/app_nav.dart';
 import '../theme/colors.dart';
 import '../theme/typography.dart';
 import '../theme/spacing.dart';
@@ -26,7 +27,7 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
   void _handleContinue() {
     if (_formKey.currentState?.validate() ?? false) {
       // TODO: Implement email signup flow with OTP
-      Navigator.pushReplacementNamed(context, '/home');
+      AppNav.go(context, '/home');
     }
   }
 
@@ -107,3 +108,6 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
     );
   }
 }
+
+
+

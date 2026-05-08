@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import '../router/app_nav.dart';
 import 'package:flutter/services.dart';
 import '../theme/colors.dart';
 import '../theme/typography.dart';
@@ -66,7 +67,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       
       if (mounted) {
         // Navigate to onboarding
-        Navigator.pushReplacementNamed(context, '/home');
+        AppNav.go(context, '/home');
       }
     } catch (e) {
       _logAnalyticsEvent('auth_oauth_completed', {
@@ -107,7 +108,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         });
         
         if (mounted) {
-          Navigator.pushReplacementNamed(context, '/home');
+          AppNav.go(context, '/home');
         }
       } else {
         _logAnalyticsEvent('auth_oauth_completed', {
@@ -153,26 +154,26 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   void _handleEmailSignUp() {
     _logAnalyticsEvent('auth_button_tapped', {'method': 'email'});
     _logAnalyticsEvent('auth_email_initiated');
-    Navigator.pushNamed(context, '/email-signup');
+    AppNav.push(context, '/email-signup');
   }
 
   void _handlePhoneSignUp() {
     _logAnalyticsEvent('auth_button_tapped', {'method': 'phone'});
-    Navigator.pushNamed(context, '/phone-signup');
+    AppNav.push(context, '/phone-signup');
   }
 
   void _handleSignIn() {
-    Navigator.pushNamed(context, '/login');
+    AppNav.push(context, '/login');
   }
 
   void _handleTermsOfService() {
     _logAnalyticsEvent('auth_legal_link_viewed', {'document_type': 'terms'});
-    Navigator.pushNamed(context, '/legal/terms');
+    AppNav.push(context, '/legal/terms');
   }
 
   void _handlePrivacyPolicy() {
     _logAnalyticsEvent('auth_legal_link_viewed', {'document_type': 'privacy'});
-    Navigator.pushNamed(context, '/legal/privacy');
+    AppNav.push(context, '/legal/privacy');
   }
 
   void _showErrorSnackBar(String message) {
@@ -371,3 +372,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     );
   }
 }
+
+
+

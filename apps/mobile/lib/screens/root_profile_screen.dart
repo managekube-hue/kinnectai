@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import '../router/app_nav.dart';
 import '../theme/colors.dart';
 
 class RootProfileScreen extends StatelessWidget {
@@ -18,7 +19,7 @@ class RootProfileScreen extends StatelessWidget {
         actions: isOwnProfile ? [
           IconButton(
             icon: const Icon(Icons.settings),
-            onPressed: () => Navigator.pushNamed(context, '/settings'),
+            onPressed: () => AppNav.push(context, '/settings'),
           ),
         ] : null,
       ),
@@ -47,4 +48,7 @@ class RootProfileScreen extends StatelessWidget {
     );
   }
 }
+
+
+
 

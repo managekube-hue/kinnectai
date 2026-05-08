@@ -1,13 +1,20 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'foundation/app_bootstrap.dart';
+import 'router/go_router_config.dart';
 import 'services/auth_service.dart';
 import 'theme/design_system.dart';
-import 'router/app_router.dart';
+
+final AuthService appAuthService = AuthService();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await AppBootstrap.initialize();
+
+  Bloc.observer = const AppBlocObserver();
 
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
@@ -26,11 +33,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => AuthService(),
-      child: MaterialApp(
+    return ChangeNotifierProvider<AuthService>.value(
+      value: appAuthService,
+      child: MaterialApp.router(
         title: 'KinnectAI',
         debugShowCheckedModeBanner: false,
+        routerConfig: AppGoRouter.router(appAuthService),
         theme: createDesignTheme(isDark: true).copyWith(
           textTheme:
               GoogleFonts.dmSansTextTheme(
@@ -59,9 +67,8 @@ class MyApp extends StatelessWidget {
                 ),
               ),
         ),
-        initialRoute: '/splash',
-        onGenerateRoute: AppRouter.onGenerateRoute,
       ),
     );
   }
 }
+

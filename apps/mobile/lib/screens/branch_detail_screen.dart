@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import '../router/app_nav.dart';
 import '../theme/colors.dart';
 
 class BranchDetailScreen extends StatefulWidget {
@@ -36,7 +37,7 @@ class _BranchDetailScreenState extends State<BranchDetailScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  '12 members • Founded 2020',
+                  '12 members â€¢ Founded 2020',
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               ],
@@ -56,9 +57,7 @@ class _BranchDetailScreenState extends State<BranchDetailScreen> {
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     TextButton(
-                      onPressed: () => Navigator.pushNamed(
-                        context,
-                        '/branch/${widget.branchId}/members',
+                      onPressed: () => AppNav.push(context, '/branch/${widget.branchId}/members',
                       ),
                       child: const Text('View All'),
                     ),
@@ -81,3 +80,7 @@ class _BranchDetailScreenState extends State<BranchDetailScreen> {
     );
   }
 }
+
+
+
+

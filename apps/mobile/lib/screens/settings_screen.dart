@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import '../router/app_nav.dart';
 import '../theme/colors.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -80,8 +81,11 @@ class SettingsScreen extends StatelessWidget {
       title: Text(title, style: const TextStyle(color: KinnectColors.white)),
       subtitle: Text(subtitle, style: const TextStyle(color: KinnectColors.grey60, fontSize: 12)),
       trailing: const Icon(Icons.chevron_right, color: KinnectColors.grey40),
-      onTap: () => Navigator.pushNamed(context, route),
+      onTap: () => AppNav.push(context, route),
     );
   }
 }
+
+
+
 

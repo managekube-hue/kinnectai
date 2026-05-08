@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import '../router/app_nav.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../theme/colors.dart';
 import '../models/memory.dart';
@@ -220,9 +221,7 @@ class _RepostStitchScreenState extends State<RepostStitchScreen> with SingleTick
 
   void _handleAction(Memory memory, bool isStitch) {
     if (isStitch) {
-      Navigator.pushNamed(
-        context,
-        '/rewind',
+      AppNav.push(context, '/rewind',
         arguments: {'memoryId': memory.id},
       );
     } else {
@@ -236,4 +235,8 @@ class _RepostStitchScreenState extends State<RepostStitchScreen> with SingleTick
     }
   }
 }
+
+
+
+
 

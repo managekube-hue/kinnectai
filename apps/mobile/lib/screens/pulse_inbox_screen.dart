@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import '../router/app_nav.dart';
 import '../theme/colors.dart';
 import '../models/memory.dart';
 import '../services/feed_service.dart';
@@ -251,15 +252,11 @@ class _PulseInboxScreenState extends State<PulseInboxScreen> with SingleTickerPr
     setState(() => notification.isRead = true);
 
     if (notification.memoryId != null) {
-      Navigator.pushNamed(
-        context,
-        '/comments',
+      AppNav.push(context, '/comments',
         arguments: {'memoryId': notification.memoryId},
       );
     } else if (notification.fromUserId != null) {
-      Navigator.pushNamed(
-        context,
-        '/profile',
+      AppNav.push(context, '/profile',
         arguments: {'userId': notification.fromUserId},
       );
     }
@@ -307,4 +304,8 @@ class PulseNotification {
     this.isRead = false,
   });
 }
+
+
+
+
 

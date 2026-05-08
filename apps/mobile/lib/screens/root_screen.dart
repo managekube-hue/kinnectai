@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import '../router/app_nav.dart';
 import 'package:provider/provider.dart';
 import '../services/auth_service.dart';
 
@@ -113,7 +114,7 @@ class _RootScreenState extends State<RootScreen> {
               child: ElevatedButton.icon(
                 onPressed: () {
                   authService.logout();
-                  Navigator.pushReplacementNamed(context, '/login');
+                  AppNav.go(context, '/login');
                 },
                 icon: const Icon(Icons.logout),
                 label: const Text('Logout'),
@@ -130,3 +131,6 @@ class _RootScreenState extends State<RootScreen> {
     );
   }
 }
+
+
+

@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import '../router/app_nav.dart';
 import '../theme/colors.dart';
 
 class PersonalToolsScreen extends StatelessWidget {
@@ -19,7 +20,7 @@ class PersonalToolsScreen extends StatelessWidget {
             title: const Text('Voiceprint', style: TextStyle(color: KinnectColors.white)),
             subtitle: const Text('Voice cloning for Blooms', style: TextStyle(color: KinnectColors.grey60, fontSize: 12)),
             trailing: const Icon(Icons.chevron_right, color: KinnectColors.grey40),
-            onTap: () => Navigator.pushNamed(context, '/voiceprint-capture'),
+            onTap: () => AppNav.push(context, '/voiceprint-capture'),
           ),
           ListTile(
             leading: const Icon(Icons.shield, color: KinnectColors.amber),
@@ -47,3 +48,6 @@ class PersonalToolsScreen extends StatelessWidget {
     );
   }
 }
+
+
+

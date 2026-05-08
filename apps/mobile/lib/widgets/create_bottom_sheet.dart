@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import '../router/app_nav.dart';
 import '../theme/colors.dart';
 
 class CreateBottomSheet extends StatelessWidget {
@@ -53,7 +54,7 @@ class CreateBottomSheet extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Navigator.pop(context);
-        Navigator.pushNamed(context, route);
+        AppNav.push(context, route);
       },
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -77,3 +78,6 @@ class CreateBottomSheet extends StatelessWidget {
     );
   }
 }
+
+
+

@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import '../router/app_nav.dart';
 import '../theme/colors.dart';
 
 class BranchDiscoveryScreen extends StatefulWidget {
@@ -28,7 +29,7 @@ class _BranchDiscoveryScreenState extends State<BranchDiscoveryScreen> {
         itemCount: 12,
         itemBuilder: (context, index) {
           return GestureDetector(
-            onTap: () => Navigator.pushNamed(context, '/branch/${index + 1}'),
+            onTap: () => AppNav.push(context, '/branch/${index + 1}'),
             child: Container(
               decoration: BoxDecoration(
                 color: KinnectColors.darkCard,
@@ -61,3 +62,6 @@ class _BranchDiscoveryScreenState extends State<BranchDiscoveryScreen> {
     );
   }
 }
+
+
+

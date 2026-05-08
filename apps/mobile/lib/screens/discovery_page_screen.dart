@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../theme/colors.dart';
 
 class DiscoveryPageScreen extends StatelessWidget {
@@ -19,7 +19,7 @@ class DiscoveryPageScreen extends StatelessWidget {
             CircularProgressIndicator(color: KinnectColors.amber),
             SizedBox(height: 16),
             Text(
-              'Scanning biological graph�',
+              'Scanning biological graph…',
               style: TextStyle(color: KinnectColors.white, fontSize: 18),
             ),
           ],
@@ -28,3 +28,4 @@ class DiscoveryPageScreen extends StatelessWidget {
     );
   }
 }
+

@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import '../router/app_nav.dart';
 import '../theme/design_system.dart';
 
 /// Splash screen with animated shader gradient background
@@ -24,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen>
     // Navigate to welcome after 2 seconds
     Future.delayed(const Duration(seconds: 2), () {
       if (mounted) {
-        Navigator.pushReplacementNamed(context, '/welcome');
+        AppNav.go(context, '/welcome');
       }
     });
   }
@@ -40,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen>
     return Scaffold(
       body: Stack(
         children: [
-          // Shader gradient background (neonDusk preset at 145� angle)
+          // Shader gradient background (neonDusk preset at 145° angle)
           AnimatedBuilder(
             animation: _controller,
             builder: (context, child) {
@@ -143,3 +144,6 @@ class _SplashScreenState extends State<SplashScreen>
     );
   }
 }
+
+
+

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../theme/colors.dart';
 
@@ -38,7 +38,7 @@ class KinshipAlertMapScreen extends StatelessWidget {
                 children: [
                   Text('Sarah Kim', style: TextStyle(color: KinnectColors.white, fontSize: 18, fontWeight: FontWeight.bold)),
                   SizedBox(height: 4),
-                  Text('0.4 miles away � 12.5% Kin Score', style: TextStyle(color: KinnectColors.amber)),
+                  Text('0.4 miles away • 12.5% Kin Score', style: TextStyle(color: KinnectColors.amber)),
                 ],
               ),
             ),
@@ -48,3 +48,4 @@ class KinshipAlertMapScreen extends StatelessWidget {
     );
   }
 }
+

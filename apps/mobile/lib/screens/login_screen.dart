@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import '../router/app_nav.dart';
 import 'package:provider/provider.dart';
 import '../services/auth_service.dart';
 
@@ -35,7 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
       );
       
       if (mounted) {
-        Navigator.pushReplacementNamed(context, '/home');
+        AppNav.go(context, '/home');
       }
     } catch (e) {
       if (mounted) {
@@ -137,7 +138,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 16),
                   TextButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, '/register');
+                      AppNav.push(context, '/register');
                     },
                     child: const Text('Don\'t have an account? Register'),
                   ),
@@ -150,3 +151,6 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
+
+
+

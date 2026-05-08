@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import '../router/app_nav.dart';
 import '../theme/colors.dart';
 
 class StrandListScreen extends StatefulWidget {
@@ -26,7 +27,7 @@ class _StrandListScreenState extends State<StrandListScreen> {
             subtitle: const Text('Family lineage strand'),
             leading: Icon(Icons.account_tree, color: Colors.grey[400]),
             trailing: const Icon(Icons.chevron_right),
-            onTap: () => Navigator.pushNamed(context, '/strand/${index + 1}'),
+            onTap: () => AppNav.push(context, '/strand/${index + 1}'),
           );
         },
       ),
@@ -38,3 +39,6 @@ class _StrandListScreenState extends State<StrandListScreen> {
     );
   }
 }
+
+
+

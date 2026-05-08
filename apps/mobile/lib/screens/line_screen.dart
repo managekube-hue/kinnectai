@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import '../router/app_nav.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../theme/colors.dart';
@@ -268,11 +269,11 @@ class _LineScreenContentState extends State<_LineScreenContent> {
       memoryId: memory.id,
       creatorId: memory.creatorId,
     );
-    Navigator.pushNamed(context, '/memory/${memory.id}/comments');
+    AppNav.push(context, '/memory/${memory.id}/comments');
   }
 
   void _handleRewind(Memory memory) {
-    Navigator.pushNamed(context, '/create/rewind/${memory.id}');
+    AppNav.push(context, '/create/rewind/${memory.id}');
   }
 
   void _handleSave(Memory memory) {
@@ -301,19 +302,17 @@ class _LineScreenContentState extends State<_LineScreenContent> {
 
   void _handleBranch(Memory memory) {
     if (memory.branchId != null) {
-      Navigator.pushNamed(context, '/branch/${memory.branchId}');
+      AppNav.push(context, '/branch/${memory.branchId}');
     }
   }
 
   void _handleNetwork(Memory memory) {
-    Navigator.pushNamed(
-      context,
-      '/graph-path?from=root&to=${memory.creatorId}',
+    AppNav.push(context, '/graph-path?from=root&to=${memory.creatorId}',
     );
   }
 
   void _handleCreatorTap(Memory memory) {
-    Navigator.pushNamed(context, '/root/${memory.creatorId}');
+    AppNav.push(context, '/root/${memory.creatorId}');
   }
 
   void _handleKinScoreTap(Memory memory) {
@@ -321,9 +320,7 @@ class _LineScreenContentState extends State<_LineScreenContent> {
       targetUserId: memory.creatorId,
       kinScore: memory.kinScore,
     );
-    Navigator.pushNamed(
-      context,
-      '/kin-score-detail?target=${memory.creatorId}',
+    AppNav.push(context, '/kin-score-detail?target=${memory.creatorId}',
     );
   }
 
@@ -578,7 +575,7 @@ List<Memory> _getSampleMemories() {
       creatorDisplayName: 'Elara Vance',
       videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
       caption: 'Sharing Grandma\'s secret recipe for Elderberry Wine. Found this in the 1954 Vault. #FamilyHeritage',
-      voiceprintLabel: 'Original Voiceprint � Elara Vance',
+      voiceprintLabel: 'Original Voiceprint · Elara Vance',
       pulseCount: 1200,
       commentCount: 84,
       kinScore: 0.92,
@@ -602,3 +599,7 @@ List<Memory> _getSampleMemories() {
     ),
   ];
 }
+
+
+
+

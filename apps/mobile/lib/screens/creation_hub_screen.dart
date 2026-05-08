@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import '../router/app_nav.dart';
 import '../theme/design_system.dart';
 
 class CreationHubScreen extends StatelessWidget {
@@ -147,7 +148,7 @@ class CreationHubScreen extends StatelessWidget {
                     bgColor: const Color(0xFFF1F8E9),
                     title: 'Voiceprint',
                     subtitle: 'Capture your unique vocal biometric',
-                    onTap: () => Navigator.pushNamed(context, '/voiceprint-capture'),
+                    onTap: () => AppNav.push(context, '/voiceprint-capture'),
                   ),
                   const SizedBox(height: DesignSpacing.md),
                   
@@ -374,3 +375,6 @@ class _IdentityCard extends StatelessWidget {
     );
   }
 }
+
+
+

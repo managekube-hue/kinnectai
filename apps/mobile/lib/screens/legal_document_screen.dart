@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import '../theme/colors.dart';
 import '../theme/typography.dart';
@@ -106,7 +106,7 @@ class _LegalDocumentScreenState extends State<LegalDocumentScreen> {
       ),
       child: SafeArea(
         child: Text(
-          'v1.0 � Updated 2026-01-15',
+          'v1.0 — Updated 2026-01-15',
           style: KinnectTextStyles.caption,
           textAlign: TextAlign.center,
         ),
@@ -114,3 +114,4 @@ class _LegalDocumentScreenState extends State<LegalDocumentScreen> {
     );
   }
 }
+

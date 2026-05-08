@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import '../router/app_nav.dart';
 import 'login_screen.dart';
 import 'register_screen.dart';
 
@@ -288,7 +289,7 @@ class _LandingScreenState extends State<LandingScreen> {
         const SizedBox(height: 24),
         // Email and Phone
         _buildAuthButton('Continue with Email', Icons.email, () {
-          Navigator.pushNamed(context, _isLogin ? '/login' : '/register');
+          AppNav.push(context, _isLogin ? '/login' : '/register');
         }),
         const SizedBox(height: 12),
         _buildAuthButton('Continue with Phone', Icons.phone, () {
@@ -422,3 +423,6 @@ class FamilyTreePainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
+
+
+

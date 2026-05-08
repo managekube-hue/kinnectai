@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
+import '../router/app_nav.dart';
 import '../theme/colors.dart';
 
 class AccountSettingsScreen extends StatelessWidget {
@@ -40,7 +41,7 @@ class AccountSettingsScreen extends StatelessWidget {
             title: const Text('Download your data', style: TextStyle(color: KinnectColors.white)),
             subtitle: const Text('GDPR export (ZIP)', style: TextStyle(color: KinnectColors.grey60, fontSize: 12)),
             trailing: const Icon(Icons.chevron_right, color: KinnectColors.grey40),
-            onTap: () => Navigator.pushNamed(context, '/settings/data-export'),
+            onTap: () => AppNav.push(context, '/settings/data-export'),
           ),
           const Divider(color: KinnectColors.grey20),
           ListTile(
@@ -55,3 +56,6 @@ class AccountSettingsScreen extends StatelessWidget {
     );
   }
 }
+
+
+
