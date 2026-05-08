@@ -1,8 +1,8 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../router/app_nav.dart';
 import '../theme/colors.dart';
 import '../models/memory.dart';
-import '../services/feed_service.dart';
+import '../feed_service.dart';
 
 class PulseInboxScreen extends StatefulWidget {
   const PulseInboxScreen({super.key});
@@ -76,9 +76,9 @@ class _PulseInboxScreenState extends State<PulseInboxScreen> with SingleTickerPr
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KinnectColors.darkBg,
+      backgroundColor: KinnectColors.background,
       appBar: AppBar(
-        backgroundColor: KinnectColors.darkSurface,
+        backgroundColor: KinnectColors.surface,
         title: const Text('Pulse Inbox'),
         actions: [
           IconButton(
@@ -89,7 +89,7 @@ class _PulseInboxScreenState extends State<PulseInboxScreen> with SingleTickerPr
         ],
         bottom: TabBar(
           controller: _tabController,
-          indicatorColor: KinnectColors.amber,
+          indicatorColor: KinnectColors.accent,
           tabs: const [
             Tab(text: 'All'),
             Tab(text: 'Pulses'),
@@ -98,7 +98,7 @@ class _PulseInboxScreenState extends State<PulseInboxScreen> with SingleTickerPr
         ),
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator(color: KinnectColors.amber))
+          ? const Center(child: CircularProgressIndicator(color: KinnectColors.accent))
           : TabBarView(
               controller: _tabController,
               children: [
@@ -116,16 +116,16 @@ class _PulseInboxScreenState extends State<PulseInboxScreen> with SingleTickerPr
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.favorite_border, size: 64, color: KinnectColors.grey40),
+            Icon(Icons.favorite_border, size: 64, color: KinnectColors.textMuted),
             SizedBox(height: 16),
             Text(
               'No new Pulses',
-              style: TextStyle(color: KinnectColors.white, fontSize: 18),
+              style: TextStyle(color: KinnectColors.textPrimary, fontSize: 18),
             ),
             SizedBox(height: 8),
             Text(
               'Your Pulse activity will appear here',
-              style: TextStyle(color: KinnectColors.grey60),
+              style: TextStyle(color: KinnectColors.textSecondary),
             ),
           ],
         ),
@@ -134,8 +134,8 @@ class _PulseInboxScreenState extends State<PulseInboxScreen> with SingleTickerPr
 
     return RefreshIndicator(
       onRefresh: _loadNotifications,
-      color: KinnectColors.amber,
-      backgroundColor: KinnectColors.darkSurface,
+      color: KinnectColors.accent,
+      backgroundColor: KinnectColors.surface,
       child: ListView.builder(
         itemCount: notifications.length,
         itemBuilder: (context, index) => _buildNotificationCard(notifications[index]),
@@ -151,15 +151,15 @@ class _PulseInboxScreenState extends State<PulseInboxScreen> with SingleTickerPr
         color: KinnectColors.error,
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: 16),
-        child: const Icon(Icons.delete, color: KinnectColors.white),
+        child: const Icon(Icons.delete, color: KinnectColors.textPrimary),
       ),
       child: InkWell(
         onTap: () => _handleNotificationTap(notification),
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: notification.isRead ? Colors.transparent : KinnectColors.darkSurface.withOpacity(0.5),
-            border: Border(bottom: BorderSide(color: KinnectColors.grey20, width: 1)),
+            color: notification.isRead ? Colors.transparent : KinnectColors.surface.withOpacity(0.5),
+            border: Border(bottom: BorderSide(color: KinnectColors.dividerSubtle, width: 1)),
           ),
           child: Row(
             children: [
@@ -175,7 +175,7 @@ class _PulseInboxScreenState extends State<PulseInboxScreen> with SingleTickerPr
                   children: [
                     RichText(
                       text: TextSpan(
-                        style: const TextStyle(color: KinnectColors.white, fontSize: 14),
+                        style: const TextStyle(color: KinnectColors.textPrimary, fontSize: 14),
                         children: [
                           TextSpan(
                             text: notification.fromUser,
@@ -188,7 +188,7 @@ class _PulseInboxScreenState extends State<PulseInboxScreen> with SingleTickerPr
                     const SizedBox(height: 4),
                     Text(
                       _formatTimestamp(notification.timestamp),
-                      style: const TextStyle(color: KinnectColors.grey60, fontSize: 12),
+                      style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 12),
                     ),
                   ],
                 ),
@@ -198,7 +198,7 @@ class _PulseInboxScreenState extends State<PulseInboxScreen> with SingleTickerPr
                   width: 8,
                   height: 8,
                   decoration: const BoxDecoration(
-                    color: KinnectColors.amber,
+                    color: KinnectColors.accent,
                     shape: BoxShape.circle,
                   ),
                 ),
@@ -227,7 +227,7 @@ class _PulseInboxScreenState extends State<PulseInboxScreen> with SingleTickerPr
       case PulseType.pulse:
         return KinnectColors.error;
       case PulseType.comment:
-        return KinnectColors.amber;
+        return KinnectColors.accent;
       case PulseType.kinnection:
         return KinnectColors.success;
       case PulseType.rewind:
@@ -267,7 +267,7 @@ class _PulseInboxScreenState extends State<PulseInboxScreen> with SingleTickerPr
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Notification removed'),
-        backgroundColor: KinnectColors.darkSurface,
+        backgroundColor: KinnectColors.surface,
       ),
     );
   }

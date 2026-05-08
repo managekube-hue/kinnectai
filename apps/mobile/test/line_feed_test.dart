@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kinnectai_app/models/memory.dart';
-import 'package:kinnectai_app/services/feed_service.dart';
+import 'package:kinnectai_app/feed_service.dart';
 import 'package:kinnectai_app/services/interaction_service.dart';
 import 'package:kinnectai_app/services/kernel_service.dart';
 

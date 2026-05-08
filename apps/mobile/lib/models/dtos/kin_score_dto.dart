@@ -1,5 +1,15 @@
 import 'package:equatable/equatable.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'kin_score_dto.g.dart';
+
+DateTime _dateTimeFromJson(Object? raw) {
+  if (raw == null) return DateTime.fromMillisecondsSinceEpoch(0);
+  final s = raw.toString();
+  return DateTime.tryParse(s) ?? DateTime.fromMillisecondsSinceEpoch(0);
+}
+
+@JsonSerializable()
 class KinScoreDTO extends Equatable {
   const KinScoreDTO({
     required this.userId,
@@ -10,44 +20,36 @@ class KinScoreDTO extends Equatable {
     required this.lastUpdated,
   });
 
+  @JsonKey(name: 'user_id')
   final String userId;
+
+  @JsonKey(name: 'normalized_score')
   final double score;
+
+  @JsonKey(name: 'relationship_label')
   final String relationshipLabel;
+
+  @JsonKey(name: 'primary_signal')
   final String primarySignal;
+
+  @JsonKey(name: 'confidence_percent')
   final int confidencePercent;
+
+  @JsonKey(name: 'last_updated', fromJson: _dateTimeFromJson)
   final DateTime lastUpdated;
 
-  factory KinScoreDTO.fromJson(Map<String, dynamic> json) {
-    return KinScoreDTO(
-      userId: (json['user_id'] ?? '').toString(),
-      score: (json['normalized_score'] as num?)?.toDouble() ?? 0.0,
-      relationshipLabel: (json['relationship_label'] ?? '').toString(),
-      primarySignal: (json['primary_signal'] ?? '').toString(),
-      confidencePercent: (json['confidence_percent'] as num?)?.toInt() ?? 0,
-      lastUpdated:
-          DateTime.tryParse((json['last_updated'] ?? '').toString()) ??
-          DateTime.fromMillisecondsSinceEpoch(0),
-    );
-  }
+  factory KinScoreDTO.fromJson(Map<String, dynamic> json) =>
+      _$KinScoreDTOFromJson(json);
 
-  Map<String, dynamic> toJson() {
-    return {
-      'user_id': userId,
-      'normalized_score': score,
-      'relationship_label': relationshipLabel,
-      'primary_signal': primarySignal,
-      'confidence_percent': confidencePercent,
-      'last_updated': lastUpdated.toIso8601String(),
-    };
-  }
+  Map<String, dynamic> toJson() => _$KinScoreDTOToJson(this);
 
   @override
   List<Object?> get props => [
-    userId,
-    score,
-    relationshipLabel,
-    primarySignal,
-    confidencePercent,
-    lastUpdated,
-  ];
+        userId,
+        score,
+        relationshipLabel,
+        primarySignal,
+        confidencePercent,
+        lastUpdated,
+      ];
 }

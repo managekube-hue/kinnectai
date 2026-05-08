@@ -1,41 +1,39 @@
+import 'package:flutter/material.dart';
 
-/// KinnectAI brand colors and design tokens
+/// PRD Addendum 1.0 §5 — production palette only.
 class KinnectColors {
-  // Brand Colors
-  static const amber = Color(0xFFFFB800);
-  static const amberLight = Color(0xFFFFD966);
-  static const amberDark = Color(0xFFCC9300);
-  
-  // Background Colors
-  static const darkBg = Color(0xFF121212);
-  static const darkSurface = Color(0xFF1E1E1E);
-  static const darkCard = Color(0xFF2C2C2C);
-  
-  // Text Colors
-  static const white = Color(0xFFFFFFFF);
-  static const grey90 = Color(0xE6FFFFFF); // 90% opacity
-  static const grey70 = Color(0xB3FFFFFF); // 70% opacity
-  static const grey60 = Color(0x99FFFFFF); // 60% opacity
-  static const grey40 = Color(0x66FFFFFF); // 40% opacity
-  
-  // OAuth Brand Colors
+  KinnectColors._();
+  static const primary = Color(0xFF00C2D4);
+  static const accent = Color(0xFFFF6B1A);
+  static const accentLight = Color(0xFFFF8F4D);
+  static const accentDark = Color(0xFFE55100);
+
+  static const background = Color(0xFF0D0D2B);
+  static const surface = Color(0xFF1A1A3A);
+  static const surfaceElevated = Color(0xFF252548);
+
+  static const textPrimary = Color(0xFFFFFFFF);
+  static const textSecondary = Color(0xFFB0B0D0);
+
+  static const success = Color(0xFF00D68F);
+  static const error = Color(0xFFFF4D4D);
+  static const warning = Color(0xFFFFA726);
+  static const info = Color(0xFF29B6F6);
+
+  /// Overlays and dividers derived from PRD text on navy.
+  static const textHighEmphasis = Color(0xE6FFFFFF);
+  static const textMediumEmphasis = Color(0xCCB0B0D0);
+  static const textMuted = Color(0x66B0B0D0);
+  static const dividerSubtle = Color(0x33B0B0D0);
+
   static const googleBlue = Color(0xFF4285F4);
   static const googleRed = Color(0xFFEA4335);
   static const facebookBlue = Color(0xFF1877F2);
   static const tiktokBlack = Color(0xFF000000);
   static const tiktokCyan = Color(0xFF00F2EA);
   static const tiktokPink = Color(0xFFFF0050);
-  
-  // Status Colors
-  static const success = Color(0xFF4CAF50);
-  static const error = Color(0xFFE53935);
-  static const warning = Color(0xFFFFA726);
-  static const info = Color(0xFF29B6F6);
-  
-  // Gradient Colors
-  static const gradientStart = Color(0xFF1E1E1E);
-  static const gradientEnd = Color(0xFF121212);
-  
-  // Private constructor to prevent instantiation
-  KinnectColors._();
+
+  static const gradientStart = surface;
+  static const gradientEnd = background;
 }
+

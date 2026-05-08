@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../theme/colors.dart';
 
 class DiscoveryPageScreen extends StatelessWidget {
@@ -7,20 +7,20 @@ class DiscoveryPageScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KinnectColors.darkBg,
+      backgroundColor: KinnectColors.background,
       appBar: AppBar(
-        backgroundColor: KinnectColors.darkSurface,
+        backgroundColor: KinnectColors.surface,
         title: const Text('Discover'),
       ),
       body: const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircularProgressIndicator(color: KinnectColors.amber),
+            CircularProgressIndicator(color: KinnectColors.accent),
             SizedBox(height: 16),
             Text(
               'Scanning biological graph…',
-              style: TextStyle(color: KinnectColors.white, fontSize: 18),
+              style: TextStyle(color: KinnectColors.textPrimary, fontSize: 18),
             ),
           ],
         ),

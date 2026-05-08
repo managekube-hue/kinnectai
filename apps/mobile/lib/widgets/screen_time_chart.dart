@@ -24,7 +24,7 @@ class ScreenTimeChart extends StatelessWidget {
                   if (value.toInt() >= 0 && value.toInt() < days.length) {
                     return Text(
                       days[value.toInt()],
-                      style: const TextStyle(color: KinnectColors.grey60, fontSize: 10),
+                      style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 10),
                     );
                   }
                   return const SizedBox();
@@ -45,12 +45,12 @@ class ScreenTimeChart extends StatelessWidget {
                 const FlSpot(6, 1.7),
               ],
               isCurved: true,
-              color: KinnectColors.amber,
+              color: KinnectColors.accent,
               barWidth: 3,
               dotData: const FlDotData(show: false),
               belowBarData: BarAreaData(
                 show: true,
-                color: KinnectColors.amber.withOpacity(0.2),
+                color: KinnectColors.accent.withOpacity(0.2),
               ),
             ),
           ],

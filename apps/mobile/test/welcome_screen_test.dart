@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kinnectai_app/widgets/auth_button.dart';
 import 'package:kinnectai_app/screens/welcome_screen.dart';

@@ -84,7 +84,7 @@ class _BottomOverlayState extends State<BottomOverlay> {
                       '${widget.memory.kinScorePercentage} Kin Score',
                       style: KinnectTextStyles.caption.copyWith(
                         fontWeight: FontWeight.w600,
-                        color: KinnectColors.white,
+                        color: KinnectColors.textPrimary,
                       ),
                     ),
                   ),
@@ -125,7 +125,7 @@ class _BottomOverlayState extends State<BottomOverlay> {
                     const Icon(
                       Icons.graphic_eq,
                       size: 16,
-                      color: KinnectColors.amber,
+                      color: KinnectColors.accent,
                     ),
                     const SizedBox(width: 8),
                     Text(
@@ -150,7 +150,7 @@ class _BottomOverlayState extends State<BottomOverlay> {
             Container(
               height: 3,
               decoration: BoxDecoration(
-                color: KinnectColors.grey40,
+                color: KinnectColors.textMuted,
                 borderRadius: BorderRadius.circular(2),
               ),
               child: FractionallySizedBox(
@@ -158,7 +158,7 @@ class _BottomOverlayState extends State<BottomOverlay> {
                 widthFactor: 0.3,
                 child: Container(
                   decoration: BoxDecoration(
-                    color: KinnectColors.amber,
+                    color: KinnectColors.accent,
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),

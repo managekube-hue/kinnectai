@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../router/app_nav.dart';
 import '../theme/colors.dart';
 
@@ -13,9 +13,9 @@ class _StrandListScreenState extends State<StrandListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KinnectColors.darkBg,
+      backgroundColor: KinnectColors.background,
       appBar: AppBar(
-        backgroundColor: KinnectColors.darkSurface,
+        backgroundColor: KinnectColors.surface,
         title: const Text('Strands'),
         elevation: 0,
       ),
@@ -32,7 +32,7 @@ class _StrandListScreenState extends State<StrandListScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: KinnectColors.amber,
+        backgroundColor: KinnectColors.accent,
         onPressed: () {},
         child: const Icon(Icons.add, color: Colors.black),
       ),

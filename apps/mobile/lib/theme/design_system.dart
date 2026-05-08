@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'colors.dart';
+
 /// Design system colors from JSON specification
 class DesignColors {
   // Light Theme Colors
@@ -19,31 +21,31 @@ class DesignColors {
   static const Color lightSuccess = Color(0xFF8FA185);
   static const Color lightDivider = Color(0xFFE5E1DA);
   
-  // Dark Theme Colors
-  static const Color darkPrimary = Color(0xFF8A9981);
-  static const Color darkOnPrimary = Color(0xFF000000);
-  static const Color darkSecondary = Color(0xFFB58A8A);
-  static const Color darkOnSecondary = Color(0xFF1A1C19);
-  static const Color darkAccent = Color(0xFFD1C4AC);
-  static const Color darkBackground = Color(0xFF1A1C19);
-  static const Color darkSurface = Color(0xFF242723);
-  static const Color darkOnSurface = Color(0xFFE2E5E0);
-  static const Color darkPrimaryText = Color(0xFFFAF7F2);
-  static const Color darkSecondaryText = Color(0xFFFAF7F2);
-  static const Color darkHint = Color(0xFFA8B5A0);
-  static const Color darkError = Color(0xFFD4A5A5);
-  static const Color darkOnError = Color(0xFF1A1C19);
-  static const Color darkSuccess = Color(0xFFA8B5A0);
-  static const Color darkDivider = Color(0xFF2D302C);
+  // Dark Theme — PRD Addendum 1.0 §5 (aligned with [KinnectColors])
+  static const Color darkPrimary = KinnectColors.primary;
+  static const Color darkOnPrimary = KinnectColors.background;
+  static const Color darkSecondary = KinnectColors.accent;
+  static const Color darkOnSecondary = KinnectColors.textPrimary;
+  static const Color darkAccent = KinnectColors.accent;
+  static const Color darkBackground = KinnectColors.background;
+  static const Color darkSurface = KinnectColors.surface;
+  static const Color darkOnSurface = KinnectColors.textPrimary;
+  static const Color darkPrimaryText = KinnectColors.textPrimary;
+  static const Color darkSecondaryText = KinnectColors.textSecondary;
+  static const Color darkHint = KinnectColors.textSecondary;
+  static const Color darkError = KinnectColors.error;
+  static const Color darkOnError = KinnectColors.textPrimary;
+  static const Color darkSuccess = KinnectColors.success;
+  static const Color darkDivider = KinnectColors.dividerSubtle;
   
   // Transparent
   static const Color transparent = Color(0x00000000);
   
-  // Shadow colors
-  static const Color shadowSm = Color(0x26A8B5A0);
-  static const Color shadowMd = Color(0x33A8B5A0);
-  static const Color shadowLg = Color(0x40A8B5A0);
-  static const Color shadowXl = Color(0x4DA8B5A0);
+  // Shadow colors (tinted with brand primary)
+  static const Color shadowSm = Color(0x2600C2D4);
+  static const Color shadowMd = Color(0x3300C2D4);
+  static const Color shadowLg = Color(0x4000C2D4);
+  static const Color shadowXl = Color(0x4D00C2D4);
 }
 
 /// Design system spacing values

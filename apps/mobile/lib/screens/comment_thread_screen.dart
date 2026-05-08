@@ -58,12 +58,12 @@ class _CommentThreadScreenState extends State<CommentThreadScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KinnectColors.darkBg,
+      backgroundColor: KinnectColors.background,
       appBar: AppBar(
-        backgroundColor: KinnectColors.darkSurface,
+        backgroundColor: KinnectColors.surface,
         title: Text('Comments', style: KinnectTextStyles.headlineSmall),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: KinnectColors.white),
+          icon: const Icon(Icons.arrow_back, color: KinnectColors.textPrimary),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -73,7 +73,7 @@ class _CommentThreadScreenState extends State<CommentThreadScreen> {
             child: _isLoading
                 ? const Center(
                     child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation(KinnectColors.amber),
+                      valueColor: AlwaysStoppedAnimation(KinnectColors.accent),
                     ),
                   )
                 : _comments.isEmpty
@@ -81,7 +81,7 @@ class _CommentThreadScreenState extends State<CommentThreadScreen> {
                         child: Text(
                           'No comments yet',
                           style: KinnectTextStyles.bodyMedium.copyWith(
-                            color: KinnectColors.grey60,
+                            color: KinnectColors.textSecondary,
                           ),
                         ),
                       )
@@ -118,11 +118,11 @@ class _CommentCard extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 20,
-            backgroundColor: KinnectColors.darkSurface,
+            backgroundColor: KinnectColors.surface,
             child: Text(
               comment.authorUsername[0].toUpperCase(),
               style: KinnectTextStyles.bodyLarge.copyWith(
-                color: KinnectColors.amber,
+                color: KinnectColors.accent,
               ),
             ),
           ),
@@ -192,9 +192,9 @@ class _CommentInput extends StatelessWidget {
         bottom: MediaQuery.of(context).padding.bottom + KinnectSpacing.sm,
       ),
       decoration: const BoxDecoration(
-        color: KinnectColors.darkSurface,
+        color: KinnectColors.surface,
         border: Border(
-          top: BorderSide(color: KinnectColors.grey40, width: 1),
+          top: BorderSide(color: KinnectColors.textMuted, width: 1),
         ),
       ),
       child: Row(
@@ -206,10 +206,10 @@ class _CommentInput extends StatelessWidget {
               decoration: InputDecoration(
                 hintText: 'Add a comment...',
                 hintStyle: KinnectTextStyles.bodyMedium.copyWith(
-                  color: KinnectColors.grey60,
+                  color: KinnectColors.textSecondary,
                 ),
                 filled: true,
-                fillColor: KinnectColors.darkBg,
+                fillColor: KinnectColors.background,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(KinnectSpacing.radiusLarge),
                   borderSide: BorderSide.none,
@@ -223,7 +223,7 @@ class _CommentInput extends StatelessWidget {
           ),
           const SizedBox(width: KinnectSpacing.sm),
           IconButton(
-            icon: const Icon(Icons.send, color: KinnectColors.amber),
+            icon: const Icon(Icons.send, color: KinnectColors.accent),
             onPressed: onSend,
           ),
         ],

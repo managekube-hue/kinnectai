@@ -1,0 +1,8 @@
+targets:
+  $default:
+    builders:
+      drift_dev|drift_dev:
+        enabled: false
+      json_serializable|json_serializable:
+        generate_for:
+          - lib/models/dtos/kin_score_dto.dart

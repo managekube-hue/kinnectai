@@ -8,9 +8,9 @@ class StewardAgreementScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KinnectColors.darkBg,
+      backgroundColor: KinnectColors.background,
       appBar: AppBar(
-        backgroundColor: KinnectColors.darkSurface,
+        backgroundColor: KinnectColors.surface,
         title: const Text('Steward Agreement'),
       ),
       body: Column(
@@ -24,21 +24,21 @@ class StewardAgreementScreen extends StatelessWidget {
           ),
           Container(
             padding: const EdgeInsets.all(16),
-            color: KinnectColors.darkSurface,
+            color: KinnectColors.surface,
             child: Column(
               children: [
                 ElevatedButton(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: KinnectColors.amber,
+                    backgroundColor: KinnectColors.accent,
                     minimumSize: const Size(double.infinity, 56),
                   ),
-                  child: const Text('I Accept', style: TextStyle(color: KinnectColors.darkBg, fontSize: 16)),
+                  child: const Text('I Accept', style: TextStyle(color: KinnectColors.background, fontSize: 16)),
                 ),
                 const SizedBox(height: 8),
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text('Decline', style: TextStyle(color: KinnectColors.grey60)),
+                  child: const Text('Decline', style: TextStyle(color: KinnectColors.textSecondary)),
                 ),
               ],
             ),

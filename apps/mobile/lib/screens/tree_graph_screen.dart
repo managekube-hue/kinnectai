@@ -50,9 +50,9 @@ class _TreeGraphScreenState extends State<TreeGraphScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KinnectColors.darkBg,
+      backgroundColor: KinnectColors.background,
       appBar: AppBar(
-        backgroundColor: KinnectColors.darkSurface,
+        backgroundColor: KinnectColors.surface,
         title: const Text('Family Tree'),
         actions: [
           IconButton(
@@ -74,14 +74,14 @@ class _TreeGraphScreenState extends State<TreeGraphScreen> {
         ],
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator(color: KinnectColors.amber))
+          ? const Center(child: CircularProgressIndicator(color: KinnectColors.accent))
           : _nodes.isEmpty
               ? _buildEmptyState()
               : _buildTreeView(),
       floatingActionButton: FloatingActionButton(
         onPressed: _showAddFamilyDialog,
-        backgroundColor: KinnectColors.amber,
-        child: const Icon(Icons.person_add, color: KinnectColors.darkBg),
+        backgroundColor: KinnectColors.accent,
+        child: const Icon(Icons.person_add, color: KinnectColors.background),
       ),
     );
   }
@@ -91,16 +91,16 @@ class _TreeGraphScreenState extends State<TreeGraphScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.account_tree, size: 80, color: KinnectColors.grey40),
+          const Icon(Icons.account_tree, size: 80, color: KinnectColors.textMuted),
           const SizedBox(height: 24),
           const Text(
             'Build your Tree',
-            style: TextStyle(color: KinnectColors.white, fontSize: 24, fontWeight: FontWeight.bold),
+            style: TextStyle(color: KinnectColors.textPrimary, fontSize: 24, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           const Text(
             'Import GEDCOM or add family manually',
-            style: TextStyle(color: KinnectColors.grey60, fontSize: 16),
+            style: TextStyle(color: KinnectColors.textSecondary, fontSize: 16),
           ),
           const SizedBox(height: 32),
           ElevatedButton.icon(
@@ -108,8 +108,8 @@ class _TreeGraphScreenState extends State<TreeGraphScreen> {
             icon: const Icon(Icons.upload_file),
             label: const Text('Import GEDCOM'),
             style: ElevatedButton.styleFrom(
-              backgroundColor: KinnectColors.amber,
-              foregroundColor: KinnectColors.darkBg,
+              backgroundColor: KinnectColors.accent,
+              foregroundColor: KinnectColors.background,
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
             ),
           ),
@@ -119,8 +119,8 @@ class _TreeGraphScreenState extends State<TreeGraphScreen> {
             icon: const Icon(Icons.person_add),
             label: const Text('Add Family Member'),
             style: OutlinedButton.styleFrom(
-              foregroundColor: KinnectColors.amber,
-              side: const BorderSide(color: KinnectColors.amber),
+              foregroundColor: KinnectColors.accent,
+              side: const BorderSide(color: KinnectColors.accent),
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
             ),
           ),
@@ -166,22 +166,22 @@ class _TreeGraphScreenState extends State<TreeGraphScreen> {
               width: 80,
               height: 80,
               decoration: BoxDecoration(
-                color: KinnectColors.darkSurface,
+                color: KinnectColors.surface,
                 shape: BoxShape.circle,
-                border: Border.all(color: KinnectColors.amber, width: 2),
+                border: Border.all(color: KinnectColors.accent, width: 2),
               ),
-              child: const Icon(Icons.person, color: KinnectColors.amber, size: 40),
+              child: const Icon(Icons.person, color: KinnectColors.accent, size: 40),
             ),
             const SizedBox(height: 8),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: KinnectColors.darkSurface,
+                color: KinnectColors.surface,
                 borderRadius: BorderRadius.circular(4),
               ),
               child: Text(
                 node.name,
-                style: const TextStyle(color: KinnectColors.white, fontSize: 12),
+                style: const TextStyle(color: KinnectColors.textPrimary, fontSize: 12),
               ),
             ),
           ],
@@ -193,29 +193,29 @@ class _TreeGraphScreenState extends State<TreeGraphScreen> {
   void _showNodeDetails(TreeNode node) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: KinnectColors.darkSurface,
+      backgroundColor: KinnectColors.surface,
       builder: (context) => Container(
         padding: const EdgeInsets.all(24),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.person, size: 64, color: KinnectColors.amber),
+            const Icon(Icons.person, size: 64, color: KinnectColors.accent),
             const SizedBox(height: 16),
             Text(
               node.name,
-              style: const TextStyle(color: KinnectColors.white, fontSize: 24, fontWeight: FontWeight.bold),
+              style: const TextStyle(color: KinnectColors.textPrimary, fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Text(
               'Generation: ${node.generation}',
-              style: const TextStyle(color: KinnectColors.grey60, fontSize: 16),
+              style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 16),
             ),
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: () => Navigator.pop(context),
               style: ElevatedButton.styleFrom(
-                backgroundColor: KinnectColors.amber,
-                foregroundColor: KinnectColors.darkBg,
+                backgroundColor: KinnectColors.accent,
+                foregroundColor: KinnectColors.background,
               ),
               child: const Text('View Profile'),
             ),
@@ -229,21 +229,21 @@ class _TreeGraphScreenState extends State<TreeGraphScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: KinnectColors.darkSurface,
-        title: const Text('Add Family Member', style: TextStyle(color: KinnectColors.white)),
+        backgroundColor: KinnectColors.surface,
+        title: const Text('Add Family Member', style: TextStyle(color: KinnectColors.textPrimary)),
         content: const Text(
           'This feature will allow you to add family members manually',
-          style: TextStyle(color: KinnectColors.grey60),
+          style: TextStyle(color: KinnectColors.textSecondary),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel', style: TextStyle(color: KinnectColors.grey60)),
+            child: const Text('Cancel', style: TextStyle(color: KinnectColors.textSecondary)),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context),
-            style: ElevatedButton.styleFrom(backgroundColor: KinnectColors.amber),
-            child: const Text('Add', style: TextStyle(color: KinnectColors.darkBg)),
+            style: ElevatedButton.styleFrom(backgroundColor: KinnectColors.accent),
+            child: const Text('Add', style: TextStyle(color: KinnectColors.background)),
           ),
         ],
       ),
@@ -298,7 +298,7 @@ class TreePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = KinnectColors.grey40
+      ..color = KinnectColors.textMuted
       ..strokeWidth = 2.0
       ..style = PaintingStyle.stroke;
 

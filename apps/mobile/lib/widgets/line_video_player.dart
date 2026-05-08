@@ -79,9 +79,9 @@ class _LineVideoPlayerState extends State<LineVideoPlayer> {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  KinnectColors.darkBg,
-                  KinnectColors.darkSurface,
-                  KinnectColors.darkBg,
+                  KinnectColors.background,
+                  KinnectColors.surface,
+                  KinnectColors.background,
                 ],
               ),
             ),
@@ -92,21 +92,21 @@ class _LineVideoPlayerState extends State<LineVideoPlayer> {
                   Icon(
                     Icons.play_circle_outline,
                     size: 80,
-                    color: KinnectColors.amber.withOpacity(0.5),
+                    color: KinnectColors.accent.withOpacity(0.5),
                   ),
                   const SizedBox(height: 16),
                   Text(
                     'Video Player',
                     style: TextStyle(
-                      color: KinnectColors.grey60,
+                      color: KinnectColors.textSecondary,
                       fontSize: 16,
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Tap to pause • Double tap to pulse',
+                    'Tap to pause ï¿½ Double tap to pulse',
                     style: TextStyle(
-                      color: KinnectColors.grey40,
+                      color: KinnectColors.textMuted,
                       fontSize: 12,
                     ),
                   ),

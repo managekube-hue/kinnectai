@@ -62,7 +62,7 @@ class PixelatedTreePainter extends CustomPainter {
       end: Alignment.bottomCenter,
       colors: [
         KinnectColors.gradientStart,
-        KinnectColors.darkBg,
+        KinnectColors.background,
         KinnectColors.gradientEnd,
       ],
     );
@@ -117,7 +117,7 @@ class PixelatedTreePainter extends CustomPainter {
           // Vary size slightly for organic feel
           final pixelSize = cellSize * (0.8 + random.nextDouble() * 0.4);
           
-          paint.color = KinnectColors.white.withOpacity(opacity);
+          paint.color = KinnectColors.textPrimary.withOpacity(opacity);
           
           canvas.drawRect(
             Rect.fromLTWH(
@@ -150,7 +150,7 @@ class PixelatedTreePainter extends CustomPainter {
       final y = centerY + math.sin(angle) * distance;
       final size = 40 + random.nextDouble() * 60;
       
-      paint.color = KinnectColors.amber.withOpacity(0.1 + random.nextDouble() * 0.1);
+      paint.color = KinnectColors.accent.withOpacity(0.1 + random.nextDouble() * 0.1);
       
       canvas.drawCircle(
         Offset(x, y),

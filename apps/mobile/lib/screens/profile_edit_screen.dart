@@ -12,9 +12,9 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KinnectColors.darkBg,
+      backgroundColor: KinnectColors.background,
       appBar: AppBar(
-        backgroundColor: KinnectColors.darkSurface,
+        backgroundColor: KinnectColors.surface,
         title: const Text('Edit Profile'),
         elevation: 0,
       ),
@@ -31,7 +31,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                   height: 120,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: KinnectColors.darkCard,
+                    color: KinnectColors.surfaceElevated,
                   ),
                   child: const Icon(Icons.person, size: 60),
                 ),
@@ -52,7 +52,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                 decoration: InputDecoration(
                   labelText: 'Full Name',
                   filled: true,
-                  fillColor: KinnectColors.darkCard,
+                  fillColor: KinnectColors.surfaceElevated,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -66,7 +66,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                 decoration: InputDecoration(
                   labelText: 'Bio',
                   filled: true,
-                  fillColor: KinnectColors.darkCard,
+                  fillColor: KinnectColors.surfaceElevated,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -79,7 +79,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                 decoration: InputDecoration(
                   labelText: 'Location',
                   filled: true,
-                  fillColor: KinnectColors.darkCard,
+                  fillColor: KinnectColors.surfaceElevated,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),

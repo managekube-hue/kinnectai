@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import '../theme/colors.dart';
 import '../theme/typography.dart';
@@ -39,7 +39,7 @@ class _LegalDocumentScreenState extends State<LegalDocumentScreen> {
 
     _controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setBackgroundColor(KinnectColors.darkBg)
+      ..setBackgroundColor(KinnectColors.background)
       ..setNavigationDelegate(
         NavigationDelegate(
           onPageStarted: (String url) {
@@ -59,12 +59,12 @@ class _LegalDocumentScreenState extends State<LegalDocumentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KinnectColors.darkBg,
+      backgroundColor: KinnectColors.background,
       appBar: AppBar(
-        backgroundColor: KinnectColors.darkSurface,
+        backgroundColor: KinnectColors.surface,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: KinnectColors.white),
+          icon: const Icon(Icons.arrow_back, color: KinnectColors.textPrimary),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
@@ -79,10 +79,10 @@ class _LegalDocumentScreenState extends State<LegalDocumentScreen> {
           
           if (_isLoading)
             Container(
-              color: KinnectColors.darkBg,
+              color: KinnectColors.background,
               child: const Center(
                 child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(KinnectColors.amber),
+                  valueColor: AlwaysStoppedAnimation<Color>(KinnectColors.accent),
                 ),
               ),
             ),
@@ -96,10 +96,10 @@ class _LegalDocumentScreenState extends State<LegalDocumentScreen> {
     return Container(
       padding: const EdgeInsets.all(KinnectSpacing.md),
       decoration: const BoxDecoration(
-        color: KinnectColors.darkSurface,
+        color: KinnectColors.surface,
         border: Border(
           top: BorderSide(
-            color: KinnectColors.grey40,
+            color: KinnectColors.textMuted,
             width: 1,
           ),
         ),

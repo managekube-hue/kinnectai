@@ -44,7 +44,7 @@ class _CommentComposerSheetState extends State<CommentComposerSheet> {
         bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
       decoration: const BoxDecoration(
-        color: KinnectColors.darkSurface,
+        color: KinnectColors.surface,
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
@@ -57,14 +57,14 @@ class _CommentComposerSheetState extends State<CommentComposerSheet> {
                 Text(
                   widget.replyToCommentId != null ? 'Reply' : 'Add Comment',
                   style: const TextStyle(
-                    color: KinnectColors.white,
+                    color: KinnectColors.textPrimary,
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const Spacer(),
                 IconButton(
-                  icon: const Icon(Icons.close, color: KinnectColors.grey60),
+                  icon: const Icon(Icons.close, color: KinnectColors.textSecondary),
                   onPressed: () => Navigator.pop(context),
                 ),
               ],
@@ -75,12 +75,12 @@ class _CommentComposerSheetState extends State<CommentComposerSheet> {
             child: TextField(
               controller: _controller,
               focusNode: _focusNode,
-              style: const TextStyle(color: KinnectColors.white),
+              style: const TextStyle(color: KinnectColors.textPrimary),
               maxLines: 4,
               maxLength: 500,
               decoration: const InputDecoration(
                 hintText: 'Write your comment...',
-                hintStyle: TextStyle(color: KinnectColors.grey60),
+                hintStyle: TextStyle(color: KinnectColors.textSecondary),
                 border: InputBorder.none,
               ),
               onChanged: (_) => setState(() {}),
@@ -95,7 +95,7 @@ class _CommentComposerSheetState extends State<CommentComposerSheet> {
                   style: TextStyle(
                     color: _controller.text.length > 450
                         ? KinnectColors.error
-                        : KinnectColors.grey60,
+                        : KinnectColors.textSecondary,
                     fontSize: 12,
                   ),
                 ),
@@ -105,8 +105,8 @@ class _CommentComposerSheetState extends State<CommentComposerSheet> {
                       ? null
                       : _submitComment,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: KinnectColors.amber,
-                    disabledBackgroundColor: KinnectColors.grey40,
+                    backgroundColor: KinnectColors.accent,
+                    disabledBackgroundColor: KinnectColors.textMuted,
                   ),
                   child: _isSubmitting
                       ? const SizedBox(
@@ -114,12 +114,12 @@ class _CommentComposerSheetState extends State<CommentComposerSheet> {
                           height: 20,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            color: KinnectColors.darkBg,
+                            color: KinnectColors.background,
                           ),
                         )
                       : const Text(
                           'Post',
-                          style: TextStyle(color: KinnectColors.darkBg),
+                          style: TextStyle(color: KinnectColors.background),
                         ),
                 ),
               ],

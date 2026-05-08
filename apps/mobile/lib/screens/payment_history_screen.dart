@@ -12,9 +12,9 @@ class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KinnectColors.darkBg,
+      backgroundColor: KinnectColors.background,
       appBar: AppBar(
-        backgroundColor: KinnectColors.darkSurface,
+        backgroundColor: KinnectColors.surface,
         title: const Text('Payment History'),
         elevation: 0,
       ),
@@ -30,12 +30,12 @@ class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
               height: 40,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: KinnectColors.darkCard,
+                color: KinnectColors.surfaceElevated,
               ),
               child: const Icon(Icons.receipt, size: 20),
             ),
             tileColor: index.isEven
-                ? KinnectColors.darkCard.withOpacity(0.3)
+                ? KinnectColors.surfaceElevated.withOpacity(0.3)
                 : null,
           );
         },

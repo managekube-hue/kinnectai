@@ -64,8 +64,8 @@ class SparklePainter extends CustomPainter {
     final bgPaint = Paint()
       ..shader = RadialGradient(
         colors: [
-          KinnectColors.amber.withOpacity(0.3),
-          KinnectColors.amber.withOpacity(0.1),
+          KinnectColors.accent.withOpacity(0.3),
+          KinnectColors.accent.withOpacity(0.1),
           Colors.transparent,
         ],
         stops: const [0.0, 0.6, 1.0],
@@ -81,7 +81,7 @@ class SparklePainter extends CustomPainter {
 
   void _drawStar(Canvas canvas, Offset center, double size, double rotation, double opacity) {
     final paint = Paint()
-      ..color = KinnectColors.amber.withOpacity(opacity)
+      ..color = KinnectColors.accent.withOpacity(opacity)
       ..style = PaintingStyle.fill
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3);
     
@@ -108,7 +108,7 @@ class SparklePainter extends CustomPainter {
     
     // Draw inner glow
     final glowPaint = Paint()
-      ..color = KinnectColors.white.withOpacity(opacity * 0.8)
+      ..color = KinnectColors.textPrimary.withOpacity(opacity * 0.8)
       ..style = PaintingStyle.fill
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2);
     

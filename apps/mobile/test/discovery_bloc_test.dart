@@ -4,7 +4,7 @@ import 'package:kinnectai_app/models/dtos/discovery_candidate_dto.dart';
 import 'package:kinnectai_app/models/dtos/paginated_response.dart';
 import 'package:kinnectai_app/repositories/feed_repository.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 class _MockFeedRepository extends Mock implements FeedRepository {}
 

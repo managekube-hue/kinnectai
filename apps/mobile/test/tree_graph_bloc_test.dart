@@ -3,7 +3,7 @@ import 'package:kinnectai_app/blocs/tree_graph/tree_graph_bloc.dart';
 import 'package:kinnectai_app/models/dtos/graph_response_dto.dart';
 import 'package:kinnectai_app/repositories/tree_graph_repository.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 class _MockTreeGraphRepository extends Mock implements TreeGraphRepository {}
 

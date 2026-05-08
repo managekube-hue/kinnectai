@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../router/app_nav.dart';
 import '../theme/colors.dart';
 
@@ -15,21 +15,21 @@ class _BranchDetailScreenState extends State<BranchDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KinnectColors.darkBg,
+      backgroundColor: KinnectColors.background,
       appBar: AppBar(
-        backgroundColor: KinnectColors.darkSurface,
+        backgroundColor: KinnectColors.surface,
         title: Text('Branch ${widget.branchId}'),
         elevation: 0,
       ),
       body: ListView(
         children: [
           Container(
-            color: KinnectColors.darkCard,
+            color: KinnectColors.surfaceElevated,
             padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(Icons.account_tree, size: 48, color: KinnectColors.amber),
+                Icon(Icons.account_tree, size: 48, color: KinnectColors.accent),
                 const SizedBox(height: 16),
                 Text(
                   'Branch Title',

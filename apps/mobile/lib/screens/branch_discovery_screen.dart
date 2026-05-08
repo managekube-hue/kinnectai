@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../router/app_nav.dart';
 import '../theme/colors.dart';
 
@@ -13,9 +13,9 @@ class _BranchDiscoveryScreenState extends State<BranchDiscoveryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KinnectColors.darkBg,
+      backgroundColor: KinnectColors.background,
       appBar: AppBar(
-        backgroundColor: KinnectColors.darkSurface,
+        backgroundColor: KinnectColors.surface,
         title: const Text('Discover Branches'),
         elevation: 0,
       ),
@@ -32,7 +32,7 @@ class _BranchDiscoveryScreenState extends State<BranchDiscoveryScreen> {
             onTap: () => AppNav.push(context, '/branch/${index + 1}'),
             child: Container(
               decoration: BoxDecoration(
-                color: KinnectColors.darkCard,
+                color: KinnectColors.surfaceElevated,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Column(
@@ -41,7 +41,7 @@ class _BranchDiscoveryScreenState extends State<BranchDiscoveryScreen> {
                   Icon(
                     Icons.account_tree,
                     size: 48,
-                    color: KinnectColors.amber,
+                    color: KinnectColors.accent,
                   ),
                   const SizedBox(height: 12),
                   Text(

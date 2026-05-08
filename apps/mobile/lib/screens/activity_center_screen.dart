@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../router/app_nav.dart';
 import '../theme/colors.dart';
 
@@ -27,13 +27,13 @@ class _ActivityCenterScreenState extends State<ActivityCenterScreen> with Single
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KinnectColors.darkBg,
+      backgroundColor: KinnectColors.background,
       appBar: AppBar(
-        backgroundColor: KinnectColors.darkSurface,
+        backgroundColor: KinnectColors.surface,
         title: const Text('Activity Center'),
         bottom: TabBar(
           controller: _tabController,
-          indicatorColor: KinnectColors.amber,
+          indicatorColor: KinnectColors.accent,
           tabs: const [
             Tab(text: 'History'),
             Tab(text: 'Time & Engagement'),
@@ -90,22 +90,22 @@ class _ActivityCenterScreenState extends State<ActivityCenterScreen> with Single
 
   Widget _buildListItem(String title, String subtitle, IconData icon, bool showClear, VoidCallback onTap) {
     return ListTile(
-      leading: Icon(icon, color: KinnectColors.amber),
-      title: Text(title, style: const TextStyle(color: KinnectColors.white)),
-      subtitle: Text(subtitle, style: const TextStyle(color: KinnectColors.grey60, fontSize: 12)),
+      leading: Icon(icon, color: KinnectColors.accent),
+      title: Text(title, style: const TextStyle(color: KinnectColors.textPrimary)),
+      subtitle: Text(subtitle, style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
       trailing: showClear
           ? TextButton(
               onPressed: () {
                 showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
-                    backgroundColor: KinnectColors.darkSurface,
-                    title: const Text('Clear history?', style: TextStyle(color: KinnectColors.white)),
-                    content: Text('This will clear your $title', style: const TextStyle(color: KinnectColors.grey60)),
+                    backgroundColor: KinnectColors.surface,
+                    title: const Text('Clear history?', style: TextStyle(color: KinnectColors.textPrimary)),
+                    content: Text('This will clear your $title', style: const TextStyle(color: KinnectColors.textSecondary)),
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.pop(context),
-                        child: const Text('Cancel', style: TextStyle(color: KinnectColors.grey60)),
+                        child: const Text('Cancel', style: TextStyle(color: KinnectColors.textSecondary)),
                       ),
                       ElevatedButton(
                         onPressed: () => Navigator.pop(context),
@@ -118,7 +118,7 @@ class _ActivityCenterScreenState extends State<ActivityCenterScreen> with Single
               },
               child: const Text('Clear', style: TextStyle(color: KinnectColors.error)),
             )
-          : const Icon(Icons.chevron_right, color: KinnectColors.grey40),
+          : const Icon(Icons.chevron_right, color: KinnectColors.textMuted),
       onTap: onTap,
     );
   }

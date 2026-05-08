@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../router/app_nav.dart';
 import '../theme/colors.dart';
 
@@ -10,7 +10,7 @@ class CreateBottomSheet extends StatelessWidget {
     return Container(
       height: MediaQuery.of(context).size.height * 0.6,
       decoration: const BoxDecoration(
-        color: KinnectColors.darkSurface,
+        color: KinnectColors.surface,
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       padding: const EdgeInsets.all(24),
@@ -20,14 +20,14 @@ class CreateBottomSheet extends StatelessWidget {
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: KinnectColors.grey40,
+              color: KinnectColors.textMuted,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
           const SizedBox(height: 24),
           const Text(
             'Create',
-            style: TextStyle(color: KinnectColors.white, fontSize: 24, fontWeight: FontWeight.bold),
+            style: TextStyle(color: KinnectColors.textPrimary, fontSize: 24, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 24),
           Expanded(
@@ -63,15 +63,15 @@ class CreateBottomSheet extends StatelessWidget {
             width: 64,
             height: 64,
             decoration: BoxDecoration(
-              color: KinnectColors.darkBg,
+              color: KinnectColors.background,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(icon, color: KinnectColors.amber, size: 32),
+            child: Icon(icon, color: KinnectColors.accent, size: 32),
           ),
           const SizedBox(height: 8),
           Text(
             label,
-            style: const TextStyle(color: KinnectColors.white, fontSize: 12),
+            style: const TextStyle(color: KinnectColors.textPrimary, fontSize: 12),
           ),
         ],
       ),

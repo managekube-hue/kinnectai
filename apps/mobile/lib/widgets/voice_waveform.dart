@@ -62,7 +62,7 @@ class _VoiceWaveformState extends State<VoiceWaveform>
       child: CustomPaint(
         painter: WaveformPainter(
           amplitudes: _amplitudes,
-          color: widget.isRecording ? KinnectColors.amber : KinnectColors.grey40,
+          color: widget.isRecording ? KinnectColors.accent : KinnectColors.textMuted,
         ),
         size: Size.infinite,
       ),

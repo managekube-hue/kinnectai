@@ -42,19 +42,19 @@ class _KinScoreDetailScreenState extends State<KinScoreDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KinnectColors.darkBg,
+      backgroundColor: KinnectColors.background,
       appBar: AppBar(
-        backgroundColor: KinnectColors.darkSurface,
+        backgroundColor: KinnectColors.surface,
         title: Text('Kin Score', style: KinnectTextStyles.headlineSmall),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: KinnectColors.white),
+          icon: const Icon(Icons.arrow_back, color: KinnectColors.textPrimary),
           onPressed: () => Navigator.pop(context),
         ),
       ),
       body: _isLoading
           ? const Center(
               child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation(KinnectColors.amber),
+                valueColor: AlwaysStoppedAnimation(KinnectColors.accent),
               ),
             )
           : _breakdown == null
@@ -143,7 +143,7 @@ class _ScoreCircle extends StatelessWidget {
             Text(
               'Kin Score',
               style: KinnectTextStyles.bodyLarge.copyWith(
-                color: KinnectColors.grey70,
+                color: KinnectColors.textMediumEmphasis,
               ),
             ),
           ],
@@ -169,7 +169,7 @@ class _InfoCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(KinnectSpacing.md),
       decoration: BoxDecoration(
-        color: KinnectColors.darkSurface,
+        color: KinnectColors.surface,
         borderRadius: BorderRadius.circular(KinnectSpacing.radiusMedium),
       ),
       child: Row(
@@ -177,10 +177,10 @@ class _InfoCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: KinnectColors.amber.withOpacity(0.2),
+              color: KinnectColors.accent.withOpacity(0.2),
               borderRadius: BorderRadius.circular(KinnectSpacing.radiusSmall),
             ),
-            child: Icon(icon, color: KinnectColors.amber),
+            child: Icon(icon, color: KinnectColors.accent),
           ),
           const SizedBox(width: KinnectSpacing.md),
           Expanded(
@@ -190,7 +190,7 @@ class _InfoCard extends StatelessWidget {
                 Text(
                   title,
                   style: KinnectTextStyles.caption.copyWith(
-                    color: KinnectColors.grey60,
+                    color: KinnectColors.textSecondary,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -229,18 +229,18 @@ class _ConnectionPath extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(KinnectSpacing.md),
                 decoration: BoxDecoration(
-                  color: KinnectColors.darkSurface,
+                  color: KinnectColors.surface,
                   borderRadius: BorderRadius.circular(KinnectSpacing.radiusMedium),
                 ),
                 child: Row(
                   children: [
                     CircleAvatar(
                       radius: 16,
-                      backgroundColor: KinnectColors.amber.withOpacity(0.2),
+                      backgroundColor: KinnectColors.accent.withOpacity(0.2),
                       child: Text(
                         path[index][0].toUpperCase(),
                         style: KinnectTextStyles.bodyMedium.copyWith(
-                          color: KinnectColors.amber,
+                          color: KinnectColors.accent,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -258,7 +258,7 @@ class _ConnectionPath extends StatelessWidget {
                   padding: EdgeInsets.symmetric(vertical: 8),
                   child: Icon(
                     Icons.arrow_downward,
-                    color: KinnectColors.amber,
+                    color: KinnectColors.accent,
                     size: 20,
                   ),
                 ),

@@ -3,7 +3,7 @@ import 'package:kinnectai_app/cubits/memory_box_cubit.dart';
 import 'package:kinnectai_app/models/dtos/memory_box_item_dto.dart';
 import 'package:kinnectai_app/repositories/memory_box_repository.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 class _MockMemoryBoxRepository extends Mock implements MemoryBoxRepository {}
 

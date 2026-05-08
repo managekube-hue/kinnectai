@@ -88,25 +88,25 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KinnectColors.darkBg,
+      backgroundColor: KinnectColors.background,
       appBar: AppBar(
-        backgroundColor: KinnectColors.darkSurface,
+        backgroundColor: KinnectColors.surface,
         title: const Text('Help Center'),
       ),
       body: Column(
         children: [
           Container(
             padding: const EdgeInsets.all(16),
-            color: KinnectColors.darkSurface,
+            color: KinnectColors.surface,
             child: TextField(
               controller: _searchController,
-              style: const TextStyle(color: KinnectColors.white),
+              style: const TextStyle(color: KinnectColors.textPrimary),
               decoration: InputDecoration(
                 hintText: 'Search help articles',
-                hintStyle: const TextStyle(color: KinnectColors.grey60),
-                prefixIcon: const Icon(Icons.search, color: KinnectColors.grey60),
+                hintStyle: const TextStyle(color: KinnectColors.textSecondary),
+                prefixIcon: const Icon(Icons.search, color: KinnectColors.textSecondary),
                 filled: true,
-                fillColor: KinnectColors.darkBg,
+                fillColor: KinnectColors.background,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide.none,
@@ -132,20 +132,20 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
 
   Widget _buildTopicCard(HelpTopic topic) {
     return Card(
-      color: KinnectColors.darkSurface,
+      color: KinnectColors.surface,
       margin: const EdgeInsets.only(bottom: 16),
       child: ExpansionTile(
-        leading: Icon(topic.icon, color: KinnectColors.amber),
+        leading: Icon(topic.icon, color: KinnectColors.accent),
         title: Text(
           topic.category,
-          style: const TextStyle(color: KinnectColors.white, fontWeight: FontWeight.bold),
+          style: const TextStyle(color: KinnectColors.textPrimary, fontWeight: FontWeight.bold),
         ),
-        iconColor: KinnectColors.amber,
-        collapsedIconColor: KinnectColors.grey60,
+        iconColor: KinnectColors.accent,
+        collapsedIconColor: KinnectColors.textSecondary,
         children: topic.articles.map((article) => ListTile(
-          title: Text(article.title, style: const TextStyle(color: KinnectColors.white, fontSize: 14)),
-          subtitle: Text(article.subtitle, style: const TextStyle(color: KinnectColors.grey60, fontSize: 12)),
-          trailing: const Icon(Icons.chevron_right, color: KinnectColors.grey40, size: 20),
+          title: Text(article.title, style: const TextStyle(color: KinnectColors.textPrimary, fontSize: 14)),
+          subtitle: Text(article.subtitle, style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
+          trailing: const Icon(Icons.chevron_right, color: KinnectColors.textMuted, size: 20),
           onTap: () => _showArticle(article),
         )).toList(),
       ),
@@ -156,7 +156,7 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: KinnectColors.darkSurface,
+        color: KinnectColors.surface,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.3),
@@ -169,12 +169,12 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
         children: [
           const Text(
             'Still need help?',
-            style: TextStyle(color: KinnectColors.white, fontSize: 16, fontWeight: FontWeight.bold),
+            style: TextStyle(color: KinnectColors.textPrimary, fontSize: 16, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           const Text(
             'Our support team is here to assist you',
-            style: TextStyle(color: KinnectColors.grey60, fontSize: 14),
+            style: TextStyle(color: KinnectColors.textSecondary, fontSize: 14),
           ),
           const SizedBox(height: 16),
           Row(
@@ -185,8 +185,8 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
                   icon: const Icon(Icons.email),
                   label: const Text('Email'),
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: KinnectColors.amber,
-                    side: const BorderSide(color: KinnectColors.amber),
+                    foregroundColor: KinnectColors.accent,
+                    side: const BorderSide(color: KinnectColors.accent),
                   ),
                 ),
               ),
@@ -197,8 +197,8 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
                   icon: const Icon(Icons.chat),
                   label: const Text('Live Chat'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: KinnectColors.amber,
-                    foregroundColor: KinnectColors.darkBg,
+                    backgroundColor: KinnectColors.accent,
+                    foregroundColor: KinnectColors.background,
                   ),
                 ),
               ),
@@ -212,7 +212,7 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
   void _showArticle(HelpArticle article) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: KinnectColors.darkSurface,
+      backgroundColor: KinnectColors.surface,
       isScrollControlled: true,
       builder: (context) => DraggableScrollableSheet(
         initialChildSize: 0.9,
@@ -229,14 +229,14 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
                     child: Text(
                       article.title,
                       style: const TextStyle(
-                        color: KinnectColors.white,
+                        color: KinnectColors.textPrimary,
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.close, color: KinnectColors.grey60),
+                    icon: const Icon(Icons.close, color: KinnectColors.textSecondary),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],
@@ -244,7 +244,7 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
               const SizedBox(height: 8),
               Text(
                 article.subtitle,
-                style: const TextStyle(color: KinnectColors.grey60, fontSize: 16),
+                style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 16),
               ),
               const SizedBox(height: 24),
               Expanded(
@@ -253,7 +253,7 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
                   children: const [
                     Text(
                       'Article content would appear here...',
-                      style: TextStyle(color: KinnectColors.white, fontSize: 14, height: 1.6),
+                      style: TextStyle(color: KinnectColors.textPrimary, fontSize: 14, height: 1.6),
                     ),
                   ],
                 ),
@@ -263,7 +263,7 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
                 children: [
                   const Text(
                     'Was this helpful?',
-                    style: TextStyle(color: KinnectColors.grey60),
+                    style: TextStyle(color: KinnectColors.textSecondary),
                   ),
                   const Spacer(),
                   IconButton(

@@ -13,7 +13,7 @@ class ShareSheet extends StatelessWidget {
     return Container(
       height: MediaQuery.of(context).size.height * 0.4,
       decoration: const BoxDecoration(
-        color: KinnectColors.darkSurface,
+        color: KinnectColors.surface,
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       padding: const EdgeInsets.all(24),
@@ -23,14 +23,14 @@ class ShareSheet extends StatelessWidget {
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: KinnectColors.grey40,
+              color: KinnectColors.textMuted,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
           const SizedBox(height: 24),
           const Text(
             'Share Memory',
-            style: TextStyle(color: KinnectColors.white, fontSize: 20, fontWeight: FontWeight.bold),
+            style: TextStyle(color: KinnectColors.textPrimary, fontSize: 20, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 24),
           _buildShareOption(
@@ -79,12 +79,12 @@ class ShareSheet extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: KinnectColors.darkBg,
+          color: KinnectColors.background,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
           children: [
-            Icon(icon, color: KinnectColors.amber, size: 32),
+            Icon(icon, color: KinnectColors.accent, size: 32),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
@@ -92,12 +92,12 @@ class ShareSheet extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(color: KinnectColors.white, fontSize: 16),
+                    style: const TextStyle(color: KinnectColors.textPrimary, fontSize: 16),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     subtitle,
-                    style: const TextStyle(color: KinnectColors.grey60, fontSize: 12),
+                    style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 12),
                   ),
                 ],
               ),

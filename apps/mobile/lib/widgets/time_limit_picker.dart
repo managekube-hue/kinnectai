@@ -30,7 +30,7 @@ class _TimeLimitPickerState extends State<TimeLimitPicker> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: KinnectColors.darkSurface,
+      backgroundColor: KinnectColors.surface,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: Text('Set Daily Limit', style: DesignTextStyles.headlineMedium),
       content: Column(
@@ -75,8 +75,8 @@ class _TimeLimitPickerState extends State<TimeLimitPicker> {
             Navigator.pop(context, duration);
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: KinnectColors.amber,
-            foregroundColor: KinnectColors.darkBg,
+            backgroundColor: KinnectColors.accent,
+            foregroundColor: KinnectColors.background,
           ),
           child: const Text('Set Limit'),
         ),
@@ -94,7 +94,7 @@ class _TimeLimitPickerState extends State<TimeLimitPicker> {
     return Column(
       children: [
         IconButton(
-          icon: const Icon(Icons.keyboard_arrow_up, color: KinnectColors.amber),
+          icon: const Icon(Icons.keyboard_arrow_up, color: KinnectColors.accent),
           onPressed: () {
             if (value + step <= max) onChanged(value + step);
           },
@@ -102,7 +102,7 @@ class _TimeLimitPickerState extends State<TimeLimitPicker> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
           decoration: BoxDecoration(
-            color: KinnectColors.darkBg,
+            color: KinnectColors.background,
             borderRadius: BorderRadius.circular(12),
           ),
           child: Text(
@@ -111,7 +111,7 @@ class _TimeLimitPickerState extends State<TimeLimitPicker> {
           ),
         ),
         IconButton(
-          icon: const Icon(Icons.keyboard_arrow_down, color: KinnectColors.amber),
+          icon: const Icon(Icons.keyboard_arrow_down, color: KinnectColors.accent),
           onPressed: () {
             if (value - step >= 0) onChanged(value - step);
           },

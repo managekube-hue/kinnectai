@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../router/app_nav.dart';
 import '../theme/colors.dart';
 
@@ -12,9 +12,9 @@ class RootProfileScreen extends StatelessWidget {
     final bool isOwnProfile = userId == null;
     
     return Scaffold(
-      backgroundColor: KinnectColors.darkBg,
+      backgroundColor: KinnectColors.background,
       appBar: AppBar(
-        backgroundColor: KinnectColors.darkSurface,
+        backgroundColor: KinnectColors.surface,
         title: const Text('Profile'),
         actions: isOwnProfile ? [
           IconButton(
@@ -29,18 +29,18 @@ class RootProfileScreen extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 64,
-              backgroundColor: KinnectColors.darkSurface,
-              child: Icon(Icons.person, size: 64, color: KinnectColors.grey40),
+              backgroundColor: KinnectColors.surface,
+              child: Icon(Icons.person, size: 64, color: KinnectColors.textMuted),
             ),
             SizedBox(height: 24),
             Text(
               'Complete your profile',
-              style: TextStyle(color: KinnectColors.white, fontSize: 18),
+              style: TextStyle(color: KinnectColors.textPrimary, fontSize: 18),
             ),
             SizedBox(height: 8),
             Text(
               'Add DOB and surname',
-              style: TextStyle(color: KinnectColors.grey60),
+              style: TextStyle(color: KinnectColors.textSecondary),
             ),
           ],
         ),

@@ -18,16 +18,16 @@ class RewindCreatorScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.videocam, size: 64, color: KinnectColors.grey40),
+            Icon(Icons.videocam, size: 64, color: KinnectColors.textMuted),
             SizedBox(height: 16),
             Text(
               'PIP camera over original Memory',
-              style: TextStyle(color: KinnectColors.white, fontSize: 18),
+              style: TextStyle(color: KinnectColors.textPrimary, fontSize: 18),
             ),
             SizedBox(height: 8),
             Text(
               'Records 0-30s',
-              style: TextStyle(color: KinnectColors.grey60),
+              style: TextStyle(color: KinnectColors.textSecondary),
             ),
           ],
         ),

@@ -77,9 +77,9 @@ class _TimeWellbeingContentState extends State<_TimeWellbeingContent> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KinnectColors.darkBg,
+      backgroundColor: KinnectColors.background,
       appBar: AppBar(
-        backgroundColor: KinnectColors.darkSurface,
+        backgroundColor: KinnectColors.surface,
         title: Text('Time & Well-being', style: KinnectTextStyles.headlineSmall),
         centerTitle: true,
       ),
@@ -109,10 +109,10 @@ class _TimeWellbeingContentState extends State<_TimeWellbeingContent> {
                 width: 120,
                 height: 120,
                 decoration: BoxDecoration(
-                  color: KinnectColors.amber.withOpacity(0.2),
+                  color: KinnectColors.accent.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(60),
                 ),
-                child: const Icon(Icons.self_improvement, size: 60, color: KinnectColors.amber),
+                child: const Icon(Icons.self_improvement, size: 60, color: KinnectColors.accent),
               ),
               const SizedBox(height: 16),
               const Padding(
@@ -120,7 +120,7 @@ class _TimeWellbeingContentState extends State<_TimeWellbeingContent> {
                 child: Text(
                   'Balance your digital legacy with your daily life.',
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: KinnectColors.white, fontSize: 16),
+                  style: TextStyle(color: KinnectColors.textPrimary, fontSize: 16),
                 ),
               ),
               const SizedBox(height: 32),
@@ -141,7 +141,7 @@ class _TimeWellbeingContentState extends State<_TimeWellbeingContent> {
                   child: ElevatedButton(
                     onPressed: () => Navigator.pop(context),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: KinnectColors.amber,
+                      backgroundColor: KinnectColors.accent,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
                     child: const Text('Save Preferences'),
@@ -161,7 +161,7 @@ class _TimeWellbeingContentState extends State<_TimeWellbeingContent> {
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: KinnectColors.darkSurface,
+          color: KinnectColors.surface,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Column(
@@ -180,7 +180,7 @@ class _TimeWellbeingContentState extends State<_TimeWellbeingContent> {
                     ],
                   );
                 }
-                return const Center(child: CircularProgressIndicator(color: KinnectColors.amber));
+                return const Center(child: CircularProgressIndicator(color: KinnectColors.accent));
               },
             ),
             const SizedBox(height: 20),
@@ -195,15 +195,15 @@ class _TimeWellbeingContentState extends State<_TimeWellbeingContent> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: KinnectColors.darkBg,
+        color: KinnectColors.background,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
         children: [
-          Icon(icon, color: KinnectColors.amber, size: 24),
+          Icon(icon, color: KinnectColors.accent, size: 24),
           const SizedBox(height: 8),
-          Text(value, style: const TextStyle(color: KinnectColors.white, fontSize: 18, fontWeight: FontWeight.bold)),
-          Text(label, style: const TextStyle(color: KinnectColors.grey60, fontSize: 12)),
+          Text(value, style: const TextStyle(color: KinnectColors.textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
+          Text(label, style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
         ],
       ),
     );
@@ -215,7 +215,7 @@ class _TimeWellbeingContentState extends State<_TimeWellbeingContent> {
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: KinnectColors.darkSurface,
+          color: KinnectColors.surface,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Column(
@@ -229,7 +229,7 @@ class _TimeWellbeingContentState extends State<_TimeWellbeingContent> {
                     children: [
                       Text('Daily Limit', style: KinnectTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.w600)),
                       const SizedBox(height: 4),
-                      const Text('Hard daily cap. We\'ll notify you at 80%.', style: TextStyle(color: KinnectColors.grey60, fontSize: 12)),
+                      const Text('Hard daily cap. We\'ll notify you at 80%.', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
                     ],
                   ),
                 ),
@@ -239,7 +239,7 @@ class _TimeWellbeingContentState extends State<_TimeWellbeingContent> {
                     _saveSetting('daily_limit_enabled', value);
                     setState(() => _dailyLimitEnabled = value);
                   },
-                  activeThumbColor: KinnectColors.amber,
+                  activeThumbColor: KinnectColors.accent,
                 ),
               ],
             ),
@@ -250,14 +250,14 @@ class _TimeWellbeingContentState extends State<_TimeWellbeingContent> {
                 child: Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: KinnectColors.darkBg,
+                    color: KinnectColors.background,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(_formatDuration(_dailyLimit), style: const TextStyle(color: KinnectColors.white, fontSize: 16)),
-                      const Icon(Icons.edit, color: KinnectColors.amber, size: 20),
+                      Text(_formatDuration(_dailyLimit), style: const TextStyle(color: KinnectColors.textPrimary, fontSize: 16)),
+                      const Icon(Icons.edit, color: KinnectColors.accent, size: 20),
                     ],
                   ),
                 ),
@@ -275,7 +275,7 @@ class _TimeWellbeingContentState extends State<_TimeWellbeingContent> {
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: KinnectColors.darkSurface,
+          color: KinnectColors.surface,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Column(
@@ -288,7 +288,7 @@ class _TimeWellbeingContentState extends State<_TimeWellbeingContent> {
                     children: [
                       Text('Break Reminders', style: KinnectTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.w600)),
                       const SizedBox(height: 4),
-                      const Text('Timed nudges to step away.', style: TextStyle(color: KinnectColors.grey60, fontSize: 12)),
+                      const Text('Timed nudges to step away.', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
                     ],
                   ),
                 ),
@@ -298,7 +298,7 @@ class _TimeWellbeingContentState extends State<_TimeWellbeingContent> {
                     _saveSetting('break_reminders_enabled', value);
                     setState(() => _breakRemindersEnabled = value);
                   },
-                  activeThumbColor: KinnectColors.amber,
+                  activeThumbColor: KinnectColors.accent,
                 ),
               ],
             ),
@@ -314,7 +314,7 @@ class _TimeWellbeingContentState extends State<_TimeWellbeingContent> {
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: KinnectColors.darkSurface,
+          color: KinnectColors.surface,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Row(
@@ -325,7 +325,7 @@ class _TimeWellbeingContentState extends State<_TimeWellbeingContent> {
                 children: [
                   Text('Night Mode', style: KinnectTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.w600)),
                   const SizedBox(height: 4),
-                  const Text('Auto-grayscale during sleep.', style: TextStyle(color: KinnectColors.grey60, fontSize: 12)),
+                  const Text('Auto-grayscale during sleep.', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
                 ],
               ),
             ),
@@ -335,7 +335,7 @@ class _TimeWellbeingContentState extends State<_TimeWellbeingContent> {
                 _saveSetting('night_mode_enabled', value);
                 setState(() => _nightModeEnabled = value);
               },
-              activeThumbColor: KinnectColors.amber,
+              activeThumbColor: KinnectColors.accent,
             ),
           ],
         ),

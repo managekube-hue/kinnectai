@@ -14,9 +14,9 @@ class _MemoryEditScreenState extends State<MemoryEditScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KinnectColors.darkBg,
+      backgroundColor: KinnectColors.background,
       appBar: AppBar(
-        backgroundColor: KinnectColors.darkSurface,
+        backgroundColor: KinnectColors.surface,
         title: const Text('Edit Memory'),
         elevation: 0,
       ),
@@ -31,10 +31,10 @@ class _MemoryEditScreenState extends State<MemoryEditScreen> {
                 decoration: InputDecoration(
                   labelText: 'Title',
                   filled: true,
-                  fillColor: KinnectColors.darkCard,
+                  fillColor: KinnectColors.surfaceElevated,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(color: KinnectColors.grey40),
+                    borderSide: const BorderSide(color: KinnectColors.textMuted),
                   ),
                 ),
               ),
@@ -46,10 +46,10 @@ class _MemoryEditScreenState extends State<MemoryEditScreen> {
                 decoration: InputDecoration(
                   labelText: 'Description',
                   filled: true,
-                  fillColor: KinnectColors.darkCard,
+                  fillColor: KinnectColors.surfaceElevated,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(color: KinnectColors.grey40),
+                    borderSide: const BorderSide(color: KinnectColors.textMuted),
                   ),
                 ),
               ),
@@ -60,10 +60,10 @@ class _MemoryEditScreenState extends State<MemoryEditScreen> {
                 decoration: InputDecoration(
                   labelText: 'Tags (comma separated)',
                   filled: true,
-                  fillColor: KinnectColors.darkCard,
+                  fillColor: KinnectColors.surfaceElevated,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(color: KinnectColors.grey40),
+                    borderSide: const BorderSide(color: KinnectColors.textMuted),
                   ),
                 ),
               ),

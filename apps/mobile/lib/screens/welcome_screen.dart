@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../router/app_nav.dart';
 import 'package:flutter/services.dart';
 import '../theme/colors.dart';
@@ -192,7 +192,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KinnectColors.darkBg,
+      backgroundColor: KinnectColors.background,
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: Stack(
@@ -318,7 +318,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         Text(
           'Already have an account? ',
           style: KinnectTextStyles.bodyMedium.copyWith(
-            color: KinnectColors.grey70,
+            color: KinnectColors.textMediumEmphasis,
           ),
         ),
         GestureDetector(
@@ -338,7 +338,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         Text(
           'By continuing, you agree to',
           style: KinnectTextStyles.caption.copyWith(
-            color: KinnectColors.grey60,
+            color: KinnectColors.textSecondary,
           ),
           textAlign: TextAlign.center,
         ),
@@ -356,7 +356,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             Text(
               '  |  ',
               style: KinnectTextStyles.caption.copyWith(
-                color: KinnectColors.grey60,
+                color: KinnectColors.textSecondary,
               ),
             ),
             GestureDetector(

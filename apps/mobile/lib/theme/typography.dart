@@ -8,7 +8,7 @@ class KinnectTextStyles {
     fontFamily: 'Inter',
     fontSize: 48,
     fontWeight: FontWeight.bold,
-    color: KinnectColors.white,
+    color: KinnectColors.textPrimary,
     letterSpacing: -1.0,
   );
   
@@ -16,7 +16,7 @@ class KinnectTextStyles {
     fontFamily: 'Inter',
     fontSize: 36,
     fontWeight: FontWeight.bold,
-    color: KinnectColors.white,
+    color: KinnectColors.textPrimary,
     letterSpacing: -0.5,
   );
   
@@ -25,7 +25,7 @@ class KinnectTextStyles {
     fontFamily: 'Inter',
     fontSize: 32,
     fontWeight: FontWeight.bold,
-    color: KinnectColors.white,
+    color: KinnectColors.textPrimary,
     letterSpacing: -0.5,
   );
   
@@ -33,14 +33,14 @@ class KinnectTextStyles {
     fontFamily: 'Inter',
     fontSize: 24,
     fontWeight: FontWeight.w600,
-    color: KinnectColors.white,
+    color: KinnectColors.textPrimary,
   );
   
   static const headlineSmall = TextStyle(
     fontFamily: 'Inter',
     fontSize: 20,
     fontWeight: FontWeight.w600,
-    color: KinnectColors.white,
+    color: KinnectColors.textPrimary,
   );
   
   // Body Styles
@@ -48,7 +48,7 @@ class KinnectTextStyles {
     fontFamily: 'Inter',
     fontSize: 16,
     fontWeight: FontWeight.w400,
-    color: KinnectColors.white,
+    color: KinnectColors.textPrimary,
     height: 1.5,
   );
   
@@ -56,7 +56,7 @@ class KinnectTextStyles {
     fontFamily: 'Inter',
     fontSize: 14,
     fontWeight: FontWeight.w400,
-    color: KinnectColors.white,
+    color: KinnectColors.textPrimary,
     height: 1.5,
   );
   
@@ -64,7 +64,7 @@ class KinnectTextStyles {
     fontFamily: 'Inter',
     fontSize: 12,
     fontWeight: FontWeight.w400,
-    color: KinnectColors.grey70,
+    color: KinnectColors.textMediumEmphasis,
     height: 1.5,
   );
   
@@ -73,7 +73,7 @@ class KinnectTextStyles {
     fontFamily: 'Inter',
     fontSize: 16,
     fontWeight: FontWeight.w600,
-    color: KinnectColors.darkBg,
+    color: KinnectColors.background,
     letterSpacing: 0.5,
   );
   
@@ -81,7 +81,7 @@ class KinnectTextStyles {
     fontFamily: 'Inter',
     fontSize: 16,
     fontWeight: FontWeight.w600,
-    color: KinnectColors.white,
+    color: KinnectColors.textPrimary,
     letterSpacing: 0.5,
   );
   
@@ -90,14 +90,14 @@ class KinnectTextStyles {
     fontFamily: 'Inter',
     fontSize: 14,
     fontWeight: FontWeight.w400,
-    color: KinnectColors.grey60,
+    color: KinnectColors.textSecondary,
   );
   
   static const subtitleBold = TextStyle(
     fontFamily: 'Inter',
     fontSize: 14,
     fontWeight: FontWeight.w600,
-    color: KinnectColors.grey70,
+    color: KinnectColors.textMediumEmphasis,
   );
   
   // Caption Styles
@@ -105,7 +105,7 @@ class KinnectTextStyles {
     fontFamily: 'Inter',
     fontSize: 12,
     fontWeight: FontWeight.w400,
-    color: KinnectColors.grey60,
+    color: KinnectColors.textSecondary,
   );
   
   // Link Styles
@@ -113,7 +113,7 @@ class KinnectTextStyles {
     fontFamily: 'Inter',
     fontSize: 14,
     fontWeight: FontWeight.w500,
-    color: KinnectColors.amber,
+    color: KinnectColors.accent,
     decoration: TextDecoration.underline,
   );
   
@@ -121,7 +121,7 @@ class KinnectTextStyles {
     fontFamily: 'Inter',
     fontSize: 12,
     fontWeight: FontWeight.w500,
-    color: KinnectColors.amber,
+    color: KinnectColors.accent,
     decoration: TextDecoration.underline,
   );
   

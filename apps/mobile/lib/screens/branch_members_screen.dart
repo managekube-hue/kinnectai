@@ -14,9 +14,9 @@ class _BranchMembersScreenState extends State<BranchMembersScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KinnectColors.darkBg,
+      backgroundColor: KinnectColors.background,
       appBar: AppBar(
-        backgroundColor: KinnectColors.darkSurface,
+        backgroundColor: KinnectColors.surface,
         title: Text('Branch Members (${widget.branchId})'),
         elevation: 0,
       ),
@@ -29,7 +29,7 @@ class _BranchMembersScreenState extends State<BranchMembersScreen> {
               height: 40,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: KinnectColors.darkCard,
+                color: KinnectColors.surfaceElevated,
               ),
               child: const Icon(Icons.person_outline, size: 20),
             ),

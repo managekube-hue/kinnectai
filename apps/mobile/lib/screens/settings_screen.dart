@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../router/app_nav.dart';
 import '../theme/colors.dart';
 
@@ -8,9 +8,9 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KinnectColors.darkBg,
+      backgroundColor: KinnectColors.background,
       appBar: AppBar(
-        backgroundColor: KinnectColors.darkSurface,
+        backgroundColor: KinnectColors.surface,
         title: const Text('Settings and privacy'),
       ),
       body: ListView(
@@ -64,7 +64,7 @@ class SettingsScreen extends StatelessWidget {
           child: Text(
             title,
             style: const TextStyle(
-              color: KinnectColors.grey60,
+              color: KinnectColors.textSecondary,
               fontSize: 14,
               fontWeight: FontWeight.bold,
             ),
@@ -77,10 +77,10 @@ class SettingsScreen extends StatelessWidget {
 
   Widget _buildItem(BuildContext context, String title, String subtitle, IconData icon, String route) {
     return ListTile(
-      leading: Icon(icon, color: KinnectColors.amber),
-      title: Text(title, style: const TextStyle(color: KinnectColors.white)),
-      subtitle: Text(subtitle, style: const TextStyle(color: KinnectColors.grey60, fontSize: 12)),
-      trailing: const Icon(Icons.chevron_right, color: KinnectColors.grey40),
+      leading: Icon(icon, color: KinnectColors.accent),
+      title: Text(title, style: const TextStyle(color: KinnectColors.textPrimary)),
+      subtitle: Text(subtitle, style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
+      trailing: const Icon(Icons.chevron_right, color: KinnectColors.textMuted),
       onTap: () => AppNav.push(context, route),
     );
   }

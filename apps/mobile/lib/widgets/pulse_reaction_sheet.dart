@@ -57,7 +57,7 @@ class _PulseReactionSheetState extends State<PulseReactionSheet> with SingleTick
                   width: 80,
                   height: 80,
                   decoration: BoxDecoration(
-                    color: _isPulsed ? KinnectColors.error : KinnectColors.grey40,
+                    color: _isPulsed ? KinnectColors.error : KinnectColors.textMuted,
                     shape: BoxShape.circle,
                     boxShadow: _isPulsed
                         ? [

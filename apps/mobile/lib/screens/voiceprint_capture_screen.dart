@@ -162,9 +162,9 @@ class _VoiceprintCaptureContentState extends State<_VoiceprintCaptureContent> {
         }
       },
       child: Scaffold(
-        backgroundColor: KinnectColors.darkBg,
+        backgroundColor: KinnectColors.background,
         appBar: AppBar(
-          backgroundColor: KinnectColors.darkSurface,
+          backgroundColor: KinnectColors.surface,
           title: Text('Voiceprint Capture', style: KinnectTextStyles.headlineSmall),
           centerTitle: true,
         ),
@@ -177,10 +177,10 @@ class _VoiceprintCaptureContentState extends State<_VoiceprintCaptureContent> {
                   width: 120,
                   height: 120,
                   decoration: BoxDecoration(
-                    color: KinnectColors.amber.withOpacity(0.2),
+                    color: KinnectColors.accent.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(60),
                   ),
-                  child: const Icon(Icons.mic, size: 60, color: KinnectColors.amber),
+                  child: const Icon(Icons.mic, size: 60, color: KinnectColors.accent),
                 ),
                 const SizedBox(height: 16),
                 Text(
@@ -205,7 +205,7 @@ class _VoiceprintCaptureContentState extends State<_VoiceprintCaptureContent> {
       child: ElevatedButton(
         onPressed: _showConsentDialog,
         style: ElevatedButton.styleFrom(
-          backgroundColor: KinnectColors.amber,
+          backgroundColor: KinnectColors.accent,
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
         ),
         child: const Text('Provide Biometric Consent'),
@@ -220,7 +220,7 @@ class _VoiceprintCaptureContentState extends State<_VoiceprintCaptureContent> {
         children: [
           Text(
             '${_recordingDuration.inMinutes.toString().padLeft(2, '0')}:${(_recordingDuration.inSeconds % 60).toString().padLeft(2, '0')} / 02:00',
-            style: const TextStyle(color: KinnectColors.white, fontSize: 32),
+            style: const TextStyle(color: KinnectColors.textPrimary, fontSize: 32),
           ),
           const SizedBox(height: 32),
           VoiceWaveform(isRecording: _isRecording, duration: _recordingDuration),
@@ -231,7 +231,7 @@ class _VoiceprintCaptureContentState extends State<_VoiceprintCaptureContent> {
               width: 80,
               height: 80,
               decoration: BoxDecoration(
-                color: _isRecording ? KinnectColors.error : KinnectColors.amber,
+                color: _isRecording ? KinnectColors.error : KinnectColors.accent,
                 shape: BoxShape.circle,
               ),
               child: Icon(_isRecording ? Icons.stop : Icons.mic, color: Colors.white, size: 40),
@@ -244,9 +244,9 @@ class _VoiceprintCaptureContentState extends State<_VoiceprintCaptureContent> {
               children: [
                 IconButton(
                   onPressed: _playRecording,
-                  icon: Icon(_isPlaying ? Icons.stop : Icons.play_arrow, color: KinnectColors.amber, size: 32),
+                  icon: Icon(_isPlaying ? Icons.stop : Icons.play_arrow, color: KinnectColors.accent, size: 32),
                 ),
-                const Text('Preview', style: TextStyle(color: KinnectColors.white)),
+                const Text('Preview', style: TextStyle(color: KinnectColors.textPrimary)),
               ],
             ),
             const SizedBox(height: 16),
@@ -256,7 +256,7 @@ class _VoiceprintCaptureContentState extends State<_VoiceprintCaptureContent> {
                 return ElevatedButton(
                   onPressed: isProcessing ? null : _processVoiceprint,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: KinnectColors.amber,
+                    backgroundColor: KinnectColors.accent,
                     padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
                   ),
                   child: isProcessing

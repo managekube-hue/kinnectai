@@ -11,7 +11,7 @@ class StrandManagerSheet extends StatelessWidget {
     return Container(
       height: MediaQuery.of(context).size.height * 0.7,
       decoration: const BoxDecoration(
-        color: KinnectColors.darkSurface,
+        color: KinnectColors.surface,
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
@@ -31,16 +31,16 @@ class StrandManagerSheet extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.folder_outlined, size: 64, color: KinnectColors.grey40),
+                  Icon(Icons.folder_outlined, size: 64, color: KinnectColors.textMuted),
                   SizedBox(height: 16),
                   Text(
                     'No Strands created',
-                    style: TextStyle(color: KinnectColors.white, fontSize: 18),
+                    style: TextStyle(color: KinnectColors.textPrimary, fontSize: 18),
                   ),
                   SizedBox(height: 8),
                   Text(
                     'Tap + to create your first Strand',
-                    style: TextStyle(color: KinnectColors.grey60),
+                    style: TextStyle(color: KinnectColors.textSecondary),
                   ),
                 ],
               ),

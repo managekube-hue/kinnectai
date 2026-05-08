@@ -1,9 +1,9 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../router/app_nav.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../theme/colors.dart';
 import '../models/memory.dart';
-import '../services/feed_service.dart';
+import '../feed_service.dart';
 
 class RepostStitchScreen extends StatefulWidget {
   const RepostStitchScreen({super.key});
@@ -43,13 +43,13 @@ class _RepostStitchScreenState extends State<RepostStitchScreen> with SingleTick
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KinnectColors.darkBg,
+      backgroundColor: KinnectColors.background,
       appBar: AppBar(
-        backgroundColor: KinnectColors.darkSurface,
+        backgroundColor: KinnectColors.surface,
         title: const Text('Repost & Stitch'),
         bottom: TabBar(
           controller: _tabController,
-          indicatorColor: KinnectColors.amber,
+          indicatorColor: KinnectColors.accent,
           tabs: const [
             Tab(text: 'Repost'),
             Tab(text: 'Stitch'),
@@ -68,7 +68,7 @@ class _RepostStitchScreenState extends State<RepostStitchScreen> with SingleTick
 
   Widget _buildRepostView() {
     if (_isLoading) {
-      return const Center(child: CircularProgressIndicator(color: KinnectColors.amber));
+      return const Center(child: CircularProgressIndicator(color: KinnectColors.accent));
     }
 
     if (_eligibleMemories.isEmpty) {
@@ -76,16 +76,16 @@ class _RepostStitchScreenState extends State<RepostStitchScreen> with SingleTick
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.repeat, size: 64, color: KinnectColors.grey40),
+            Icon(Icons.repeat, size: 64, color: KinnectColors.textMuted),
             const SizedBox(height: 16),
             const Text(
               'No eligible Memories',
-              style: TextStyle(color: KinnectColors.grey60, fontSize: 18),
+              style: TextStyle(color: KinnectColors.textSecondary, fontSize: 18),
             ),
             const SizedBox(height: 8),
             const Text(
               'Memories you can repost will appear here',
-              style: TextStyle(color: KinnectColors.grey40, fontSize: 14),
+              style: TextStyle(color: KinnectColors.textMuted, fontSize: 14),
             ),
           ],
         ),
@@ -103,7 +103,7 @@ class _RepostStitchScreenState extends State<RepostStitchScreen> with SingleTick
 
   Widget _buildStitchView() {
     if (_isLoading) {
-      return const Center(child: CircularProgressIndicator(color: KinnectColors.amber));
+      return const Center(child: CircularProgressIndicator(color: KinnectColors.accent));
     }
 
     if (_eligibleMemories.isEmpty) {
@@ -111,16 +111,16 @@ class _RepostStitchScreenState extends State<RepostStitchScreen> with SingleTick
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.video_library, size: 64, color: KinnectColors.grey40),
+            Icon(Icons.video_library, size: 64, color: KinnectColors.textMuted),
             const SizedBox(height: 16),
             const Text(
               'No eligible Memories',
-              style: TextStyle(color: KinnectColors.grey60, fontSize: 18),
+              style: TextStyle(color: KinnectColors.textSecondary, fontSize: 18),
             ),
             const SizedBox(height: 8),
             const Text(
               'Memories you can stitch will appear here',
-              style: TextStyle(color: KinnectColors.grey40, fontSize: 14),
+              style: TextStyle(color: KinnectColors.textMuted, fontSize: 14),
             ),
           ],
         ),
@@ -139,7 +139,7 @@ class _RepostStitchScreenState extends State<RepostStitchScreen> with SingleTick
   Widget _buildMemoryCard(Memory memory, {required bool isStitch}) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      color: KinnectColors.darkSurface,
+      color: KinnectColors.surface,
       child: InkWell(
         onTap: () => _handleAction(memory, isStitch),
         child: Padding(
@@ -150,12 +150,12 @@ class _RepostStitchScreenState extends State<RepostStitchScreen> with SingleTick
                 width: 80,
                 height: 80,
                 decoration: BoxDecoration(
-                  color: KinnectColors.darkBg,
+                  color: KinnectColors.background,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: memory.thumbnailUrl != null
                     ? Image.network(memory.thumbnailUrl!, fit: BoxFit.cover)
-                    : const Icon(Icons.videocam, color: KinnectColors.grey40, size: 32),
+                    : const Icon(Icons.videocam, color: KinnectColors.textMuted, size: 32),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -165,7 +165,7 @@ class _RepostStitchScreenState extends State<RepostStitchScreen> with SingleTick
                     Text(
                       memory.creatorDisplayName,
                       style: const TextStyle(
-                        color: KinnectColors.white,
+                        color: KinnectColors.textPrimary,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
@@ -175,7 +175,7 @@ class _RepostStitchScreenState extends State<RepostStitchScreen> with SingleTick
                       memory.caption,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(color: KinnectColors.grey60, fontSize: 14),
+                      style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 14),
                     ),
                     const SizedBox(height: 8),
                     Row(
@@ -184,7 +184,7 @@ class _RepostStitchScreenState extends State<RepostStitchScreen> with SingleTick
                         const SizedBox(width: 4),
                         Text(
                           memory.formattedPulseCount,
-                          style: const TextStyle(color: KinnectColors.grey60, fontSize: 12),
+                          style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 12),
                         ),
                         const SizedBox(width: 16),
                         Container(
@@ -209,7 +209,7 @@ class _RepostStitchScreenState extends State<RepostStitchScreen> with SingleTick
               ),
               Icon(
                 isStitch ? Icons.video_library : Icons.repeat,
-                color: KinnectColors.amber,
+                color: KinnectColors.accent,
                 size: 32,
               ),
             ],

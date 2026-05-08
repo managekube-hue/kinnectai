@@ -7,9 +7,9 @@ class AncestralMarketplaceScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KinnectColors.darkBg,
+      backgroundColor: KinnectColors.background,
       appBar: AppBar(
-        backgroundColor: KinnectColors.darkSurface,
+        backgroundColor: KinnectColors.surface,
         title: const Text('Ancestral Marketplace'),
         actions: [
           IconButton(
@@ -22,11 +22,11 @@ class AncestralMarketplaceScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.store, size: 64, color: KinnectColors.grey40),
+            Icon(Icons.store, size: 64, color: KinnectColors.textMuted),
             SizedBox(height: 16),
             Text(
               'Curated heritage items coming soon',
-              style: TextStyle(color: KinnectColors.white, fontSize: 18),
+              style: TextStyle(color: KinnectColors.textPrimary, fontSize: 18),
             ),
           ],
         ),

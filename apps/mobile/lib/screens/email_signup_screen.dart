@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../router/app_nav.dart';
 import '../theme/colors.dart';
 import '../theme/typography.dart';
@@ -34,12 +34,12 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KinnectColors.darkBg,
+      backgroundColor: KinnectColors.background,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: KinnectColors.white),
+          icon: const Icon(Icons.arrow_back, color: KinnectColors.textPrimary),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
@@ -69,17 +69,17 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
                   decoration: InputDecoration(
                     labelText: 'Email',
                     labelStyle: KinnectTextStyles.bodyMedium.copyWith(
-                      color: KinnectColors.grey60,
+                      color: KinnectColors.textSecondary,
                     ),
                     filled: true,
-                    fillColor: KinnectColors.darkSurface,
+                    fillColor: KinnectColors.surface,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(KinnectSpacing.radiusMedium),
                       borderSide: BorderSide.none,
                     ),
                     prefixIcon: const Icon(
                       Icons.email_outlined,
-                      color: KinnectColors.grey60,
+                      color: KinnectColors.textSecondary,
                     ),
                   ),
                   validator: (value) {

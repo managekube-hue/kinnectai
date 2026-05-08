@@ -210,10 +210,10 @@ class _EnhancedLineVideoPlayerState extends State<EnhancedLineVideoPlayer> {
 
   Widget _buildLoadingPlaceholder() {
     return Container(
-      color: KinnectColors.darkBg,
+      color: KinnectColors.background,
       child: const Center(
         child: CircularProgressIndicator(
-          color: KinnectColors.amber,
+          color: KinnectColors.accent,
         ),
       ),
     );
@@ -226,8 +226,8 @@ class _EnhancedLineVideoPlayerState extends State<EnhancedLineVideoPlayer> {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            KinnectColors.darkBg,
-            KinnectColors.darkSurface,
+            KinnectColors.background,
+            KinnectColors.surface,
           ],
         ),
       ),
@@ -244,7 +244,7 @@ class _EnhancedLineVideoPlayerState extends State<EnhancedLineVideoPlayer> {
             Text(
               'Failed to load video',
               style: TextStyle(
-                color: KinnectColors.grey60,
+                color: KinnectColors.textSecondary,
                 fontSize: 16,
               ),
             ),

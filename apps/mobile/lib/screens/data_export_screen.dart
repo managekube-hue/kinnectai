@@ -7,9 +7,9 @@ class DataExportScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KinnectColors.darkBg,
+      backgroundColor: KinnectColors.background,
       appBar: AppBar(
-        backgroundColor: KinnectColors.darkSurface,
+        backgroundColor: KinnectColors.surface,
         title: const Text('Download Your Data'),
       ),
       body: Padding(
@@ -17,9 +17,9 @@ class DataExportScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('GDPR Export', style: TextStyle(color: KinnectColors.white, fontSize: 24, fontWeight: FontWeight.bold)),
+            const Text('GDPR Export', style: TextStyle(color: KinnectColors.textPrimary, fontSize: 24, fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
-            const Text('Download a complete archive of your KinnectAI data:', style: TextStyle(color: KinnectColors.grey60)),
+            const Text('Download a complete archive of your KinnectAI data:', style: TextStyle(color: KinnectColors.textSecondary)),
             const SizedBox(height: 16),
             _buildDataItem('Memories & Blooms'),
             _buildDataItem('Tree & Kinnections'),
@@ -30,10 +30,10 @@ class DataExportScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: () {},
               style: ElevatedButton.styleFrom(
-                backgroundColor: KinnectColors.amber,
+                backgroundColor: KinnectColors.accent,
                 minimumSize: const Size(double.infinity, 56),
               ),
-              child: const Text('Request Export', style: TextStyle(color: KinnectColors.darkBg, fontSize: 16)),
+              child: const Text('Request Export', style: TextStyle(color: KinnectColors.background, fontSize: 16)),
             ),
           ],
         ),
@@ -48,7 +48,7 @@ class DataExportScreen extends StatelessWidget {
         children: [
           const Icon(Icons.check_circle, color: KinnectColors.success, size: 20),
           const SizedBox(width: 12),
-          Text(label, style: const TextStyle(color: KinnectColors.white)),
+          Text(label, style: const TextStyle(color: KinnectColors.textPrimary)),
         ],
       ),
     );

@@ -3,7 +3,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:kinnectai_app/cubits/line_cubit.dart';
 import 'package:kinnectai_app/models/memory.dart';
-import 'package:kinnectai_app/services/feed_service.dart';
+import 'package:kinnectai_app/feed_service.dart';
 
 // Mock classes
 class MockFeedService extends Mock implements FeedService {}

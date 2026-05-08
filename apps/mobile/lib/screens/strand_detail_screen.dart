@@ -14,16 +14,16 @@ class _StrandDetailScreenState extends State<StrandDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KinnectColors.darkBg,
+      backgroundColor: KinnectColors.background,
       appBar: AppBar(
-        backgroundColor: KinnectColors.darkSurface,
+        backgroundColor: KinnectColors.surface,
         title: Text('Strand ${widget.strandId}'),
         elevation: 0,
       ),
       body: ListView(
         children: [
           Container(
-            color: KinnectColors.darkCard,
+            color: KinnectColors.surfaceElevated,
             padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

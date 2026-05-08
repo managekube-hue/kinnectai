@@ -20,8 +20,8 @@ class LinePullToRefresh extends StatelessWidget {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: onRefresh,
-      color: color ?? KinnectColors.amber,
-      backgroundColor: backgroundColor ?? KinnectColors.darkSurface,
+      color: color ?? KinnectColors.accent,
+      backgroundColor: backgroundColor ?? KinnectColors.surface,
       strokeWidth: 2.5,
       displacement: 60,
       child: child,
@@ -133,9 +133,9 @@ class _FeedLoadingShimmerState extends State<FeedLoadingShimmer>
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                KinnectColors.darkBg,
-                KinnectColors.darkSurface.withOpacity(0.5),
-                KinnectColors.darkBg,
+                KinnectColors.background,
+                KinnectColors.surface.withOpacity(0.5),
+                KinnectColors.background,
               ],
               stops: [
                 _controller.value - 0.3,
@@ -151,13 +151,13 @@ class _FeedLoadingShimmerState extends State<FeedLoadingShimmer>
                 Icon(
                   Icons.auto_awesome,
                   size: 48,
-                  color: KinnectColors.amber.withOpacity(0.3),
+                  color: KinnectColors.accent.withOpacity(0.3),
                 ),
                 const SizedBox(height: 16),
                 Text(
                   'Loading your feed...',
                   style: TextStyle(
-                    color: KinnectColors.grey60,
+                    color: KinnectColors.textSecondary,
                     fontSize: 14,
                   ),
                 ),

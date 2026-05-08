@@ -12,9 +12,9 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KinnectColors.darkBg,
+      backgroundColor: KinnectColors.background,
       appBar: AppBar(
-        backgroundColor: KinnectColors.darkSurface,
+        backgroundColor: KinnectColors.surface,
         title: const Text('Subscription'),
         elevation: 0,
       ),
@@ -26,9 +26,9 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
 
           Container(
             decoration: BoxDecoration(
-              color: KinnectColors.darkCard,
+              color: KinnectColors.surfaceElevated,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: KinnectColors.amber),
+              border: Border.all(color: KinnectColors.accent),
             ),
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -47,7 +47,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: KinnectColors.amber,
+                        color: KinnectColors.accent,
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: const Text(
@@ -75,7 +75,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
           // Free Plan
           Container(
             decoration: BoxDecoration(
-              color: KinnectColors.darkCard,
+              color: KinnectColors.surfaceElevated,
               borderRadius: BorderRadius.circular(12),
             ),
             padding: const EdgeInsets.all(16),
@@ -98,7 +98,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
           // Premium Plan
           Container(
             decoration: BoxDecoration(
-              color: KinnectColors.darkCard,
+              color: KinnectColors.surfaceElevated,
               borderRadius: BorderRadius.circular(12),
             ),
             padding: const EdgeInsets.all(16),

@@ -34,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          color: KinnectColors.darkSurface,
+          color: KinnectColors.surface,
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.3),
@@ -73,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Icon(
               icon,
-              color: isActive ? KinnectColors.amber : KinnectColors.grey60,
+              color: isActive ? KinnectColors.accent : KinnectColors.textSecondary,
               size: 28,
             ),
             const SizedBox(height: 4),
@@ -81,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
               label,
               style: TextStyle(
                 fontSize: 10,
-                color: isActive ? KinnectColors.white : KinnectColors.grey60,
+                color: isActive ? KinnectColors.textPrimary : KinnectColors.textSecondary,
               ),
             ),
           ],
@@ -96,29 +96,14 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: const BoxDecoration(
-          color: KinnectColors.amber,
+          color: KinnectColors.accent,
           shape: BoxShape.circle,
         ),
         child: const Icon(
           Icons.add,
-          color: KinnectColors.darkBg,
+          color: KinnectColors.background,
           size: 32,
         ),
-      ),
-    );
-  }
-}
-
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-            label: 'Pulse',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Root',
-          ),
-        ],
       ),
     );
   }

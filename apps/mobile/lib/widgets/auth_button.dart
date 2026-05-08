@@ -117,7 +117,7 @@ class AuthButton extends StatelessWidget {
               boxShadow: isPrimary
                   ? [
                       BoxShadow(
-                        color: KinnectColors.amber.withOpacity(0.3),
+                        color: KinnectColors.accent.withOpacity(0.3),
                         blurRadius: 12,
                         offset: const Offset(0, 4),
                       ),
@@ -250,21 +250,21 @@ class AuthButton extends StatelessWidget {
   }
 
   Color _getBackgroundColor() {
-    if (isPrimary) return KinnectColors.amber;
+    if (isPrimary) return KinnectColors.accent;
     if (type == AuthButtonType.phone) return Colors.transparent;
-    return KinnectColors.darkSurface;
+    return KinnectColors.surface;
   }
 
   Color _getTextColor() {
-    if (isPrimary) return KinnectColors.darkBg;
-    if (type == AuthButtonType.phone) return KinnectColors.amber;
-    return KinnectColors.white;
+    if (isPrimary) return KinnectColors.background;
+    if (type == AuthButtonType.phone) return KinnectColors.accent;
+    return KinnectColors.textPrimary;
   }
 
   Border? _getBorder() {
     if (type == AuthButtonType.phone) {
       return Border.all(
-        color: KinnectColors.amber.withOpacity(0.6),
+        color: KinnectColors.accent.withOpacity(0.6),
         width: 2,
       );
     }

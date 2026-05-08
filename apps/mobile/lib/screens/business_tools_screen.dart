@@ -7,39 +7,39 @@ class BusinessToolsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KinnectColors.darkBg,
+      backgroundColor: KinnectColors.background,
       appBar: AppBar(
-        backgroundColor: KinnectColors.darkSurface,
+        backgroundColor: KinnectColors.surface,
         title: const Text('Business Tools'),
       ),
       body: ListView(
         children: [
           ListTile(
-            leading: const Icon(Icons.analytics, color: KinnectColors.amber),
-            title: const Text('Branch Analytics', style: TextStyle(color: KinnectColors.white)),
-            subtitle: const Text('Dashboard and insights', style: TextStyle(color: KinnectColors.grey60, fontSize: 12)),
-            trailing: const Icon(Icons.chevron_right, color: KinnectColors.grey40),
+            leading: const Icon(Icons.analytics, color: KinnectColors.accent),
+            title: const Text('Branch Analytics', style: TextStyle(color: KinnectColors.textPrimary)),
+            subtitle: const Text('Dashboard and insights', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
+            trailing: const Icon(Icons.chevron_right, color: KinnectColors.textMuted),
             onTap: () {},
           ),
           ListTile(
-            leading: const Icon(Icons.event, color: KinnectColors.amber),
-            title: const Text('Gathering Ticketing', style: TextStyle(color: KinnectColors.white)),
-            subtitle: const Text('Room monetization', style: TextStyle(color: KinnectColors.grey60, fontSize: 12)),
-            trailing: const Icon(Icons.chevron_right, color: KinnectColors.grey40),
+            leading: const Icon(Icons.event, color: KinnectColors.accent),
+            title: const Text('Gathering Ticketing', style: TextStyle(color: KinnectColors.textPrimary)),
+            subtitle: const Text('Room monetization', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
+            trailing: const Icon(Icons.chevron_right, color: KinnectColors.textMuted),
             onTap: () {},
           ),
           ListTile(
-            leading: const Icon(Icons.store, color: KinnectColors.amber),
-            title: const Text('Marketplace Seller', style: TextStyle(color: KinnectColors.white)),
-            subtitle: const Text('Ancestral products', style: TextStyle(color: KinnectColors.grey60, fontSize: 12)),
-            trailing: const Icon(Icons.chevron_right, color: KinnectColors.grey40),
+            leading: const Icon(Icons.store, color: KinnectColors.accent),
+            title: const Text('Marketplace Seller', style: TextStyle(color: KinnectColors.textPrimary)),
+            subtitle: const Text('Ancestral products', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
+            trailing: const Icon(Icons.chevron_right, color: KinnectColors.textMuted),
             onTap: () {},
           ),
           ListTile(
-            leading: const Icon(Icons.api, color: KinnectColors.amber),
-            title: const Text('KinnectAI Insights API', style: TextStyle(color: KinnectColors.white)),
-            subtitle: const Text('Developer access', style: TextStyle(color: KinnectColors.grey60, fontSize: 12)),
-            trailing: const Icon(Icons.chevron_right, color: KinnectColors.grey40),
+            leading: const Icon(Icons.api, color: KinnectColors.accent),
+            title: const Text('KinnectAI Insights API', style: TextStyle(color: KinnectColors.textPrimary)),
+            subtitle: const Text('Developer access', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
+            trailing: const Icon(Icons.chevron_right, color: KinnectColors.textMuted),
             onTap: () {},
           ),
         ],

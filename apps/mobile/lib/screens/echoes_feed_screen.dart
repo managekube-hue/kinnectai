@@ -7,23 +7,23 @@ class EchoesFeedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KinnectColors.darkBg,
+      backgroundColor: KinnectColors.background,
       appBar: AppBar(
-        backgroundColor: KinnectColors.darkSurface,
+        backgroundColor: KinnectColors.surface,
         title: const Text('Echoes'),
       ),
       body: Column(
         children: [
           Container(
             padding: const EdgeInsets.all(16),
-            color: KinnectColors.amber.withOpacity(0.1),
+            color: KinnectColors.accent.withOpacity(0.1),
             child: const Row(
               children: [
-                Icon(Icons.history, color: KinnectColors.amber),
+                Icon(Icons.history, color: KinnectColors.accent),
                 SizedBox(width: 8),
                 Text(
                   'On This Day',
-                  style: TextStyle(color: KinnectColors.amber, fontSize: 16),
+                  style: TextStyle(color: KinnectColors.accent, fontSize: 16),
                 ),
               ],
             ),
@@ -32,7 +32,7 @@ class EchoesFeedScreen extends StatelessWidget {
             child: Center(
               child: Text(
                 'No historical matches found',
-                style: TextStyle(color: KinnectColors.grey60),
+                style: TextStyle(color: KinnectColors.textSecondary),
               ),
             ),
           ),

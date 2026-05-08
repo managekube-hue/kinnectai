@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
@@ -321,11 +321,11 @@ class AppGoRouter {
         path: '/:rest(.*)',
         builder: (BuildContext context, GoRouterState state) {
           return Scaffold(
-            backgroundColor: KinnectColors.darkBg,
+            backgroundColor: KinnectColors.background,
             body: Center(
               child: Text(
                 'Route not implemented: /${state.pathParameters['rest'] ?? ''}',
-                style: const TextStyle(color: KinnectColors.white),
+                style: const TextStyle(color: KinnectColors.textPrimary),
               ),
             ),
           );
@@ -371,7 +371,7 @@ class _MainShell extends StatelessWidget {
       body: child,
       bottomNavigationBar: SafeArea(
         child: Container(
-          color: KinnectColors.darkSurface,
+          color: KinnectColors.surface,
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -401,12 +401,12 @@ class _MainShell extends StatelessWidget {
                   width: 48,
                   height: 48,
                   decoration: const BoxDecoration(
-                    color: KinnectColors.amber,
+                    color: KinnectColors.accent,
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
                     PhosphorIcons.plus(),
-                    color: KinnectColors.darkBg,
+                    color: KinnectColors.background,
                   ),
                 ),
               ),
@@ -445,7 +445,7 @@ class _NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = active ? KinnectColors.amber : KinnectColors.grey60;
+    final color = active ? KinnectColors.accent : KinnectColors.textSecondary;
     return GestureDetector(
       onTap: onTap,
       child: Column(

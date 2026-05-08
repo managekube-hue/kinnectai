@@ -7,9 +7,9 @@ class OfflineVideosScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KinnectColors.darkBg,
+      backgroundColor: KinnectColors.background,
       appBar: AppBar(
-        backgroundColor: KinnectColors.darkSurface,
+        backgroundColor: KinnectColors.surface,
         title: const Text('Offline Videos'),
         actions: [
           IconButton(icon: const Icon(Icons.delete_sweep), onPressed: () {}),
@@ -19,11 +19,11 @@ class OfflineVideosScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.download_outlined, size: 64, color: KinnectColors.grey40),
+            Icon(Icons.download_outlined, size: 64, color: KinnectColors.textMuted),
             SizedBox(height: 16),
-            Text('No downloaded Memories', style: TextStyle(color: KinnectColors.white, fontSize: 18)),
+            Text('No downloaded Memories', style: TextStyle(color: KinnectColors.textPrimary, fontSize: 18)),
             SizedBox(height: 8),
-            Text('Download Memories for offline viewing', style: TextStyle(color: KinnectColors.grey60)),
+            Text('Download Memories for offline viewing', style: TextStyle(color: KinnectColors.textSecondary)),
           ],
         ),
       ),

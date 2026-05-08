@@ -10,9 +10,9 @@ class QRCodeScreen extends StatelessWidget {
     const profileUrl = 'https://kinnect.ai/root/user_id_123';
     
     return Scaffold(
-      backgroundColor: KinnectColors.darkBg,
+      backgroundColor: KinnectColors.background,
       appBar: AppBar(
-        backgroundColor: KinnectColors.darkSurface,
+        backgroundColor: KinnectColors.surface,
         title: const Text('Your QR Code'),
       ),
       body: Center(
@@ -34,7 +34,7 @@ class QRCodeScreen extends StatelessWidget {
             const SizedBox(height: 32),
             const Text(
               'Scan to view Root profile',
-              style: TextStyle(color: KinnectColors.grey60, fontSize: 16),
+              style: TextStyle(color: KinnectColors.textSecondary, fontSize: 16),
             ),
             const SizedBox(height: 48),
             Row(
@@ -45,8 +45,8 @@ class QRCodeScreen extends StatelessWidget {
                   icon: const Icon(Icons.download),
                   label: const Text('Save'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: KinnectColors.amber,
-                    foregroundColor: KinnectColors.darkBg,
+                    backgroundColor: KinnectColors.accent,
+                    foregroundColor: KinnectColors.background,
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -55,8 +55,8 @@ class QRCodeScreen extends StatelessWidget {
                   icon: const Icon(Icons.share),
                   label: const Text('Share'),
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: KinnectColors.amber,
-                    side: const BorderSide(color: KinnectColors.amber),
+                    foregroundColor: KinnectColors.accent,
+                    side: const BorderSide(color: KinnectColors.accent),
                   ),
                 ),
               ],

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../router/app_nav.dart';
 import '../theme/colors.dart';
 
@@ -19,7 +19,7 @@ class KinshipBadgeSheet extends StatelessWidget {
     return Container(
       height: MediaQuery.of(context).size.height * 0.7,
       decoration: const BoxDecoration(
-        color: KinnectColors.darkSurface,
+        color: KinnectColors.surface,
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
@@ -63,7 +63,7 @@ class KinshipBadgeSheet extends StatelessWidget {
                       Text(
                         relationshipType,
                         style: const TextStyle(
-                          color: KinnectColors.white,
+                          color: KinnectColors.textPrimary,
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
@@ -88,12 +88,12 @@ class KinshipBadgeSheet extends StatelessWidget {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: KinnectColors.amber,
+                    backgroundColor: KinnectColors.accent,
                     minimumSize: const Size(double.infinity, 56),
                   ),
                   child: const Text(
                     'View Full Graph Path',
-                    style: TextStyle(color: KinnectColors.darkBg, fontSize: 16),
+                    style: TextStyle(color: KinnectColors.background, fontSize: 16),
                   ),
                 ),
               ],
@@ -108,7 +108,7 @@ class KinshipBadgeSheet extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: KinnectColors.darkBg,
+        color: KinnectColors.background,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
@@ -117,7 +117,7 @@ class KinshipBadgeSheet extends StatelessWidget {
           Text(
             title,
             style: const TextStyle(
-              color: KinnectColors.amber,
+              color: KinnectColors.accent,
               fontSize: 14,
               fontWeight: FontWeight.bold,
             ),
@@ -125,7 +125,7 @@ class KinshipBadgeSheet extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             description,
-            style: const TextStyle(color: KinnectColors.grey60, fontSize: 14),
+            style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 14),
           ),
         ],
       ),
@@ -133,9 +133,9 @@ class KinshipBadgeSheet extends StatelessWidget {
   }
 
   Color _getScoreColor(double score) {
-    if (score >= 0.8) return KinnectColors.amber;
+    if (score >= 0.8) return KinnectColors.accent;
     if (score >= 0.5) return KinnectColors.success;
-    return KinnectColors.grey60;
+    return KinnectColors.textSecondary;
   }
 }
 

@@ -16,23 +16,23 @@ class _NightModeScreenState extends State<NightModeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KinnectColors.darkBg,
+      backgroundColor: KinnectColors.background,
       appBar: AppBar(
-        backgroundColor: KinnectColors.darkSurface,
+        backgroundColor: KinnectColors.surface,
         title: const Text('Night Mode Schedule'),
       ),
       body: ListView(
         children: [
           SwitchListTile(
-            title: const Text('Enable Night Mode', style: TextStyle(color: KinnectColors.white)),
-            subtitle: const Text('Grayscale + mute notifications', style: TextStyle(color: KinnectColors.grey60, fontSize: 12)),
+            title: const Text('Enable Night Mode', style: TextStyle(color: KinnectColors.textPrimary)),
+            subtitle: const Text('Grayscale + mute notifications', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
             value: _enabled,
-            activeColor: KinnectColors.amber,
+            activeColor: KinnectColors.accent,
             onChanged: (value) => setState(() => _enabled = value),
           ),
           ListTile(
-            title: const Text('Start time', style: TextStyle(color: KinnectColors.white)),
-            subtitle: Text(_startTime.format(context), style: const TextStyle(color: KinnectColors.amber)),
+            title: const Text('Start time', style: TextStyle(color: KinnectColors.textPrimary)),
+            subtitle: Text(_startTime.format(context), style: const TextStyle(color: KinnectColors.accent)),
             enabled: _enabled,
             onTap: () async {
               final time = await showTimePicker(context: context, initialTime: _startTime);
@@ -40,8 +40,8 @@ class _NightModeScreenState extends State<NightModeScreen> {
             },
           ),
           ListTile(
-            title: const Text('End time', style: TextStyle(color: KinnectColors.white)),
-            subtitle: Text(_endTime.format(context), style: const TextStyle(color: KinnectColors.amber)),
+            title: const Text('End time', style: TextStyle(color: KinnectColors.textPrimary)),
+            subtitle: Text(_endTime.format(context), style: const TextStyle(color: KinnectColors.accent)),
             enabled: _enabled,
             onTap: () async {
               final time = await showTimePicker(context: context, initialTime: _endTime);

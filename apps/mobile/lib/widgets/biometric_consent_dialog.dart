@@ -26,11 +26,11 @@ class _BiometricConsentDialogState extends State<BiometricConsentDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: KinnectColors.darkSurface,
+      backgroundColor: KinnectColors.surface,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: Row(
         children: [
-          const Icon(Icons.security, color: KinnectColors.amber, size: 28),
+          const Icon(Icons.security, color: KinnectColors.accent, size: 28),
           const SizedBox(width: 12),
           Text('Biometric Consent', style: KinnectTextStyles.headlineSmall),
         ],
@@ -48,9 +48,9 @@ class _BiometricConsentDialogState extends State<BiometricConsentDialog> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: KinnectColors.darkBg,
+                color: KinnectColors.background,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: KinnectColors.amber.withOpacity(0.3)),
+                border: Border.all(color: KinnectColors.accent.withOpacity(0.3)),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,7 +85,7 @@ class _BiometricConsentDialogState extends State<BiometricConsentDialog> {
                 Checkbox(
                   value: _consentChecked,
                   onChanged: (value) => setState(() => _consentChecked = value ?? false),
-                  activeColor: KinnectColors.amber,
+                  activeColor: KinnectColors.accent,
                 ),
                 Expanded(
                   child: Text(
@@ -100,7 +100,7 @@ class _BiometricConsentDialogState extends State<BiometricConsentDialog> {
               padding: const EdgeInsets.only(left: 48),
               child: Text(
                 'Required for ElevenLabs synthesis',
-                style: KinnectTextStyles.caption.copyWith(color: KinnectColors.grey60),
+                style: KinnectTextStyles.caption.copyWith(color: KinnectColors.textSecondary),
               ),
             ),
           ],
@@ -114,9 +114,9 @@ class _BiometricConsentDialogState extends State<BiometricConsentDialog> {
         ElevatedButton(
           onPressed: _consentChecked ? () => Navigator.pop(context, true) : null,
           style: ElevatedButton.styleFrom(
-            backgroundColor: KinnectColors.amber,
-            foregroundColor: KinnectColors.darkBg,
-            disabledBackgroundColor: KinnectColors.grey40,
+            backgroundColor: KinnectColors.accent,
+            foregroundColor: KinnectColors.background,
+            disabledBackgroundColor: KinnectColors.textMuted,
           ),
           child: const Text('I Consent'),
         ),
@@ -127,7 +127,7 @@ class _BiometricConsentDialogState extends State<BiometricConsentDialog> {
   Widget _buildInfoRow(IconData icon, String text) {
     return Row(
       children: [
-        Icon(icon, size: 16, color: KinnectColors.amber),
+        Icon(icon, size: 16, color: KinnectColors.accent),
         const SizedBox(width: 8),
         Expanded(child: Text(text, style: KinnectTextStyles.bodySmall)),
       ],

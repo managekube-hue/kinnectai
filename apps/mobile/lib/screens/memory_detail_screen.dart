@@ -14,9 +14,9 @@ class _MemoryDetailScreenState extends State<MemoryDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KinnectColors.darkBg,
+      backgroundColor: KinnectColors.background,
       appBar: AppBar(
-        backgroundColor: KinnectColors.darkSurface,
+        backgroundColor: KinnectColors.surface,
         title: const Text('Memory'),
         elevation: 0,
       ),
@@ -29,7 +29,7 @@ class _MemoryDetailScreenState extends State<MemoryDetailScreen> {
               color: Colors.black,
               height: 300,
               child: Center(
-                child: Icon(Icons.image, color: KinnectColors.amber, size: 80),
+                child: Icon(Icons.image, color: KinnectColors.accent, size: 80),
               ),
             ),
             Padding(
@@ -46,7 +46,7 @@ class _MemoryDetailScreenState extends State<MemoryDetailScreen> {
                   Text(
                     'Captured • Memory ID: ${widget.memoryId}',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: KinnectColors.grey70,
+                      color: KinnectColors.textMediumEmphasis,
                     ),
                   ),
                   const SizedBox(height: 16),

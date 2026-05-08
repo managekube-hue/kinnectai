@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import '../models/memory.dart';
-import '../services/feed_service.dart';
+import '../feed_service.dart';
 
 // Events
 abstract class LineEvent extends Equatable {

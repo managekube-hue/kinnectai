@@ -30,9 +30,9 @@ class _NotificationsSettingsScreenState extends State<NotificationsSettingsScree
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KinnectColors.darkBg,
+      backgroundColor: KinnectColors.background,
       appBar: AppBar(
-        backgroundColor: KinnectColors.darkSurface,
+        backgroundColor: KinnectColors.surface,
         title: const Text('Notifications'),
         actions: [
           TextButton(
@@ -140,7 +140,7 @@ class _NotificationsSettingsScreenState extends State<NotificationsSettingsScree
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: KinnectColors.darkSurface,
+        color: KinnectColors.surface,
         borderRadius: BorderRadius.circular(8),
       ),
       child: const Column(
@@ -148,15 +148,15 @@ class _NotificationsSettingsScreenState extends State<NotificationsSettingsScree
         children: [
           Row(
             children: [
-              Icon(Icons.info_outline, color: KinnectColors.amber, size: 20),
+              Icon(Icons.info_outline, color: KinnectColors.accent, size: 20),
               SizedBox(width: 8),
-              Text('Push vs In-App', style: TextStyle(color: KinnectColors.white, fontWeight: FontWeight.bold)),
+              Text('Push vs In-App', style: TextStyle(color: KinnectColors.textPrimary, fontWeight: FontWeight.bold)),
             ],
           ),
           SizedBox(height: 8),
           Text(
             'Push: Device notifications\nIn-App: Pulse tab inbox\n\nDisabling Push won\'t affect In-App history.',
-            style: TextStyle(color: KinnectColors.grey60, fontSize: 12, height: 1.5),
+            style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12, height: 1.5),
           ),
         ],
       ),
@@ -174,16 +174,16 @@ class _NotificationsSettingsScreenState extends State<NotificationsSettingsScree
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       decoration: BoxDecoration(
-        color: KinnectColors.darkSurface,
+        color: KinnectColors.surface,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
         children: [
           ListTile(
-            leading: Icon(icon, color: KinnectColors.amber),
+            leading: Icon(icon, color: KinnectColors.accent),
             title: Row(
               children: [
-                Text(title, style: const TextStyle(color: KinnectColors.white)),
+                Text(title, style: const TextStyle(color: KinnectColors.textPrimary)),
                 if (recommended) ...[
                   const SizedBox(width: 8),
                   Container(
@@ -214,7 +214,7 @@ class _NotificationsSettingsScreenState extends State<NotificationsSettingsScree
                 ],
               ],
             ),
-            subtitle: Text(subtitle, style: const TextStyle(color: KinnectColors.grey60, fontSize: 12)),
+            subtitle: Text(subtitle, style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -223,11 +223,11 @@ class _NotificationsSettingsScreenState extends State<NotificationsSettingsScree
                 Expanded(
                   child: Row(
                     children: [
-                      const Text('Push', style: TextStyle(color: KinnectColors.grey60, fontSize: 12)),
+                      const Text('Push', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
                       const SizedBox(width: 8),
                       Switch(
                         value: _notifications[key]!['push']!,
-                        activeColor: KinnectColors.amber,
+                        activeColor: KinnectColors.accent,
                         onChanged: required
                             ? null
                             : (value) => setState(() => _notifications[key]!['push'] = value),
@@ -238,11 +238,11 @@ class _NotificationsSettingsScreenState extends State<NotificationsSettingsScree
                 Expanded(
                   child: Row(
                     children: [
-                      const Text('In-App', style: TextStyle(color: KinnectColors.grey60, fontSize: 12)),
+                      const Text('In-App', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
                       const SizedBox(width: 8),
                       Switch(
                         value: _notifications[key]!['inApp']!,
-                        activeColor: KinnectColors.amber,
+                        activeColor: KinnectColors.accent,
                         onChanged: (value) => setState(() => _notifications[key]!['inApp'] = value),
                       ),
                     ],
@@ -260,16 +260,16 @@ class _NotificationsSettingsScreenState extends State<NotificationsSettingsScree
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: KinnectColors.darkSurface,
-        title: const Text('Disable All Notifications?', style: TextStyle(color: KinnectColors.white)),
+        backgroundColor: KinnectColors.surface,
+        title: const Text('Disable All Notifications?', style: TextStyle(color: KinnectColors.textPrimary)),
         content: const Text(
           'This will disable Push notifications for all types (except Memory Box which is required).\n\nIn-App notifications will remain in your Pulse tab.',
-          style: TextStyle(color: KinnectColors.grey60),
+          style: TextStyle(color: KinnectColors.textSecondary),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel', style: TextStyle(color: KinnectColors.grey60)),
+            child: const Text('Cancel', style: TextStyle(color: KinnectColors.textSecondary)),
           ),
           ElevatedButton(
             onPressed: () {

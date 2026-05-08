@@ -3,7 +3,7 @@ import 'package:kinnectai_app/cubits/settings_cubit.dart';
 import 'package:kinnectai_app/models/dtos/settings_state_dto.dart';
 import 'package:kinnectai_app/repositories/settings_repository.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 class _MockSettingsRepository extends Mock implements SettingsRepository {}
 
