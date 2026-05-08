@@ -1,26 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../theme/colors.dart';
 import '../theme/spacing.dart';
 import '../models/memory.dart';
-import '../widgets/line_video_player.dart';
+import '../widgets/enhanced_video_player.dart';
 import '../widgets/right_rail_buttons.dart';
 import '../widgets/bottom_overlay.dart';
+import '../widgets/pull_to_refresh.dart';
+import '../cubits/line_cubit.dart';
+import '../services/feed_service.dart';
+import '../services/analytics_service.dart';
+import '../services/video_cache.dart';
 
 /// The Line - Vertical video feed screen (PRD Section 01)
-class LineScreen extends StatefulWidget {
+class LineScreen extends StatelessWidget {
   const LineScreen({super.key});
 
   @override
-  State<LineScreen> createState() => _LineScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => LineCubit(FeedService())..loadFeed('current_user_id'),
+      child: const _LineScreenContent(),
+    );
+  }
 }
 
-class _LineScreenState extends State<LineScreen> {
+class _LineScreenContent extends StatefulWidget {
+  const _LineScreenContent();
+
+  @override
+  State<_LineScreenContent> createState() => _LineScreenContentState();
+}
+
+class _LineScreenContentState extends State<_LineScreenContent> {
   final PageController _pageController = PageController();
-  int _currentIndex = 0;
-  
-  // TODO: Replace with real feed service
-  final List<Memory> _memories = _getSampleMemories();
+  final VideoCache _videoCache = VideoCache();
 
   @override
   void dispose() {
