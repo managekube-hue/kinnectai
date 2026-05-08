@@ -1,0 +1,310 @@
+import 'package:flutter/material.dart';
+import '../theme/colors.dart';
+import '../models/memory.dart';
+import '../services/feed_service.dart';
+
+class PulseInboxScreen extends StatefulWidget {
+  const PulseInboxScreen({super.key});
+
+  @override
+  State<PulseInboxScreen> createState() => _PulseInboxScreenState();
+}
+
+class _PulseInboxScreenState extends State<PulseInboxScreen> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+  final FeedService _feedService = FeedService();
+  List<PulseNotification> _notifications = [];
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+    _loadNotifications();
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _loadNotifications() async {
+    setState(() => _isLoading = true);
+    await Future.delayed(const Duration(milliseconds: 500));
+    setState(() {
+      _notifications = _getSampleNotifications();
+      _isLoading = false;
+    });
+  }
+
+  List<PulseNotification> _getSampleNotifications() {
+    return [
+      PulseNotification(
+        id: '1',
+        type: PulseType.pulse,
+        fromUser: 'Sarah Kim',
+        fromUserId: 'sarah_kim_id',
+        memoryId: 'mem1',
+        message: 'pulsed your Memory',
+        timestamp: DateTime.now().subtract(const Duration(minutes: 5)),
+        isRead: false,
+      ),
+      PulseNotification(
+        id: '2',
+        type: PulseType.comment,
+        fromUser: 'Marcus Chen',
+        fromUserId: 'marcus_chen_id',
+        memoryId: 'mem2',
+        message: 'commented on your Memory',
+        timestamp: DateTime.now().subtract(const Duration(hours: 2)),
+        isRead: false,
+      ),
+      PulseNotification(
+        id: '3',
+        type: PulseType.kinnection,
+        fromUser: 'Elara Vance',
+        fromUserId: 'elara_vance_id',
+        message: 'accepted your Kinnection request',
+        timestamp: DateTime.now().subtract(const Duration(hours: 5)),
+        isRead: true,
+      ),
+    ];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: KinnectColors.darkBg,
+      appBar: AppBar(
+        backgroundColor: KinnectColors.darkSurface,
+        title: const Text('Pulse Inbox'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.done_all),
+            onPressed: _markAllAsRead,
+            tooltip: 'Mark all as read',
+          ),
+        ],
+        bottom: TabBar(
+          controller: _tabController,
+          indicatorColor: KinnectColors.amber,
+          tabs: const [
+            Tab(text: 'All'),
+            Tab(text: 'Pulses'),
+            Tab(text: 'Kinnections'),
+          ],
+        ),
+      ),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator(color: KinnectColors.amber))
+          : TabBarView(
+              controller: _tabController,
+              children: [
+                _buildNotificationList(_notifications),
+                _buildNotificationList(_notifications.where((n) => n.type == PulseType.pulse || n.type == PulseType.comment).toList()),
+                _buildNotificationList(_notifications.where((n) => n.type == PulseType.kinnection).toList()),
+              ],
+            ),
+    );
+  }
+
+  Widget _buildNotificationList(List<PulseNotification> notifications) {
+    if (notifications.isEmpty) {
+      return const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.favorite_border, size: 64, color: KinnectColors.grey40),
+            SizedBox(height: 16),
+            Text(
+              'No new Pulses',
+              style: TextStyle(color: KinnectColors.white, fontSize: 18),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Your Pulse activity will appear here',
+              style: TextStyle(color: KinnectColors.grey60),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return RefreshIndicator(
+      onRefresh: _loadNotifications,
+      color: KinnectColors.amber,
+      backgroundColor: KinnectColors.darkSurface,
+      child: ListView.builder(
+        itemCount: notifications.length,
+        itemBuilder: (context, index) => _buildNotificationCard(notifications[index]),
+      ),
+    );
+  }
+
+  Widget _buildNotificationCard(PulseNotification notification) {
+    return Dismissible(
+      key: Key(notification.id),
+      onDismissed: (_) => _dismissNotification(notification),
+      background: Container(
+        color: KinnectColors.error,
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.only(right: 16),
+        child: const Icon(Icons.delete, color: KinnectColors.white),
+      ),
+      child: InkWell(
+        onTap: () => _handleNotificationTap(notification),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: notification.isRead ? Colors.transparent : KinnectColors.darkSurface.withOpacity(0.5),
+            border: Border(bottom: BorderSide(color: KinnectColors.grey20, width: 1)),
+          ),
+          child: Row(
+            children: [
+              CircleAvatar(
+                radius: 24,
+                backgroundColor: _getTypeColor(notification.type).withOpacity(0.2),
+                child: Icon(_getTypeIcon(notification.type), color: _getTypeColor(notification.type)),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    RichText(
+                      text: TextSpan(
+                        style: const TextStyle(color: KinnectColors.white, fontSize: 14),
+                        children: [
+                          TextSpan(
+                            text: notification.fromUser,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          TextSpan(text: ' ${notification.message}'),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      _formatTimestamp(notification.timestamp),
+                      style: const TextStyle(color: KinnectColors.grey60, fontSize: 12),
+                    ),
+                  ],
+                ),
+              ),
+              if (!notification.isRead)
+                Container(
+                  width: 8,
+                  height: 8,
+                  decoration: const BoxDecoration(
+                    color: KinnectColors.amber,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  IconData _getTypeIcon(PulseType type) {
+    switch (type) {
+      case PulseType.pulse:
+        return Icons.favorite;
+      case PulseType.comment:
+        return Icons.comment;
+      case PulseType.kinnection:
+        return Icons.people;
+      case PulseType.rewind:
+        return Icons.replay;
+    }
+  }
+
+  Color _getTypeColor(PulseType type) {
+    switch (type) {
+      case PulseType.pulse:
+        return KinnectColors.error;
+      case PulseType.comment:
+        return KinnectColors.amber;
+      case PulseType.kinnection:
+        return KinnectColors.success;
+      case PulseType.rewind:
+        return KinnectColors.warning;
+    }
+  }
+
+  String _formatTimestamp(DateTime timestamp) {
+    final now = DateTime.now();
+    final diff = now.difference(timestamp);
+
+    if (diff.inMinutes < 60) {
+      return '${diff.inMinutes}m ago';
+    } else if (diff.inHours < 24) {
+      return '${diff.inHours}h ago';
+    } else {
+      return '${diff.inDays}d ago';
+    }
+  }
+
+  void _handleNotificationTap(PulseNotification notification) {
+    setState(() => notification.isRead = true);
+
+    if (notification.memoryId != null) {
+      Navigator.pushNamed(
+        context,
+        '/comments',
+        arguments: {'memoryId': notification.memoryId},
+      );
+    } else if (notification.fromUserId != null) {
+      Navigator.pushNamed(
+        context,
+        '/profile',
+        arguments: {'userId': notification.fromUserId},
+      );
+    }
+  }
+
+  void _dismissNotification(PulseNotification notification) {
+    setState(() => _notifications.remove(notification));
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Notification removed'),
+        backgroundColor: KinnectColors.darkSurface,
+      ),
+    );
+  }
+
+  void _markAllAsRead() {
+    setState(() {
+      for (var notification in _notifications) {
+        notification.isRead = true;
+      }
+    });
+  }
+}
+
+enum PulseType { pulse, comment, kinnection, rewind }
+
+class PulseNotification {
+  final String id;
+  final PulseType type;
+  final String fromUser;
+  final String? fromUserId;
+  final String? memoryId;
+  final String message;
+  final DateTime timestamp;
+  bool isRead;
+
+  PulseNotification({
+    required this.id,
+    required this.type,
+    required this.fromUser,
+    this.fromUserId,
+    this.memoryId,
+    required this.message,
+    required this.timestamp,
+    this.isRead = false,
+  });
+}
+

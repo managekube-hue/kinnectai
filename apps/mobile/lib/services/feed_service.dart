@@ -2,13 +2,15 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import '../models/memory.dart';
+import 'line_api_client.dart';
+import '../utils/performance_monitor.dart';
 
 /// Feed service for loading The Line (PRD Section 01.1)
 /// Handles Redis cache ? PostgreSQL fallback pattern
 class FeedService {
-  // TODO: Replace with actual dio HTTP client
-  // final Dio _dio;
-  // final WebSocketChannel _ws;
+  final LineApiClient? apiClient;
+  
+  FeedService({this.apiClient});
   
   static const String _cacheKeyPrefix = 'feed:';
   static const Duration _cacheExpiry = Duration(minutes: 5);
@@ -21,27 +23,45 @@ class FeedService {
     int limit = 20,
     String? cursor,
   }) async {
-    try {
-      // 1. Try local cache first (simulating Redis)
-      final cached = await _getCachedFeed(userId, tab);
-      if (cached != null && cached.isNotEmpty) {
-        debugPrint('?? Feed loaded from cache (${cached.length} items)');
-        return cached;
-      }
-      
-      // 2. Fetch from API (simulating PostgreSQL + KC computation)
-      debugPrint('?? Fetching feed from API...');
-      final feed = await _fetchFeedFromAPI(userId, tab, limit, cursor);
-      
-      // 3. Cache the result
-      await _cacheFeed(userId, tab, feed);
-      
-      return feed;
-    } catch (e) {
-      debugPrint('? Error loading feed: $e');
-      // Return empty feed on error
-      return [];
-    }
+    return await PerformanceMonitor.measureAsync(
+      PerformanceMonitor.feedLoad,
+      () async {
+        try {
+          // 1. Try local cache first (simulating Redis)
+          final cached = await _getCachedFeed(userId, tab);
+          if (cached != null && cached.isNotEmpty) {
+            debugPrint('? Feed loaded from cache (${cached.length} items)');
+            return cached;
+          }
+          
+          // 2. Fetch from API or use sample data
+          debugPrint('?? Fetching feed from API...');
+          List<Memory> feed;
+          
+          if (apiClient != null) {
+            final result = await apiClient!.getFeed(
+              userId: userId,
+              tab: tab.name,
+              limit: limit,
+              cursor: cursor,
+            );
+            feed = result.isSuccess ? result.data! : _getSampleMemories();
+          } else {
+            // Fallback to sample data for now
+            feed = _getSampleMemories();
+          }
+          
+          // 3. Cache the result
+          await _cacheFeed(userId, tab, feed);
+          
+          return feed;
+        } catch (e) {
+          debugPrint('? Error loading feed: $e');
+          // Return sample data on error
+          return _getSampleMemories();
+        }
+      },
+    );
   }
 
   /// Load next page of feed
@@ -104,29 +124,7 @@ class FeedService {
     }
   }
 
-  Future<List<Memory>> _fetchFeedFromAPI(
-    String userId,
-    LineTab tab,
-    int limit,
-    String? cursor,
-  ) async {
-    // TODO: Replace with actual API call
-    // final response = await _dio.get(
-    //   '/v1/line/$userId',
-    //   queryParameters: {
-    //     'tab': tab.name,
-    //     'limit': limit,
-    //     if (cursor != null) 'cursor': cursor,
-    //   },
-    // );
-    // return (response.data as List).map((json) => Memory.fromJson(json)).toList();
-    
-    // For now, return sample data
-    await Future.delayed(const Duration(milliseconds: 500));
-    return _getSampleFeed();
-  }
-
-  List<Memory> _getSampleFeed() {
+  List<Memory> _getSampleMemories() {
     return [
       Memory(
         id: '1',

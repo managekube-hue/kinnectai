@@ -1,0 +1,292 @@
+import 'package:flutter/material.dart';
+import '../theme/colors.dart';
+
+class NotificationsSettingsScreen extends StatefulWidget {
+  const NotificationsSettingsScreen({super.key});
+
+  @override
+  State<NotificationsSettingsScreen> createState() => _NotificationsSettingsScreenState();
+}
+
+class _NotificationsSettingsScreenState extends State<NotificationsSettingsScreen> {
+  // Notification toggles: Push and In-App
+  final Map<String, Map<String, bool>> _notifications = {
+    'pulses': {'push': true, 'inApp': true},
+    'kinnections': {'push': true, 'inApp': true},
+    'mentions': {'push': true, 'inApp': true},
+    'comments': {'push': true, 'inApp': true},
+    'messages': {'push': true, 'inApp': true},
+    'gatherings': {'push': true, 'inApp': true},
+    'branch': {'push': true, 'inApp': true},
+    'heartbeat': {'push': true, 'inApp': true},
+    'echoes': {'push': true, 'inApp': true},
+    'memorybox': {'push': true, 'inApp': true}, // Cannot be fully disabled
+    'kinshipalerts': {'push': true, 'inApp': true},
+    'ripples': {'push': false, 'inApp': true},
+    'lostbranches': {'push': true, 'inApp': true},
+    'live': {'push': false, 'inApp': true},
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: KinnectColors.darkBg,
+      appBar: AppBar(
+        backgroundColor: KinnectColors.darkSurface,
+        title: const Text('Notifications'),
+        actions: [
+          TextButton(
+            onPressed: _disableAll,
+            child: const Text('Disable All', style: TextStyle(color: KinnectColors.error)),
+          ),
+        ],
+      ),
+      body: ListView(
+        children: [
+          _buildInfo(),
+          _buildNotificationTile(
+            'Pulses',
+            'Reactions and comments on your Memories',
+            Icons.favorite,
+            'pulses',
+          ),
+          _buildNotificationTile(
+            'New Kinnections',
+            'Confirmed connections and Discovery matches',
+            Icons.people,
+            'kinnections',
+          ),
+          _buildNotificationTile(
+            'Mentions',
+            'When you\'re tagged in Memories or comments',
+            Icons.alternate_email,
+            'mentions',
+          ),
+          _buildNotificationTile(
+            'Comments',
+            'Replies to your Memories',
+            Icons.comment,
+            'comments',
+          ),
+          _buildNotificationTile(
+            'Messages',
+            'Direct messages from Kinnections',
+            Icons.message,
+            'messages',
+          ),
+          _buildNotificationTile(
+            'Gatherings',
+            'Room invites and reminders',
+            Icons.event,
+            'gatherings',
+          ),
+          _buildNotificationTile(
+            'Branch Activity',
+            'New Memories, Merges, Markers',
+            Icons.account_tree,
+            'branch',
+          ),
+          _buildNotificationTile(
+            'Heartbeat',
+            'Daily morning digest (recommended)',
+            Icons.favorite_border,
+            'heartbeat',
+            recommended: true,
+          ),
+          _buildNotificationTile(
+            'Echoes',
+            'On This Day memory matches',
+            Icons.history,
+            'echoes',
+          ),
+          _buildNotificationTile(
+            'Memory Box',
+            'Vault deliveries and Steward alerts',
+            Icons.lock,
+            'memorybox',
+            required: true,
+          ),
+          _buildNotificationTile(
+            'Kinship Alerts',
+            'Kin proximity geofence triggers',
+            Icons.location_on,
+            'kinshipalerts',
+          ),
+          _buildNotificationTile(
+            'Ripples',
+            'Your Memory reaches high engagement',
+            Icons.trending_up,
+            'ripples',
+          ),
+          _buildNotificationTile(
+            'Lost Branches',
+            'New probable Kinnections found',
+            Icons.search,
+            'lostbranches',
+          ),
+          _buildNotificationTile(
+            'Live Broadcasts',
+            'Kin converts Room to Live',
+            Icons.live_tv,
+            'live',
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfo() {
+    return Container(
+      margin: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: KinnectColors.darkSurface,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: const Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.info_outline, color: KinnectColors.amber, size: 20),
+              SizedBox(width: 8),
+              Text('Push vs In-App', style: TextStyle(color: KinnectColors.white, fontWeight: FontWeight.bold)),
+            ],
+          ),
+          SizedBox(height: 8),
+          Text(
+            'Push: Device notifications\nIn-App: Pulse tab inbox\n\nDisabling Push won\'t affect In-App history.',
+            style: TextStyle(color: KinnectColors.grey60, fontSize: 12, height: 1.5),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNotificationTile(
+    String title,
+    String subtitle,
+    IconData icon,
+    String key, {
+    bool recommended = false,
+    bool required = false,
+  }) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      decoration: BoxDecoration(
+        color: KinnectColors.darkSurface,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        children: [
+          ListTile(
+            leading: Icon(icon, color: KinnectColors.amber),
+            title: Row(
+              children: [
+                Text(title, style: const TextStyle(color: KinnectColors.white)),
+                if (recommended) ...[
+                  const SizedBox(width: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: KinnectColors.success.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: const Text(
+                      'RECOMMENDED',
+                      style: TextStyle(color: KinnectColors.success, fontSize: 10, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+                if (required) ...[
+                  const SizedBox(width: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: KinnectColors.error.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: const Text(
+                      'REQUIRED',
+                      style: TextStyle(color: KinnectColors.error, fontSize: 10, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+            subtitle: Text(subtitle, style: const TextStyle(color: KinnectColors.grey60, fontSize: 12)),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Row(
+                    children: [
+                      const Text('Push', style: TextStyle(color: KinnectColors.grey60, fontSize: 12)),
+                      const SizedBox(width: 8),
+                      Switch(
+                        value: _notifications[key]!['push']!,
+                        activeColor: KinnectColors.amber,
+                        onChanged: required
+                            ? null
+                            : (value) => setState(() => _notifications[key]!['push'] = value),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Row(
+                    children: [
+                      const Text('In-App', style: TextStyle(color: KinnectColors.grey60, fontSize: 12)),
+                      const SizedBox(width: 8),
+                      Switch(
+                        value: _notifications[key]!['inApp']!,
+                        activeColor: KinnectColors.amber,
+                        onChanged: (value) => setState(() => _notifications[key]!['inApp'] = value),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _disableAll() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: KinnectColors.darkSurface,
+        title: const Text('Disable All Notifications?', style: TextStyle(color: KinnectColors.white)),
+        content: const Text(
+          'This will disable Push notifications for all types (except Memory Box which is required).\n\nIn-App notifications will remain in your Pulse tab.',
+          style: TextStyle(color: KinnectColors.grey60),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel', style: TextStyle(color: KinnectColors.grey60)),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                _notifications.forEach((key, value) {
+                  if (key != 'memorybox') {
+                    value['push'] = false;
+                  }
+                });
+              });
+              Navigator.pop(context);
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: KinnectColors.error),
+            child: const Text('Disable All Push'),
+          ),
+        ],
+      ),
+    );
+  }
+}

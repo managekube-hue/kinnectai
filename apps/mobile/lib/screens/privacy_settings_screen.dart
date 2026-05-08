@@ -1,0 +1,233 @@
+import 'package:flutter/material.dart';
+import '../theme/colors.dart';
+
+class PrivacySettingsScreen extends StatefulWidget {
+  const PrivacySettingsScreen({super.key});
+
+  @override
+  State<PrivacySettingsScreen> createState() => _PrivacySettingsScreenState();
+}
+
+class _PrivacySettingsScreenState extends State<PrivacySettingsScreen> {
+  bool _isPublicAccount = false;
+  bool _showActivityStatus = true;
+  bool _allowDiscovery = true;
+  bool _syncContacts = false;
+  bool _showHaplogroup = true;
+  double _minKinScore = 0.2;
+  bool _allowPulses = true;
+  bool _allowDMs = true;
+  bool _allowStitch = true;
+  bool _trackOffPlatform = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: KinnectColors.darkBg,
+      appBar: AppBar(
+        backgroundColor: KinnectColors.darkSurface,
+        title: const Text('Privacy'),
+      ),
+      body: ListView(
+        children: [
+          _buildSection('Account Visibility', [
+            SwitchListTile(
+              title: const Text('Public Account', style: TextStyle(color: KinnectColors.white)),
+              subtitle: const Text('Allow non-Kinnections to see your Memories', style: TextStyle(color: KinnectColors.grey60, fontSize: 12)),
+              value: _isPublicAccount,
+              activeColor: KinnectColors.amber,
+              onChanged: (value) => setState(() => _isPublicAccount = value),
+            ),
+            SwitchListTile(
+              title: const Text('Activity Status', style: TextStyle(color: KinnectColors.white)),
+              subtitle: const Text('Show when you\'re active', style: TextStyle(color: KinnectColors.grey60, fontSize: 12)),
+              value: _showActivityStatus,
+              activeColor: KinnectColors.amber,
+              onChanged: (value) => setState(() => _showActivityStatus = value),
+            ),
+            SwitchListTile(
+              title: const Text('Discoverability', style: TextStyle(color: KinnectColors.white)),
+              subtitle: const Text('Appear in Discovery and Lost Branches', style: TextStyle(color: KinnectColors.grey60, fontSize: 12)),
+              value: _allowDiscovery,
+              activeColor: KinnectColors.amber,
+              onChanged: (value) => setState(() => _allowDiscovery = value),
+            ),
+          ]),
+          _buildSection('Data Controls', [
+            SwitchListTile(
+              title: const Text('Sync Contacts', style: TextStyle(color: KinnectColors.white)),
+              subtitle: const Text('Find Kin from your contacts', style: TextStyle(color: KinnectColors.grey60, fontSize: 12)),
+              value: _syncContacts,
+              activeColor: KinnectColors.amber,
+              onChanged: (value) => setState(() => _syncContacts = value),
+            ),
+            ListTile(
+              title: const Text('Interaction Permissions', style: TextStyle(color: KinnectColors.white)),
+              subtitle: const Text('Who can Pulse, DM, Stitch', style: TextStyle(color: KinnectColors.grey60, fontSize: 12)),
+              trailing: const Icon(Icons.chevron_right, color: KinnectColors.grey40),
+              onTap: _showInteractionPermissions,
+            ),
+          ]),
+          _buildSection('Genomic Data', [
+            SwitchListTile(
+              title: const Text('Haplogroup Visibility', style: TextStyle(color: KinnectColors.white)),
+              subtitle: const Text('Show haplogroup on public profile', style: TextStyle(color: KinnectColors.grey60, fontSize: 12)),
+              value: _showHaplogroup,
+              activeColor: KinnectColors.amber,
+              onChanged: (value) => setState(() => _showHaplogroup = value),
+            ),
+            ListTile(
+              title: const Text('Kin Score Display Range', style: TextStyle(color: KinnectColors.white)),
+              subtitle: Text('Minimum: ${(_minKinScore * 100).toStringAsFixed(1)}% (~6th cousin)', style: const TextStyle(color: KinnectColors.grey60, fontSize: 12)),
+              onTap: _showKinScoreSlider,
+            ),
+            ListTile(
+              title: const Text('DNA Kit Connection', style: TextStyle(color: KinnectColors.white)),
+              subtitle: const Text('Manage Sequencing.com OAuth', style: TextStyle(color: KinnectColors.grey60, fontSize: 12)),
+              trailing: const Icon(Icons.chevron_right, color: KinnectColors.grey40),
+              onTap: () {},
+            ),
+            ListTile(
+              title: const Text('Raw Data Deletion', style: TextStyle(color: KinnectColors.error)),
+              subtitle: const Text('Delete FASTQ/BAM files (irreversible)', style: TextStyle(color: KinnectColors.grey60, fontSize: 12)),
+              trailing: const Icon(Icons.warning, color: KinnectColors.error),
+              onTap: _showDeleteDataWarning,
+            ),
+          ]),
+          _buildSection('Off-Platform Tracking', [
+            SwitchListTile(
+              title: const Text('Tracking Pixel Opt-Out', style: TextStyle(color: KinnectColors.white)),
+              subtitle: const Text('Disable Layer 4 behavioral signals', style: TextStyle(color: KinnectColors.grey60, fontSize: 12)),
+              value: _trackOffPlatform,
+              activeColor: KinnectColors.amber,
+              onChanged: (value) => setState(() => _trackOffPlatform = value),
+            ),
+            ListTile(
+              title: const Text('Third-Party Sharing Opt-Out', style: TextStyle(color: KinnectColors.white)),
+              subtitle: const Text('NielsenIQ, Facteus data sharing', style: TextStyle(color: KinnectColors.grey60, fontSize: 12)),
+              trailing: const Icon(Icons.chevron_right, color: KinnectColors.grey40),
+              onTap: () {},
+            ),
+          ]),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSection(String title, List<Widget> children) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
+          child: Text(title, style: const TextStyle(color: KinnectColors.grey60, fontSize: 14, fontWeight: FontWeight.bold)),
+        ),
+        ...children,
+      ],
+    );
+  }
+
+  void _showInteractionPermissions() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: KinnectColors.darkSurface,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setModalState) => Container(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('Interaction Permissions', style: TextStyle(color: KinnectColors.white, fontSize: 20, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 24),
+              SwitchListTile(
+                title: const Text('Allow Pulses', style: TextStyle(color: KinnectColors.white)),
+                subtitle: const Text('All Kin / Confirmed Kinnections / Off', style: TextStyle(color: KinnectColors.grey60, fontSize: 12)),
+                value: _allowPulses,
+                activeColor: KinnectColors.amber,
+                onChanged: (value) => setModalState(() => _allowPulses = value),
+              ),
+              SwitchListTile(
+                title: const Text('Allow DMs', style: TextStyle(color: KinnectColors.white)),
+                subtitle: const Text('Confirmed Kinnections only', style: TextStyle(color: KinnectColors.grey60, fontSize: 12)),
+                value: _allowDMs,
+                activeColor: KinnectColors.amber,
+                onChanged: (value) => setModalState(() => _allowDMs = value),
+              ),
+              SwitchListTile(
+                title: const Text('Allow Stitch/Rewind', style: TextStyle(color: KinnectColors.white)),
+                subtitle: const Text('Others can use your Memories', style: TextStyle(color: KinnectColors.grey60, fontSize: 12)),
+                value: _allowStitch,
+                activeColor: KinnectColors.amber,
+                onChanged: (value) => setModalState(() => _allowStitch = value),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showKinScoreSlider() {
+    showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          backgroundColor: KinnectColors.darkSurface,
+          title: const Text('Kin Score Display Range', style: TextStyle(color: KinnectColors.white)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                '${(_minKinScore * 100).toStringAsFixed(1)}%',
+                style: const TextStyle(color: KinnectColors.amber, fontSize: 32, fontWeight: FontWeight.bold),
+              ),
+              Slider(
+                value: _minKinScore,
+                min: 0.0,
+                max: 10.0,
+                divisions: 100,
+                activeColor: KinnectColors.amber,
+                label: '${(_minKinScore * 100).toStringAsFixed(1)}%',
+                onChanged: (value) => setDialogState(() => _minKinScore = value),
+              ),
+              const Text('Only show Kin Score above this threshold', style: TextStyle(color: KinnectColors.grey60, fontSize: 12)),
+            ],
+          ),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel', style: TextStyle(color: KinnectColors.grey60))),
+            ElevatedButton(
+              onPressed: () {
+                setState(() {});
+                Navigator.pop(context);
+              },
+              style: ElevatedButton.styleFrom(backgroundColor: KinnectColors.amber),
+              child: const Text('Save', style: TextStyle(color: KinnectColors.darkBg)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showDeleteDataWarning() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: KinnectColors.darkSurface,
+        title: const Text('Delete Raw Genomic Data?', style: TextStyle(color: KinnectColors.error)),
+        content: const Text(
+          'This will permanently delete your FASTQ/BAM files from our servers. This action is irreversible and will be processed within 30 days.\n\nYour Kin Score and connections will not be affected.',
+          style: TextStyle(color: KinnectColors.white),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel', style: TextStyle(color: KinnectColors.grey60))),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context),
+            style: ElevatedButton.styleFrom(backgroundColor: KinnectColors.error),
+            child: const Text('Request Deletion'),
+          ),
+        ],
+      ),
+    );
+  }
+}
