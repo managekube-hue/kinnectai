@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 
 /// KinnectAI brand colors and design tokens
 class KinnectColors {

@@ -48,6 +48,111 @@ class AnalyticsService {
     });
   }
 
+  // === The Line Feed Analytics ===
+
+  /// Track video view
+  Future<void> trackVideoViewed({
+    required String memoryId,
+    required String creatorId,
+    required double kinScore,
+    required int durationSeconds,
+    required double watchPercentage,
+  }) async {
+    await trackEvent('line_video_viewed', {
+      'memory_id': memoryId,
+      'creator_id': creatorId,
+      'kin_score': kinScore,
+      'duration_seconds': durationSeconds,
+      'watch_percentage': watchPercentage,
+    });
+  }
+
+  /// Track pulse (like) action
+  Future<void> trackPulse({
+    required String memoryId,
+    required String creatorId,
+    required bool isPulsed,
+    required String source, // 'button' or 'double_tap'
+  }) async {
+    await trackEvent('line_pulse', {
+      'memory_id': memoryId,
+      'creator_id': creatorId,
+      'action': isPulsed ? 'add' : 'remove',
+      'source': source,
+    });
+  }
+
+  /// Track comment action
+  Future<void> trackCommentOpened({
+    required String memoryId,
+    required String creatorId,
+  }) async {
+    await trackEvent('line_comment_opened', {
+      'memory_id': memoryId,
+      'creator_id': creatorId,
+    });
+  }
+
+  /// Track save/strand action
+  Future<void> trackSave({
+    required String memoryId,
+    required String creatorId,
+    required bool isSaved,
+    String? strandId,
+  }) async {
+    await trackEvent('line_save', {
+      'memory_id': memoryId,
+      'creator_id': creatorId,
+      'action': isSaved ? 'add' : 'remove',
+      'strand_id': ?strandId,
+    });
+  }
+
+  /// Track share action
+  Future<void> trackShare({
+    required String memoryId,
+    required String creatorId,
+    required String shareType, // 'branch', 'kin', 'copy'
+  }) async {
+    await trackEvent('line_share', {
+      'memory_id': memoryId,
+      'creator_id': creatorId,
+      'share_type': shareType,
+    });
+  }
+
+  /// Track Kin Score detail view
+  Future<void> trackKinScoreDetailViewed({
+    required String targetUserId,
+    required double kinScore,
+  }) async {
+    await trackEvent('kin_score_detail_viewed', {
+      'target_user_id': targetUserId,
+      'kin_score': kinScore,
+    });
+  }
+
+  /// Track feed refresh
+  Future<void> trackFeedRefresh({
+    required String feedTab,
+  }) async {
+    await trackEvent('line_feed_refresh', {
+      'feed_tab': feedTab,
+    });
+  }
+
+  /// Track feed scroll depth
+  Future<void> trackFeedScrollDepth({
+    required int videoIndex,
+    required int totalVideos,
+  }) async {
+    await trackEvent('line_feed_scroll', {
+      'video_index': videoIndex,
+      'total_videos': totalVideos,
+      'scroll_percentage': ((videoIndex / totalVideos) * 100).toInt(),
+    });
+  }
+
   Future<void> trackAuthButtonTapped(String method) async {
     await trackEvent('auth_button_tapped', {
       'method': method,
@@ -75,7 +180,7 @@ class AnalyticsService {
       'provider': provider,
       'duration_ms': durationMs,
       'success': success,
-      if (errorCode != null) 'error_code': errorCode,
+      'error_code': ?errorCode,
     });
   }
 

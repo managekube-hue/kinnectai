@@ -32,8 +32,8 @@ class _TimeWellbeingContentState extends State<_TimeWellbeingContent> {
   bool _breakRemindersEnabled = false;
   Duration _breakInterval = const Duration(minutes: 20);
   bool _nightModeEnabled = false;
-  TimeOfDay _nightModeStart = const TimeOfDay(hour: 22, minute: 0);
-  TimeOfDay _nightModeEnd = const TimeOfDay(hour: 7, minute: 0);
+  final TimeOfDay _nightModeStart = const TimeOfDay(hour: 22, minute: 0);
+  final TimeOfDay _nightModeEnd = const TimeOfDay(hour: 7, minute: 0);
 
   @override
   void initState() {
@@ -239,7 +239,7 @@ class _TimeWellbeingContentState extends State<_TimeWellbeingContent> {
                     _saveSetting('daily_limit_enabled', value);
                     setState(() => _dailyLimitEnabled = value);
                   },
-                  activeColor: KinnectColors.amber,
+                  activeThumbColor: KinnectColors.amber,
                 ),
               ],
             ),
@@ -298,7 +298,7 @@ class _TimeWellbeingContentState extends State<_TimeWellbeingContent> {
                     _saveSetting('break_reminders_enabled', value);
                     setState(() => _breakRemindersEnabled = value);
                   },
-                  activeColor: KinnectColors.amber,
+                  activeThumbColor: KinnectColors.amber,
                 ),
               ],
             ),
@@ -335,7 +335,7 @@ class _TimeWellbeingContentState extends State<_TimeWellbeingContent> {
                 _saveSetting('night_mode_enabled', value);
                 setState(() => _nightModeEnabled = value);
               },
-              activeColor: KinnectColors.amber,
+              activeThumbColor: KinnectColors.amber,
             ),
           ],
         ),

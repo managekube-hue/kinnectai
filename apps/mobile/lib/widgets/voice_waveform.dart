@@ -20,7 +20,7 @@ class _VoiceWaveformState extends State<VoiceWaveform>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   final Random _random = Random();
-  List<double> _amplitudes = List.generate(50, (_) => 0.2);
+  final List<double> _amplitudes = List.generate(50, (_) => 0.2);
 
   @override
   void initState() {

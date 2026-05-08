@@ -1,3 +1,4 @@
 {
-    "github.copilot.chat.agent.autoFix": true
+    "github.copilot.chat.agent.autoFix": true,
+    "dart.flutterSdkPath": "D:\\Kinnect Dev\\flutter_sdk\\flutter"
 }

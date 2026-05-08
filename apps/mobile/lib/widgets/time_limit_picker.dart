@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/colors.dart';
-import '../theme/typography.dart';
+import '../theme/design_system.dart';
 
 class TimeLimitPicker extends StatefulWidget {
   final Duration initialLimit;
@@ -32,7 +32,7 @@ class _TimeLimitPickerState extends State<TimeLimitPicker> {
     return AlertDialog(
       backgroundColor: KinnectColors.darkSurface,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      title: Text('Set Daily Limit', style: KinnectTextStyles.headlineSmall),
+      title: Text('Set Daily Limit', style: DesignTextStyles.headlineMedium),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -46,7 +46,7 @@ class _TimeLimitPickerState extends State<TimeLimitPicker> {
                 onChanged: (val) => setState(() => _hours = val),
               ),
               const SizedBox(width: 20),
-              Text(':', style: KinnectTextStyles.displaySmall),
+              Text(':', style: DesignTextStyles.headlineLarge),
               const SizedBox(width: 20),
               _buildPicker(
                 value: _minutes,
@@ -60,7 +60,7 @@ class _TimeLimitPickerState extends State<TimeLimitPicker> {
           const SizedBox(height: 16),
           Text(
             'Maximum: ${widget.maxLimit.inHours}h 0m',
-            style: KinnectTextStyles.caption.copyWith(color: KinnectColors.grey60),
+            style: DesignTextStyles.bodySmall.copyWith(color: DesignColors.darkHint),
           ),
         ],
       ),
@@ -107,7 +107,7 @@ class _TimeLimitPickerState extends State<TimeLimitPicker> {
           ),
           child: Text(
             value.toString().padLeft(2, '0'),
-            style: KinnectTextStyles.displaySmall,
+            style: DesignTextStyles.headlineLarge,
           ),
         ),
         IconButton(
@@ -116,7 +116,7 @@ class _TimeLimitPickerState extends State<TimeLimitPicker> {
             if (value - step >= 0) onChanged(value - step);
           },
         ),
-        Text(label, style: KinnectTextStyles.caption),
+        Text(label, style: DesignTextStyles.bodySmall),
       ],
     );
   }
