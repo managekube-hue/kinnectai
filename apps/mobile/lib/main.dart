@@ -72,6 +72,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<MarketplaceCubit>(
           create: (_) => MarketplaceCubit(
             repository: MarketplaceRepositoryImpl(dio: Dio()),
+            errorCubit: appErrorCubit,
           ),
         ),
         BlocProvider<CartCubit>(
