@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../theme/colors.dart';
 import '../theme/typography.dart';
 import '../theme/spacing.dart';
@@ -36,7 +37,7 @@ class RightRailButtons extends StatelessWidget {
         children: [
           // Pulse/Like
           _InteractionButton(
-            icon: memory.isPulsed ? Icons.favorite : Icons.favorite_border,
+            icon: memory.isPulsed ? PhosphorIcons.heartFill() : PhosphorIcons.heart(),
             iconColor: memory.isPulsed ? KinnectColors.error : KinnectColors.textPrimary,
             label: memory.formattedPulseCount,
             onTap: onPulseTap,
@@ -46,7 +47,7 @@ class RightRailButtons extends StatelessWidget {
           
           // Comment
           _InteractionButton(
-            icon: Icons.chat_bubble_outline,
+            icon: PhosphorIcons.chatCircleText(),
             label: memory.formattedCommentCount,
             onTap: onCommentTap,
           ),
@@ -55,7 +56,7 @@ class RightRailButtons extends StatelessWidget {
           
           // Rewind
           _InteractionButton(
-            icon: Icons.restart_alt,
+            icon: PhosphorIcons.arrowUDownLeft(),
             label: 'Rewind',
             onTap: onRewindTap,
           ),
@@ -64,7 +65,7 @@ class RightRailButtons extends StatelessWidget {
           
           // Save
           _InteractionButton(
-            icon: memory.isSaved ? Icons.star : Icons.star_border,
+            icon: memory.isSaved ? PhosphorIcons.starFill() : PhosphorIcons.star(),
             iconColor: memory.isSaved ? KinnectColors.accent : KinnectColors.textPrimary,
             label: 'Save',
             onTap: onSaveTap,
@@ -74,7 +75,7 @@ class RightRailButtons extends StatelessWidget {
           
           // Share
           _InteractionButton(
-            icon: Icons.share_outlined,
+            icon: PhosphorIcons.shareNetwork(),
             label: 'Share',
             onTap: onShareTap,
           ),
@@ -84,7 +85,7 @@ class RightRailButtons extends StatelessWidget {
           // Branch
           if (memory.branchId != null)
             _InteractionButton(
-              icon: Icons.account_tree_outlined,
+              icon: PhosphorIcons.treeStructure(),
               label: 'Branch',
               onTap: onBranchTap,
             ),
@@ -94,7 +95,7 @@ class RightRailButtons extends StatelessWidget {
           
           // Network/Graph Path
           _InteractionButton(
-            icon: Icons.hub_outlined,
+            icon: PhosphorIcons.graph(),
             label: '',
             onTap: onNetworkTap,
           ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../theme/colors.dart';
 import '../theme/typography.dart';
 import '../theme/spacing.dart';
@@ -25,6 +26,13 @@ class BottomOverlay extends StatefulWidget {
 
 class _BottomOverlayState extends State<BottomOverlay> {
   bool _isExpanded = false;
+
+  /// PRD Addendum 1.0 S5 + Addendum 3.0 S1: Kin Score color thresholds.
+  static Color _kinScoreColor(double score) {
+    if (score >= 0.80) return KinnectColors.accent;     // #FF6B1A
+    if (score >= 0.50) return KinnectColors.primary;     // #00C2D4
+    return KinnectColors.textSecondary.withOpacity(0.6); // #B0B0D0 @ 60%
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +85,7 @@ class _BottomOverlayState extends State<BottomOverlay> {
                       vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: KinnectColors.success.withOpacity(0.9),
+                      color: _kinScoreColor(widget.memory.kinScore).withOpacity(0.9),
                       borderRadius: BorderRadius.circular(KinnectSpacing.radiusRound),
                     ),
                     child: Text(
@@ -123,7 +131,7 @@ class _BottomOverlayState extends State<BottomOverlay> {
                 child: Row(
                   children: [
                     const Icon(
-                      Icons.graphic_eq,
+                      PhosphorIcons.waveform(),
                       size: 16,
                       color: KinnectColors.accent,
                     ),

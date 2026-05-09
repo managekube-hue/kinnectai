@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:video_player/video_player.dart';
 import '../theme/colors.dart';
 
@@ -236,7 +237,7 @@ class _EnhancedLineVideoPlayerState extends State<EnhancedLineVideoPlayer> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.error_outline,
+              PhosphorIcons.warningCircle(),
               size: 80,
               color: KinnectColors.error.withOpacity(0.5),
             ),
@@ -265,7 +266,7 @@ class _EnhancedLineVideoPlayerState extends State<EnhancedLineVideoPlayer> {
             child: Opacity(
               opacity: 1.0 - (value - 0.5),
               child: Icon(
-                Icons.favorite,
+                PhosphorIcons.heartFill(),
                 size: 100,
                 color: KinnectColors.error.withOpacity(0.8),
               ),
@@ -285,7 +286,7 @@ class _EnhancedLineVideoPlayerState extends State<EnhancedLineVideoPlayer> {
           shape: BoxShape.circle,
         ),
         child: const Icon(
-          Icons.play_arrow,
+          PhosphorIcons.play(),
           size: 60,
           color: Colors.white,
         ),

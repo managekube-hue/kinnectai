@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../theme/colors.dart';
 
 /// Video player placeholder for The Line (web-compatible)
@@ -90,7 +91,7 @@ class _LineVideoPlayerState extends State<LineVideoPlayer> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
-                    Icons.play_circle_outline,
+                    PhosphorIcons.play(),
                     size: 80,
                     color: KinnectColors.accent.withOpacity(0.5),
                   ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../theme/colors.dart';
 import '../theme/typography.dart';
 
@@ -30,7 +31,7 @@ class _BiometricConsentDialogState extends State<BiometricConsentDialog> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: Row(
         children: [
-          const Icon(Icons.security, color: KinnectColors.accent, size: 28),
+          const Icon(PhosphorIcons.fingerprint(), color: KinnectColors.accent, size: 28),
           const SizedBox(width: 12),
           Text('Biometric Consent', style: KinnectTextStyles.headlineSmall),
         ],
@@ -57,11 +58,11 @@ class _BiometricConsentDialogState extends State<BiometricConsentDialog> {
                 children: [
                   Text('Data Handling:', style: KinnectTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.w600)),
                   const SizedBox(height: 12),
-                  _buildInfoRow(Icons.storage, widget.retention),
+                  _buildInfoRow(PhosphorIcons.database(), widget.retention),
                   const SizedBox(height: 8),
-                  _buildInfoRow(Icons.lock, 'End-to-end encrypted'),
+                  _buildInfoRow(PhosphorIcons.lock(), 'End-to-end encrypted'),
                   const SizedBox(height: 8),
-                  _buildInfoRow(Icons.verified_user, 'Vault protected'),
+                  _buildInfoRow(PhosphorIcons.shieldCheck(), 'Vault protected'),
                 ],
               ),
             ),
@@ -73,7 +74,7 @@ class _BiometricConsentDialogState extends State<BiometricConsentDialog> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(Icons.check_circle, size: 16, color: KinnectColors.success),
+                  const Icon(PhosphorIcons.checkCircle(), size: 16, color: KinnectColors.success),
                   const SizedBox(width: 8),
                   Expanded(child: Text(right, style: KinnectTextStyles.bodySmall)),
                 ],
