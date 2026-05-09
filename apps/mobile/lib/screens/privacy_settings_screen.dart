@@ -1,27 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+
+import '../cubits/settings_cubit.dart';
+import '../models/dtos/settings_state_dto.dart';
 import '../theme/colors.dart';
 
-class PrivacySettingsScreen extends StatefulWidget {
+/// PRD Section 7 -- Privacy Controls.
+/// All toggles wired to SettingsCubit -> API.
+class PrivacySettingsScreen extends StatelessWidget {
   const PrivacySettingsScreen({super.key});
-
-  @override
-  State<PrivacySettingsScreen> createState() => _PrivacySettingsScreenState();
-}
-
-class _PrivacySettingsScreenState extends State<PrivacySettingsScreen> {
-  bool _isPublicAccount = false;
-  bool _showActivityStatus = true;
-  bool _allowDiscovery = true;
-  bool _syncContacts = false;
-  bool _showHaplogroup = true;
-  double _minKinScore = 0.2;
-  bool _allowPulses = true;
-  bool _allowDMs = true;
-  bool _allowStitch = true;
-  bool _trackOffPlatform = false;
-  bool _contextualAds = true;
-  bool _feedbackSharing = false;
 
   @override
   Widget build(BuildContext context) {
@@ -30,114 +18,54 @@ class _PrivacySettingsScreenState extends State<PrivacySettingsScreen> {
       appBar: AppBar(
         backgroundColor: KinnectColors.surface,
         title: const Text('Privacy'),
+        leading: IconButton(icon: const Icon(Icons.arrow_back, color: KinnectColors.textPrimary), onPressed: () => Navigator.pop(context)),
       ),
-      body: ListView(
-        children: [
-          _buildSection('Account Visibility', [
-            SwitchListTile(
-              title: const Text('Public Account', style: TextStyle(color: KinnectColors.textPrimary)),
-              subtitle: const Text('Allow non-Kinnections to see your Memories', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
-              value: _isPublicAccount,
-              activeColor: KinnectColors.accent,
-              onChanged: (value) => setState(() => _isPublicAccount = value),
-            ),
-            SwitchListTile(
-              title: const Text('Activity Status', style: TextStyle(color: KinnectColors.textPrimary)),
-              subtitle: const Text('Show when you\'re active', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
-              value: _showActivityStatus,
-              activeColor: KinnectColors.accent,
-              onChanged: (value) => setState(() => _showActivityStatus = value),
-            ),
-            SwitchListTile(
-              title: const Text('Discoverability', style: TextStyle(color: KinnectColors.textPrimary)),
-              subtitle: const Text('Appear in Discovery and Lost Branches', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
-              value: _allowDiscovery,
-              activeColor: KinnectColors.accent,
-              onChanged: (value) => setState(() => _allowDiscovery = value),
-            ),
-          ]),
-          _buildSection('Data Controls', [
-            SwitchListTile(
-              title: const Text('Sync Contacts', style: TextStyle(color: KinnectColors.textPrimary)),
-              subtitle: const Text('Find Kin from your contacts', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
-              value: _syncContacts,
-              activeColor: KinnectColors.accent,
-              onChanged: (value) => setState(() => _syncContacts = value),
-            ),
-            ListTile(
-              title: const Text('Interaction Permissions', style: TextStyle(color: KinnectColors.textPrimary)),
-              subtitle: const Text('Who can Pulse, DM, Stitch', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
-              trailing: Icon(PhosphorIcons.caretRight(), color: KinnectColors.textMuted),
-              onTap: _showInteractionPermissions,
-            ),
-          ]),
-          _buildSection('Genomic Data', [
-            SwitchListTile(
-              title: const Text('Haplogroup Visibility', style: TextStyle(color: KinnectColors.textPrimary)),
-              subtitle: const Text('Show haplogroup on public profile', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
-              value: _showHaplogroup,
-              activeColor: KinnectColors.accent,
-              onChanged: (value) => setState(() => _showHaplogroup = value),
-            ),
-            ListTile(
-              title: const Text('Kin Score Display Range', style: TextStyle(color: KinnectColors.textPrimary)),
-              subtitle: Text('Minimum: ${(_minKinScore * 100).toStringAsFixed(1)}% (~6th cousin)', style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
-              onTap: _showKinScoreSlider,
-            ),
-            ListTile(
-              title: const Text('DNA Kit Connection', style: TextStyle(color: KinnectColors.textPrimary)),
-              subtitle: const Text('Manage Sequencing.com OAuth', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
-              trailing: Icon(PhosphorIcons.caretRight(), color: KinnectColors.textMuted),
-              onTap: () {},
-            ),
-            ListTile(
-              title: const Text('Raw Data Deletion', style: TextStyle(color: KinnectColors.error)),
-              subtitle: const Text('Delete FASTQ/BAM files (irreversible)', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
-              trailing: Icon(PhosphorIcons.warning(), color: KinnectColors.error),
-              onTap: _showDeleteDataWarning,
-            ),
-          ]),
-          _buildSection('Off-Platform Tracking', [
-            SwitchListTile(
-              title: const Text('Tracking Pixel Opt-Out', style: TextStyle(color: KinnectColors.textPrimary)),
-              subtitle: const Text('Disable Layer 4 behavioral signals', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
-              value: _trackOffPlatform,
-              activeColor: KinnectColors.accent,
-              onChanged: (value) => setState(() => _trackOffPlatform = value),
-            ),
-            ListTile(
-              title: const Text('Third-Party Sharing Opt-Out', style: TextStyle(color: KinnectColors.textPrimary)),
-              subtitle: const Text('NielsenIQ, Facteus data sharing', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
-              trailing: Icon(PhosphorIcons.caretRight(), color: KinnectColors.textMuted),
-              onTap: () {},
-            ),
-            SwitchListTile(
-              title: const Text('Contextual Ad Preferences', style: TextStyle(color: KinnectColors.textPrimary)),
-              subtitle: const Text('Bio-Identity-based contextual offer relevance', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
-              value: _contextualAds,
-              activeColor: KinnectColors.accent,
-              onChanged: (value) => setState(() => _contextualAds = value),
-            ),
-            ListTile(
-              title: const Text('Partner Muting', style: TextStyle(color: KinnectColors.textPrimary)),
-              subtitle: const Text('Mute specific partner brands from offers', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
-              trailing: Icon(PhosphorIcons.caretRight(), color: KinnectColors.textMuted),
-              onTap: () {},
-            ),
-            SwitchListTile(
-              title: const Text('Feedback Sharing', style: TextStyle(color: KinnectColors.textPrimary)),
-              subtitle: const Text('Allow anonymized usage data to improve KinnectAI. No PII or genomic data shared.', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
-              value: _feedbackSharing,
-              activeColor: KinnectColors.accent,
-              onChanged: (value) => setState(() => _feedbackSharing = value),
-            ),
-          ]),
-        ],
+      body: BlocBuilder<SettingsCubit, SettingsState>(
+        builder: (context, state) {
+          final s = state is SettingsLoaded ? state.settings : const SettingsStateDTO();
+          final cubit = context.read<SettingsCubit>();
+
+          return ListView(
+            children: [
+              _section('Account Visibility', [
+                _toggle('Public Account', 'Allow non-Kinnections to see your Memories', s.privateAccount == false, (v) => cubit.updatePrivacy(privateAccount: !v)),
+                _toggle('Activity Status', 'Show when you\'re active', s.activityStatus, (v) => cubit.updatePrivacy(activityStatus: v)),
+                _toggle('Discoverability', 'Appear in Discovery and Lost Branches', s.discoveryEnabled, (v) => cubit.updatePrivacy(discoveryEnabled: v)),
+              ]),
+              _section('Data Controls', [
+                _toggle('Sync Contacts', 'Find Kin from your contacts', s.syncContacts, (v) => cubit.updatePrivacy(syncContacts: v)),
+                _nav('Interaction Permissions', 'Who can Pulse, DM, Stitch', () => _showInteractionSheet(context, s, cubit)),
+              ]),
+              _section('Genomic Data', [
+                _toggle('Haplogroup Visibility', 'Show haplogroup on public profile', s.showHaplogroup, (v) => cubit.updatePrivacy(showHaplogroup: v)),
+                ListTile(
+                  title: const Text('Kin Score Display Range', style: TextStyle(color: KinnectColors.textPrimary)),
+                  subtitle: Text('Minimum: ${(s.minKinScoreDisplay * 100).toStringAsFixed(1)}%', style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
+                  onTap: () => _showKinScoreSlider(context, s, cubit),
+                ),
+                _nav('DNA Kit Connection', 'Manage Sequencing.com OAuth', () {}),
+                ListTile(
+                  title: const Text('Raw Data Deletion', style: TextStyle(color: KinnectColors.error)),
+                  subtitle: const Text('Delete FASTQ/BAM files (irreversible)', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
+                  trailing: Icon(PhosphorIcons.warning(), color: KinnectColors.error),
+                  onTap: () => _showDeleteDataWarning(context),
+                ),
+                _toggle('Third-Party Sharing Opt-Out', 'NielsenIQ, Facteus data sharing', s.thirdPartySharing == false, (v) => cubit.updatePrivacy(thirdPartySharing: !v)),
+              ]),
+              _section('Off-Platform Tracking', [
+                _toggle('Tracking Pixel Opt-Out', 'Disable Layer 4 behavioral signals', s.offPlatformTracking == false, (v) => cubit.updatePrivacy(offPlatformTracking: !v)),
+                _toggle('Contextual Ad Preferences', 'Bio-Identity-based offer relevance', s.contextualAds, (v) => cubit.updatePrivacy(contextualAds: v)),
+                _nav('Partner Muting', 'Mute specific partner brands', () {}),
+                _toggle('Feedback Sharing', 'Anonymized usage data (no PII/genomic)', s.feedbackSharing, (v) => cubit.updatePrivacy(feedbackSharing: v)),
+              ]),
+            ],
+          );
+        },
       ),
     );
   }
 
-  Widget _buildSection(String title, List<Widget> children) {
+  Widget _section(String title, List<Widget> children) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -150,81 +78,60 @@ class _PrivacySettingsScreenState extends State<PrivacySettingsScreen> {
     );
   }
 
-  void _showInteractionPermissions() {
+  Widget _toggle(String title, String subtitle, bool value, ValueChanged<bool> onChanged) {
+    return SwitchListTile(
+      title: Text(title, style: const TextStyle(color: KinnectColors.textPrimary)),
+      subtitle: Text(subtitle, style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
+      value: value,
+      activeColor: KinnectColors.accent,
+      onChanged: onChanged,
+    );
+  }
+
+  Widget _nav(String title, String subtitle, VoidCallback onTap) {
+    return ListTile(
+      title: Text(title, style: const TextStyle(color: KinnectColors.textPrimary)),
+      subtitle: Text(subtitle, style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
+      trailing: Icon(PhosphorIcons.caretRight(), color: KinnectColors.textMuted),
+      onTap: onTap,
+    );
+  }
+
+  void _showInteractionSheet(BuildContext context, SettingsStateDTO s, SettingsCubit cubit) {
     showModalBottomSheet(
       context: context,
       backgroundColor: KinnectColors.surface,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setModalState) => Container(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text('Interaction Permissions', style: TextStyle(color: KinnectColors.textPrimary, fontSize: 20, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 24),
-              SwitchListTile(
-                title: const Text('Allow Pulses', style: TextStyle(color: KinnectColors.textPrimary)),
-                subtitle: const Text('All Kin / Confirmed Kinnections / Off', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
-                value: _allowPulses,
-                activeColor: KinnectColors.accent,
-                onChanged: (value) => setModalState(() => _allowPulses = value),
-              ),
-              SwitchListTile(
-                title: const Text('Allow DMs', style: TextStyle(color: KinnectColors.textPrimary)),
-                subtitle: const Text('Confirmed Kinnections only', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
-                value: _allowDMs,
-                activeColor: KinnectColors.accent,
-                onChanged: (value) => setModalState(() => _allowDMs = value),
-              ),
-              SwitchListTile(
-                title: const Text('Allow Stitch/Rewind', style: TextStyle(color: KinnectColors.textPrimary)),
-                subtitle: const Text('Others can use your Memories', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
-                value: _allowStitch,
-                activeColor: KinnectColors.accent,
-                onChanged: (value) => setModalState(() => _allowStitch = value),
-              ),
-            ],
-          ),
-        ),
+      builder: (_) => Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          const Text('Interaction Permissions', style: TextStyle(color: KinnectColors.textPrimary, fontSize: 20, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 24),
+          SwitchListTile(title: const Text('Allow Pulses', style: TextStyle(color: KinnectColors.textPrimary)), value: s.allowPulses, activeColor: KinnectColors.accent, onChanged: (v) => cubit.updatePrivacy(allowPulses: v)),
+          SwitchListTile(title: const Text('Allow DMs', style: TextStyle(color: KinnectColors.textPrimary)), value: s.allowDMs, activeColor: KinnectColors.accent, onChanged: (v) => cubit.updatePrivacy(allowDMs: v)),
+          SwitchListTile(title: const Text('Allow Stitch/Rewind', style: TextStyle(color: KinnectColors.textPrimary)), value: s.allowStitch, activeColor: KinnectColors.accent, onChanged: (v) => cubit.updatePrivacy(allowStitch: v)),
+        ]),
       ),
     );
   }
 
-  void _showKinScoreSlider() {
+  void _showKinScoreSlider(BuildContext context, SettingsStateDTO s, SettingsCubit cubit) {
+    double val = s.minKinScoreDisplay;
     showDialog(
       context: context,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setDialogState) => AlertDialog(
+      builder: (_) => StatefulBuilder(
+        builder: (_, setDialogState) => AlertDialog(
           backgroundColor: KinnectColors.surface,
           title: const Text('Kin Score Display Range', style: TextStyle(color: KinnectColors.textPrimary)),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                '${(_minKinScore * 100).toStringAsFixed(1)}%',
-                style: const TextStyle(color: KinnectColors.accent, fontSize: 32, fontWeight: FontWeight.bold),
-              ),
-              Slider(
-                value: _minKinScore,
-                min: 0.0,
-                max: 10.0,
-                divisions: 100,
-                activeColor: KinnectColors.accent,
-                label: '${(_minKinScore * 100).toStringAsFixed(1)}%',
-                onChanged: (value) => setDialogState(() => _minKinScore = value),
-              ),
-              const Text('Only show Kin Score above this threshold', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
-            ],
-          ),
+          content: Column(mainAxisSize: MainAxisSize.min, children: [
+            Text('${(val * 100).toStringAsFixed(1)}%', style: const TextStyle(color: KinnectColors.accent, fontSize: 32, fontWeight: FontWeight.bold)),
+            Slider(value: val, min: 0.0, max: 10.0, divisions: 100, activeColor: KinnectColors.accent, onChanged: (v) => setDialogState(() => val = v)),
+          ]),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel', style: TextStyle(color: KinnectColors.textSecondary))),
+            TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
             ElevatedButton(
-              onPressed: () {
-                setState(() {});
-                Navigator.pop(context);
-              },
+              onPressed: () { cubit.updatePrivacy(minKinScoreDisplay: val); Navigator.pop(context); },
               style: ElevatedButton.styleFrom(backgroundColor: KinnectColors.accent),
-              child: const Text('Save', style: TextStyle(color: KinnectColors.background)),
+              child: const Text('Save'),
             ),
           ],
         ),
@@ -232,23 +139,16 @@ class _PrivacySettingsScreenState extends State<PrivacySettingsScreen> {
     );
   }
 
-  void _showDeleteDataWarning() {
+  void _showDeleteDataWarning(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (_) => AlertDialog(
         backgroundColor: KinnectColors.surface,
         title: const Text('Delete Raw Genomic Data?', style: TextStyle(color: KinnectColors.error)),
-        content: const Text(
-          'This will permanently delete your FASTQ/BAM files from our servers. This action is irreversible and will be processed within 30 days.\n\nYour Kin Score and connections will not be affected.',
-          style: TextStyle(color: KinnectColors.textPrimary),
-        ),
+        content: const Text('This will permanently delete your FASTQ/BAM files. Irreversible. Processed within 30 days.', style: TextStyle(color: KinnectColors.textPrimary)),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel', style: TextStyle(color: KinnectColors.textSecondary))),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context),
-            style: ElevatedButton.styleFrom(backgroundColor: KinnectColors.error),
-            child: const Text('Request Deletion'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+          ElevatedButton(onPressed: () => Navigator.pop(context), style: ElevatedButton.styleFrom(backgroundColor: KinnectColors.error), child: const Text('Request Deletion')),
         ],
       ),
     );
