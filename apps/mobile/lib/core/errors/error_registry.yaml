@@ -1,0 +1,143 @@
+# KinnectAI Error Registry (Addendum 1.0 S5 + Addendum 2.0 S6)
+# Format: screen_id: [error_code: {ui_behavior, retry_action, a11y_label}]
+# CI gate: python scripts/validate_error_coverage.py fails if any screen missing >= 3 error states
+
+the_line_screen:
+  - NETWORK_ERROR:
+      ui_behavior: "Inline banner: 'No connection. Tap to retry.' + cached fallback"
+      retry_action: "Exponential backoff + connectivity_plus listener"
+      a11y_label: "Network error: feed unavailable. Tap to retry connection."
+  - SERVER_ERROR_5XX:
+      ui_behavior: "Full-screen illustration + 'Servers updating' message"
+      retry_action: "Retry button + background health check"
+      a11y_label: "Service temporarily unavailable. Tap to check status."
+  - EMPTY_FEED:
+      ui_behavior: "Name Map animation + 'Invite first Kin' CTA"
+      retry_action: "Contact sync / share link / search"
+      a11y_label: "Your Line is empty. Invite family to activate your biological feed."
+
+discovery_page_screen:
+  - NETWORK_ERROR:
+      ui_behavior: "Inline banner + last cached candidates"
+      retry_action: "Exponential backoff"
+      a11y_label: "Discovery unavailable offline. Showing cached results."
+  - SERVER_ERROR_5XX:
+      ui_behavior: "Full-screen illustration"
+      retry_action: "Retry button"
+      a11y_label: "Discovery service updating."
+  - EMPTY_CANDIDATES:
+      ui_behavior: "'Scanning biological graph...' + weekly reset notice"
+      retry_action: "Auto-refresh on Sunday 06:00 local"
+      a11y_label: "No new candidates this week. New batch unlocks Sunday."
+
+bloom_studio_screen:
+  - D_ID_API_FAILURE:
+      ui_behavior: "Auto-fallback to SadTalker + toast notification"
+      retry_action: "Queue for retry + user notified of fallback"
+      a11y_label: "Premium animation service unavailable. Using standard quality."
+  - VOICEPRINT_NOT_CAPTURED:
+      ui_behavior: "Prompt to record voice or select text-to-speech"
+      retry_action: "Navigate to Voiceprint capture flow"
+      a11y_label: "Voiceprint required for Bloom. Record voice or type text."
+  - CREDIT_BALANCE_ZERO:
+      ui_behavior: "Show 'Buy Credits' CTA + disable Premium option"
+      retry_action: "Open commerce sheet for Bloom Credits purchase"
+      a11y_label: "Insufficient Bloom Credits. Purchase credits to continue."
+
+memory_box_screen:
+  - NETWORK_ERROR:
+      ui_behavior: "Inline banner + cached vault list"
+      retry_action: "Exponential backoff"
+      a11y_label: "Memory Box unavailable offline. Showing cached vault."
+  - SEAL_FAILURE:
+      ui_behavior: "Toast: 'Seal failed. Memory saved as draft.'"
+      retry_action: "Retry seal with step-up auth"
+      a11y_label: "Memory sealing failed. Saved as draft."
+  - STORAGE_LIMIT:
+      ui_behavior: "Upgrade CTA: 'Vault+ required for more storage'"
+      retry_action: "Navigate to subscription screen"
+      a11y_label: "Storage limit reached. Upgrade to Vault+ for 500GB."
+
+tree_graph_screen:
+  - NETWORK_ERROR:
+      ui_behavior: "Partial render with cached nodes"
+      retry_action: "Exponential backoff"
+      a11y_label: "Tree partially loaded. Some connections may be missing."
+  - GRAPH_ERROR:
+      ui_behavior: "'Branch subgraph incomplete. Showing known connections.'"
+      retry_action: "Fetch fallback via identity layer"
+      a11y_label: "Branch subgraph incomplete. Showing known connections."
+  - EMPTY_TREE:
+      ui_behavior: "'Build your Tree' + Import GEDCOM CTA"
+      retry_action: "Navigate to GEDCOM import or manual add"
+      a11y_label: "Your tree is empty. Import GEDCOM or add family manually."
+
+voiceprint_capture_screen:
+  - PERMISSION_DENIED:
+      ui_behavior: "Toast + redirect to Settings"
+      retry_action: "Open device settings for mic permission"
+      a11y_label: "Microphone permission required. Open settings to enable."
+  - UPLOAD_FAILURE:
+      ui_behavior: "Toast: 'Upload failed. Check connection.'"
+      retry_action: "Retry upload with backoff"
+      a11y_label: "Voice upload failed. Tap to retry."
+  - CONSENT_DECLINED:
+      ui_behavior: "Navigate back, no data captured"
+      retry_action: "None"
+      a11y_label: "Biometric consent declined. No data captured."
+
+settings_screen:
+  - NETWORK_ERROR:
+      ui_behavior: "Cached settings + offline banner"
+      retry_action: "Connectivity listener"
+      a11y_label: "Settings loaded from cache. Some changes may not sync."
+  - SAVE_FAILURE:
+      ui_behavior: "Toast: 'Save failed. Tap to retry.'"
+      retry_action: "Retry save"
+      a11y_label: "Settings save failed. Tap to retry."
+  - AUTH_EXPIRED:
+      ui_behavior: "Redirect to login"
+      retry_action: "Silent re-auth via Firebase"
+      a11y_label: "Session expired. Please sign in again."
+
+comment_thread_screen:
+  - NETWORK_ERROR:
+      ui_behavior: "Cached comments + offline banner"
+      retry_action: "Exponential backoff"
+      a11y_label: "Comments unavailable offline."
+  - POST_FAILURE:
+      ui_behavior: "Toast + queue for offline sync"
+      retry_action: "Background sync on reconnect"
+      a11y_label: "Comment will be posted when connected."
+  - MODERATION_BLOCK:
+      ui_behavior: "Toast: 'Comment flagged for review.'"
+      retry_action: "None (auto-reviewed within 24h)"
+      a11y_label: "Comment flagged by content filter. Under review."
+
+rooms_screen:
+  - NETWORK_ERROR:
+      ui_behavior: "Cached room list + offline banner"
+      retry_action: "Connectivity listener"
+      a11y_label: "Rooms unavailable offline."
+  - JOIN_FAILURE:
+      ui_behavior: "Toast: 'Could not join Room. Check Kin Score.'"
+      retry_action: "Retry join"
+      a11y_label: "Room join failed. May require higher Kin Score."
+  - RECORDING_CONSENT_REJECTED:
+      ui_behavior: "Toast: 'Recording stopped. Majority declined.'"
+      retry_action: "None"
+      a11y_label: "Recording stopped because majority of participants declined consent."
+
+subscription_screen:
+  - PURCHASE_FAILURE:
+      ui_behavior: "Toast: 'Purchase failed. Try again.'"
+      retry_action: "Retry purchase"
+      a11y_label: "Purchase failed. Tap to retry."
+  - RESTORE_FAILURE:
+      ui_behavior: "Toast: 'Restore failed. Contact support.'"
+      retry_action: "Navigate to support chat"
+      a11y_label: "Purchase restore failed. Contact support for help."
+  - NETWORK_ERROR:
+      ui_behavior: "Cached subscription status + offline banner"
+      retry_action: "Connectivity listener"
+      a11y_label: "Subscription details unavailable offline."

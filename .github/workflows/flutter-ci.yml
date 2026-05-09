@@ -1,0 +1,95 @@
+# KinnectAI CI/CD Gates (Addendum 2.0 S1)
+name: Flutter CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  analyze:
+    name: Analyze & Lint
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.32.0'
+          channel: stable
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run analyzer
+        run: flutter analyze --no-fatal-infos
+
+      - name: Check for Material Icons violations
+        run: |
+          echo "Checking PhosphorIcons compliance..."
+          VIOLATIONS=$(grep -rn "Icons\." lib/screens/ lib/widgets/ --include="*.dart" \
+            | grep -v "Icons.arrow_back\|Icons.close\|// system fallback" \
+            | grep -v "\.g\.dart\|\.freezed\.dart" || true)
+          if [ -n "$VIOLATIONS" ]; then
+            echo "FAIL: Material Icons found on brand surfaces:"
+            echo "$VIOLATIONS"
+            exit 1
+          fi
+          echo "PASS: No Material Icons violations"
+
+      - name: Check for hardcoded colors
+        run: |
+          echo "Checking for hardcoded colors..."
+          VIOLATIONS=$(grep -rn "Color(0x" lib/screens/ lib/widgets/ --include="*.dart" \
+            | grep -v "colors.dart\|design_system.dart\|\.g\.dart\|\.freezed\.dart" || true)
+          if [ -n "$VIOLATIONS" ]; then
+            echo "WARNING: Hardcoded colors found (should use KinnectColors):"
+            echo "$VIOLATIONS"
+          fi
+
+      - name: Check for dynamic in models
+        run: |
+          echo "Checking for 'dynamic' in data layer..."
+          VIOLATIONS=$(grep -rn "\bdynamic\b" lib/models/dtos/ --include="*.dart" \
+            | grep -v "\.g\.dart\|\.freezed\.dart\|fromJson\|Map<String, dynamic>" || true)
+          if [ -n "$VIOLATIONS" ]; then
+            echo "WARNING: 'dynamic' found in DTO layer:"
+            echo "$VIOLATIONS"
+          fi
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.32.0'
+          channel: stable
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run tests
+        run: flutter test --coverage
+
+      - name: Check test coverage
+        run: |
+          if [ -f coverage/lcov.info ]; then
+            COVERAGE=$(lcov --summary coverage/lcov.info 2>&1 | grep "lines" | grep -oP '\d+\.\d+%')
+            echo "Test coverage: $COVERAGE"
+          fi
+
+  traceability:
+    name: PRD Traceability
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run traceability check
+        run: python3 scripts/validate_prd_trace.py
