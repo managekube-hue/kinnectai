@@ -31,12 +31,15 @@ import '../screens/legal_document_screen.dart';
 import '../screens/line_screen.dart';
 import '../screens/login_screen.dart';
 import '../screens/memory_box_screen.dart';
+import '../screens/messaging_screen.dart';
 import '../screens/memory_detail_screen.dart';
 import '../screens/memory_edit_screen.dart';
 import '../screens/night_mode_screen.dart';
 import '../screens/notifications_settings_screen.dart';
 import '../screens/offline_videos_screen.dart';
+import '../screens/data_deletion_screen.dart';
 import '../screens/payment_history_screen.dart';
+import '../screens/room_list_screen.dart';
 import '../screens/personal_tools_screen.dart';
 import '../screens/phone_signup_screen.dart';
 import '../screens/privacy_settings_screen.dart';
@@ -414,6 +417,26 @@ class AppGoRouter {
         path: '/subscription',
         builder: (BuildContext context, GoRouterState state) =>
             const SubscriptionScreen(),
+      ),
+      // --- DM / Messaging ---
+      GoRoute(
+        path: '/dm/:kinId',
+        builder: (BuildContext context, GoRouterState state) {
+          final kinId = state.pathParameters['kinId'];
+          return MessagingScreen(kinId: kinId);
+        },
+      ),
+      // --- Rooms ---
+      GoRoute(
+        path: '/rooms',
+        builder: (BuildContext context, GoRouterState state) =>
+            const RoomListScreen(),
+      ),
+      // --- Data Deletion ---
+      GoRoute(
+        path: '/settings/delete-account',
+        builder: (BuildContext context, GoRouterState state) =>
+            const DataDeletionScreen(),
       ),
       // --- Ancestral Marketplace ---
       GoRoute(
