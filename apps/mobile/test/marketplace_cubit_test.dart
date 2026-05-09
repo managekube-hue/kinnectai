@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 import 'package:kinnectai_app/cubits/marketplace_cubit.dart';
+import 'package:kinnectai_app/cubits/error_cubit.dart';
 import 'package:kinnectai_app/models/dtos/marketplace_product_dto.dart';
 import 'package:kinnectai_app/repositories/marketplace_repository.dart';
 
@@ -85,7 +86,7 @@ void main() {
           cursor: any(named: 'cursor'),
           limit: any(named: 'limit'),
         )).thenAnswer((_) async => samplePage);
-        return MarketplaceCubit(repository: mockRepo);
+        return MarketplaceCubit(repository: mockRepo, errorCubit: ErrorCubit());
       },
       act: (cubit) => cubit.load(),
       expect: () => [
@@ -111,7 +112,7 @@ void main() {
           cursor: any(named: 'cursor'),
           limit: any(named: 'limit'),
         )).thenAnswer((_) async => samplePage);
-        return MarketplaceCubit(repository: mockRepo);
+        return MarketplaceCubit(repository: mockRepo, errorCubit: ErrorCubit());
       },
       act: (cubit) => cubit.load(),
       expect: () => [
@@ -126,7 +127,7 @@ void main() {
         when(() => mockRepo.getProduct('p1')).thenAnswer((_) async => sampleProducts[0]);
         when(() => mockRepo.listReviews('p1', cursor: any(named: 'cursor'), limit: any(named: 'limit')))
             .thenAnswer((_) async => sampleReviews);
-        return MarketplaceCubit(repository: mockRepo);
+        return MarketplaceCubit(repository: mockRepo, errorCubit: ErrorCubit());
       },
       act: (cubit) => cubit.fetchProductDetail('p1'),
       expect: () => [
@@ -149,7 +150,7 @@ void main() {
           imageUrls: any(named: 'imageUrls'),
           tags: any(named: 'tags'),
         )).thenAnswer((_) async => sampleProducts[0]);
-        return MarketplaceCubit(repository: mockRepo);
+        return MarketplaceCubit(repository: mockRepo, errorCubit: ErrorCubit());
       },
       act: (cubit) => cubit.createListing(
         title: 'New Book',
@@ -169,7 +170,7 @@ void main() {
         when(() => mockRepo.listOrders(role: any(named: 'role'))).thenAnswer((_) async => [
           const MarketplaceOrderDTO(orderId: 'ord_1', status: 'paid', totalCents: 2999),
         ]);
-        return MarketplaceCubit(repository: mockRepo);
+        return MarketplaceCubit(repository: mockRepo, errorCubit: ErrorCubit());
       },
       act: (cubit) => cubit.loadOrders(),
       expect: () => [
@@ -182,7 +183,7 @@ void main() {
       'emits [Loading, WishlistLoaded] when loadWishlist succeeds',
       build: () {
         when(() => mockRepo.listWishlist()).thenAnswer((_) async => [sampleProducts[0]]);
-        return MarketplaceCubit(repository: mockRepo);
+        return MarketplaceCubit(repository: mockRepo, errorCubit: ErrorCubit());
       },
       act: (cubit) => cubit.loadWishlist(),
       expect: () => [
@@ -202,7 +203,7 @@ void main() {
           pendingOrders: 3,
           stripeOnboarded: true,
         ));
-        return MarketplaceCubit(repository: mockRepo);
+        return MarketplaceCubit(repository: mockRepo, errorCubit: ErrorCubit());
       },
       act: (cubit) => cubit.loadSellerDashboard(),
       expect: () => [
