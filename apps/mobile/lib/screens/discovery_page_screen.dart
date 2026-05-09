@@ -1,35 +1,41 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../blocs/discovery/discovery_bloc.dart';
 import '../models/dtos/discovery_candidate_dto.dart';
+import '../repositories/feed_repository.dart';
+import '../repositories/feed_repository_impl.dart';
 import '../router/app_nav.dart';
 import '../theme/colors.dart';
 import '../theme/typography.dart';
 
 /// PRD Section 07 -- Discovery Page.
 /// Biologically-curated candidate cards ranked by Connection Score.
-class DiscoveryPageScreen extends StatefulWidget {
+class DiscoveryPageScreen extends StatelessWidget {
   const DiscoveryPageScreen({super.key});
 
   @override
-  State<DiscoveryPageScreen> createState() => _DiscoveryPageScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => DiscoveryBloc(FeedRepositoryImpl(dio: Dio()))..add(const FetchCandidates()),
+      child: const _DiscoveryContent(),
+    );
+  }
 }
 
-class _DiscoveryPageScreenState extends State<DiscoveryPageScreen> {
+class _DiscoveryContent extends StatefulWidget {
+  const _DiscoveryContent();
+
+  @override
+  State<_DiscoveryContent> createState() => _DiscoveryContentState();
+}
+
+class _DiscoveryContentState extends State<_DiscoveryContent> {
   int _filterIndex = 0;
 
   static const _filters = ['All', 'DNA Matches', 'Name Matches', 'Branch Overlaps', 'Facial Matches'];
-
-  @override
-  void initState() {
-    super.initState();
-    final bloc = context.read<DiscoveryBloc>();
-    if (bloc.state is DiscoveryInitial) {
-      bloc.add(const FetchCandidates());
-    }
-  }
 
   void _onFilterTap(int index) {
     setState(() => _filterIndex = index);

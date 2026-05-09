@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'cubits/error_cubit.dart';
 import 'foundation/app_bootstrap.dart';
 import 'foundation/offline/offline_sync_manager.dart';
+import 'utils/consent_store.dart';
 import 'router/go_router_config.dart';
 import 'services/auth_service.dart';
 import 'theme/design_system.dart';
@@ -19,6 +20,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await AppBootstrap.initialize();
   await appOfflineSync.initialize();
+  await ConsentStore.initialize();
 
   Bloc.observer = const AppBlocObserver();
 
