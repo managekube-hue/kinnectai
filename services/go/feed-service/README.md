@@ -1,6 +1,15 @@
 # Feed Service
 
-This service contains the Go backend that serves The Line feed and core API endpoints.
+Feed serving, ranking, and timeline assembly.
+
+Responsibilities:
+- Build and return The Line feed payloads.
+- Apply feed ranking and retrieval policies.
+
+Out of scope:
+- Candidate generation (owned by discovery-service).
+- Kernel intelligence orchestration (owned by kernel-service).
+- Behavioral telemetry/scoring pipelines (owned by behavioral-service).
 
 ## Local development
 

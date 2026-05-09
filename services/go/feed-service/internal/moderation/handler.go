@@ -2,18 +2,28 @@ package moderation
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"io"
 	"net/http"
 	"os"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/kinnectai/backend/pkg/middleware"
 )
 
-type Handler struct{}
+type Handler struct {
+	service reportCreator
+}
 
-func NewHandler() *Handler { return &Handler{} }
+type reportCreator interface {
+	CreateReport(ctx context.Context, reporterID uuid.UUID, req CreateReportRequest) (*ReportResponse, error)
+}
+
+func NewHandler(service reportCreator) *Handler {
+	return &Handler{service: service}
+}
 
 func (h *Handler) RegisterRoutes(rg *gin.RouterGroup) {
 	rg.POST("/check", h.checkContent)
@@ -98,14 +108,23 @@ func (h *Handler) reportContent(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
 		return
 	}
-	var req struct {
-		ContentID string `json:"content_id" binding:"required"`
-		Reason    string `json:"reason" binding:"required"`
-		Details   string `json:"details"`
+	uid, err := uuid.Parse(userID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid user id"})
+		return
 	}
+
+	var req CreateReportRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusCreated, gin.H{"status": "reported", "reporter_id": userID})
+
+	resp, err := h.service.CreateReport(c.Request.Context(), uid, req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create report"})
+		return
+	}
+
+	c.JSON(http.StatusCreated, resp)
 }

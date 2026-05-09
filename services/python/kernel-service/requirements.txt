@@ -4,5 +4,5 @@ pydantic==2.5.2
 numpy==1.26.2
 psycopg2-binary==2.9.9
 neo4j==5.22.0
-cassandra-driver==3.27.2
+cassandra-driver==3.30.0
 pgvector==0.2.4

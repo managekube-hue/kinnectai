@@ -101,6 +101,18 @@ func main() {
 		}
 	}()
 
+	kafkaModerationWriter := kafka.NewWriter(kafka.WriterConfig{
+		Brokers:  kafkaBrokers,
+		Topic:    cfg.KafkaTopicModeration,
+		Balancer: &kafka.LeastBytes{},
+		Async:    true,
+	})
+	defer func() {
+		if err := kafkaModerationWriter.Close(); err != nil {
+			slog.Warn("failed to close kafka moderation writer", "err", err)
+		}
+	}()
+
 	// ── Services ─────────────────────────────────────────────────────────────
 	authSvc := auth.NewService(pg, streamClient, cfg.JWTSecret, cfg.JWTExpiryHours)
 	userSvc := user.NewService(pg)
@@ -108,6 +120,7 @@ func main() {
 	feedSvc := feed.NewService(pg, streamClient)
 	dnaSvc := dna.NewService(pg, kafkaWriter)
 	mediaSvc := media.NewService(streamClient, cfg.GetStreamAPIKey, cfg.GetStreamAppID)
+	moderationSvc := moderation.NewService(pg, kafkaModerationWriter, cfg.KafkaTopicModeration)
 
 	// ── Handlers ─────────────────────────────────────────────────────────────
 	authHandler := auth.NewHandler(authSvc)
@@ -123,7 +136,7 @@ func main() {
 	paymentHandler := payment.NewHandler()
 	roomHandler := room.NewHandler()
 	messagingHandler := messaging.NewHandler(pg)
-	moderationHandler := moderation.NewHandler()
+	moderationHandler := moderation.NewHandler(moderationSvc)
 	settingsHandler := settings.NewHandler(pg)
 	marketplaceSvc := marketplace.NewService(pg, cfg.StripeSecretKey)
 	marketplaceHandler := marketplace.NewHandler(marketplaceSvc, cfg.StripeWebhookSecret)

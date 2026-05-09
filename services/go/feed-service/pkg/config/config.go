@@ -39,8 +39,9 @@ type Config struct {
 	GetStreamSecret string
 	GetStreamAppID  string
 
-	KafkaBrokers      string
-	KafkaTopicDNAKits string
+	KafkaBrokers         string
+	KafkaTopicDNAKits    string
+	KafkaTopicModeration string
 
 	SequencingAPIKey  string
 	SequencingBaseURL string
@@ -96,8 +97,9 @@ func Load() (*Config, error) {
 		GetStreamSecret: requireEnv("GETSTREAM_SECRET"),
 		GetStreamAppID:  getEnv("GETSTREAM_APP_ID", ""),
 
-		KafkaBrokers:      getEnv("KAFKA_BROKERS", "localhost:9092"),
-		KafkaTopicDNAKits: getEnv("KAFKA_TOPIC_DNA_KITS", "dna-kit-submissions"),
+		KafkaBrokers:         getEnv("KAFKA_BROKERS", "localhost:9092"),
+		KafkaTopicDNAKits:    getEnv("KAFKA_TOPIC_DNA_KITS", "dna-kit-submissions"),
+		KafkaTopicModeration: getEnv("KAFKA_TOPIC_MODERATION", "moderation-reports"),
 
 		SequencingAPIKey:  getEnv("SEQUENCING_API_KEY", ""),
 		SequencingBaseURL: getEnv("SEQUENCING_BASE_URL", "https://api.sequencing.com"),

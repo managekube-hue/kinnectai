@@ -619,18 +619,7 @@ func (s *Service) OnboardSeller(ctx context.Context, userID string, storeName, s
 			Transfers:    &stripe.AccountCapabilitiesTransfersParams{Requested: stripe.Bool(true)},
 		},
 		BusinessType: stripe.String("individual"),
-		// Default payout schedule: weekly on Fridays via ACH
-		Settings: &stripe.AccountSettingsParams{
-			Payouts: &stripe.AccountSettingsPayoutsParams{
-				Schedule: &stripe.PayoutScheduleParams{
-					Interval:  stripe.String("weekly"),
-					WeeklyAnchor: stripe.String("friday"),
-				},
-				// ACH is the default for US accounts -- Stripe collects bank
-				// routing + account number during the Express onboarding flow.
-				// No manual external_account creation needed.
-			},
-		},
+		// Stripe Express onboarding collects payout schedule and bank info directly.
 	}
 	params.AddMetadata("kinnect_user_id", userID)
 	params.AddMetadata("kinnect_store_name", storeName)

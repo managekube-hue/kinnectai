@@ -1,0 +1,674 @@
+openapi: 3.1.0
+info:
+  title: KinnectAI Production API
+  version: 1.0.0
+  contact:
+    name: Engineering
+    url: 'https://kinnectai.app/docs'
+
+servers:
+  - url: https://api.kinnectai.app/v1
+    description: Production
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    StepUpAuth:
+      type: apiKey
+      in: header
+      name: X-Stepup-Auth
+    Scope:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: 'https://auth.kinnectai.app/oauth/token'
+          scopes: {}
+
+  schemas:
+    MemoryCard:
+      type: object
+      properties:
+        memory_id:
+          type: string
+          format: uuid
+        creator_id:
+          type: string
+          format: uuid
+        type:
+          type: string
+          enum: [video, bloom, audio, stitch, rewind]
+        kin_score:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+        is_ai_generated:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        pulse_count:
+          type: integer
+          default: 0
+        caption:
+          type: string
+          nullable: true
+        audio_url:
+          type: string
+          nullable: true
+        video_url:
+          type: string
+          nullable: true
+        c2pa_manifest_url:
+          type: string
+          nullable: true
+
+    FeedMetadata:
+      type: object
+      properties:
+        kernel_status:
+          type: string
+          enum: [healthy, degraded, unavailable]
+        fallback_applied:
+          type: boolean
+        cache_age_seconds:
+          type: integer
+
+    VaultSealedResponse:
+      description: Response confirming memory sealed to vault
+      type: object
+      properties:
+        memory_id:
+          type: string
+          format: uuid
+        trigger_id:
+          type: string
+          format: uuid
+        audit_log_id:
+          type: string
+
+    MockAPIFeedResponse:
+      type: object
+      description: Mock response shape for frontend development
+      example:
+        items:
+          - memoryId: mem_abc123
+            creatorId: usr_xyz789
+            type: bloom
+            s3Key: memories/2026/05/abc123.mp4
+            createdAt: '2026-05-07T10:30:00Z'
+            isAiGenerated: true
+            pulseCount: 12
+            caption: Grandpa story about the old farm
+            audioUrl: https://cdn.kinnectai.app/audio/abc123.aac
+            videoUrl: https://cdn.kinnectai.app/video/abc123_720p.mp4
+        next_cursor: cursor_next_page_token
+        metadata:
+          kernel_status: healthy
+          fallback_applied: false
+          cache_age_seconds: 45
+
+    BloomRequest:
+      type: object
+      required: [photo_s3_key, quality_tier]
+      properties:
+        photo_s3_key:
+          type: string
+        audio_s3_key:
+          type: string
+          nullable: true
+        voiceprint_id:
+          type: string
+          nullable: true
+        quality_tier:
+          type: string
+          enum: [STANDARD, PREMIUM]
+        c2pa_required:
+          type: boolean
+          default: true
+
+    BloomJobResponse:
+      description: Bloom job queued for processing
+      type: object
+      properties:
+        job_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum: [QUEUED, PROCESSING, FALLBACK_ACTIVATED]
+        estimated_completion:
+          type: string
+          format: date-time
+
+    DiscoveryList:
+      type: object
+      properties:
+        candidates:
+          type: array
+          items:
+            $ref: '#/components/schemas/DiscoveryCard'
+
+    DiscoveryCard:
+      type: object
+      properties:
+        candidate_id:
+          type: string
+          format: uuid
+        kc_score_display:
+          type: integer
+          minimum: 0
+          maximum: 100
+        relationship_guess:
+          type: string
+        primary_signal:
+          type: string
+          enum: [DNA, HAPLOGROUP, FACIAL, NAME_GEO, TREE, BEHAVIORAL]
+        confidence_interval:
+          type: array
+          items:
+            type: number
+
+    KinnectionList:
+      type: object
+      properties:
+        kinnections:
+          type: array
+          items:
+            type: object
+            properties:
+              target_user_id:
+                type: string
+                format: uuid
+              cr_score:
+                type: number
+                format: float
+              status:
+                type: string
+                enum: [confirmed, pending, rejected]
+
+    KinnectionPath:
+      type: object
+      properties:
+        path:
+          type: array
+          items:
+            type: object
+            properties:
+              user_id:
+                type: string
+                format: uuid
+              edge_type:
+                type: string
+              kc_score:
+                type: number
+                format: float
+        hop_count:
+          type: integer
+        total_kc_score:
+          type: number
+          format: float
+
+    RoomCreateRequest:
+      type: object
+      required: [name, privacy]
+      properties:
+        name:
+          type: string
+        privacy:
+          type: string
+          enum: [private, kc_gated, branch]
+        invitee_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+
+    RoomTokenResponse:
+      description: Room created with SFU token and ICE servers
+      type: object
+      properties:
+        room_id:
+          type: string
+          format: uuid
+        sfu_token:
+          type: string
+        ice_servers:
+          type: array
+          items:
+            type: object
+            properties:
+              urls:
+                type: array
+                items:
+                  type: string
+              username:
+                type: string
+              credential:
+                type: string
+              credentialType:
+                type: string
+
+    KCExplainResponse:
+      type: object
+      properties:
+        pair_id:
+          type: string
+        model_version:
+          type: string
+        final_score:
+          type: number
+          format: float
+        top_features:
+          type: array
+          maxItems: 3
+          items:
+            type: object
+            properties:
+              feature_name:
+                type: string
+              layer:
+                type: string
+                enum: [L1, L2, L3, L4, L5]
+              weight:
+                type: number
+                format: float
+              importance:
+                type: number
+                format: float
+        confidence_interval:
+          type: object
+          properties:
+            lower:
+              type: number
+              format: float
+            upper:
+              type: number
+              format: float
+
+    RevenueCatWebhook:
+      type: object
+      properties:
+        event:
+          type: object
+          properties:
+            id:
+              type: string
+            created_at:
+              type: string
+              format: date-time
+            type:
+              type: string
+              enum: [INITIAL_PURCHASE, RENEWAL, CANCELLATION, REFUND]
+            app_user_id:
+              type: string
+            product_identifier:
+              type: string
+            store:
+              type: string
+              enum: [APP_STORE, PLAY_STORE, STRIPE]
+            entitlements:
+              type: object
+              additionalProperties:
+                type: object
+                properties:
+                  active:
+                    type: boolean
+                  expires_date:
+                    type: string
+                    format: date-time
+
+  responses:
+    InsufficientScope:
+      description: 403 Forbidden — missing OAuth scope
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: insufficient_scope
+              missing_scope:
+                type: string
+                example: 'media:write'
+
+    RateLimitExceeded:
+      description: 429 Too Many Requests
+      headers:
+        Retry-After:
+          schema:
+            type: integer
+
+    StepUpRequired:
+      description: 401 Step-up authentication required
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: step_up_required
+              reason:
+                type: string
+                example: vault_write
+
+    ConsentMissing:
+      description: 403 Consent flag not set
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: consent_required
+              missing_bit:
+                type: integer
+                example: 2
+              feature:
+                type: string
+                example: dna_upload
+
+paths:
+  /feed:
+    get:
+      tags: [feed-service]
+      summary: Retrieve The Line feed sorted by KC
+      security:
+        - BearerAuth: []
+        - Scope: ['feed:read']
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 10
+        - name: cursor
+          in: query
+          schema:
+            type: string
+        - name: fallback_mode
+          in: query
+          schema:
+            type: string
+            enum: [kc_cached, chronological, empty]
+            default: kc_cached
+      responses:
+        '200':
+          description: KC-ranked feed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/MemoryCard'
+                  next_cursor:
+                    type: string
+                    nullable: true
+                  metadata:
+                    $ref: '#/components/schemas/FeedMetadata'
+        '403':
+          $ref: '#/components/responses/InsufficientScope'
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+
+  /memorybox:
+    post:
+      tags: [memorybox-service]
+      summary: Seal Memory Box with ZK client-side encryption
+      security:
+        - BearerAuth: []
+        - StepUpAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [recipient_id, trigger_type, trigger_value, content_s3_key, encrypted_dek, dek_key_id]
+              properties:
+                recipient_id:
+                  type: string
+                  format: uuid
+                trigger_type:
+                  type: string
+                  enum: [time_capsule, milestone, unspoken, geofence]
+                trigger_value:
+                  type: object
+                content_s3_key:
+                  type: string
+                encrypted_dek:
+                  type: string
+                  format: byte
+                dek_key_id:
+                  type: string
+                steward_id:
+                  type: string
+                  format: uuid
+                  nullable: true
+      responses:
+        '201':
+          description: Memory sealed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VaultSealedResponse'
+        '401':
+          $ref: '#/components/responses/StepUpRequired'
+        '403':
+          $ref: '#/components/responses/ConsentMissing'
+
+  /bloom:
+    post:
+      tags: [bloom-service]
+      summary: Queue Bloom animation job (Standard or Premium tier)
+      security:
+        - BearerAuth: []
+        - Scope: ['media:write', 'biometric:face:write']
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BloomRequest'
+      responses:
+        '202':
+          description: Bloom job queued
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BloomJobResponse'
+        '503':
+          description: Fallback activated — SadTalker OSS pipeline engaged
+
+  /discovery:
+    get:
+      tags: [discovery-service]
+      summary: Weekly Discovery candidates ranked by KC score
+      security:
+        - BearerAuth: []
+        - Scope: ['discovery:read']
+      responses:
+        '200':
+          description: Weekly Discovery candidates
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DiscoveryList'
+        '403':
+          $ref: '#/components/responses/InsufficientScope'
+
+  /kinnections:
+    get:
+      tags: [kin-graph-service]
+      summary: Confirmed Kinnections and pending requests
+      security:
+        - BearerAuth: []
+        - Scope: ['graph:read']
+      responses:
+        '200':
+          description: List of Kinnections
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KinnectionList'
+
+  /kinnections/path:
+    get:
+      tags: [kin-graph-service]
+      summary: Shortest graph path between two users (Graph Path View)
+      security:
+        - BearerAuth: []
+        - Scope: ['graph:read']
+      parameters:
+        - name: user_a
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: user_b
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Shortest path between users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KinnectionPath'
+
+  /rooms:
+    post:
+      tags: [rooms-service]
+      summary: Create Room and generate mediasoup SFU token
+      security:
+        - BearerAuth: []
+        - Scope: ['rooms:write']
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoomCreateRequest'
+      responses:
+        '201':
+          description: Room created with SFU token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomTokenResponse'
+
+  /kc/explain/{pair_id}:
+    get:
+      tags: [kernel-service]
+      summary: Return top-k features, layer weights, CI, model_version for a KC pair
+      security:
+        - BearerAuth: []
+        - Scope: ['graph:read']
+      parameters:
+        - name: pair_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: KC explainability for user pair
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KCExplainResponse'
+
+  /pulses:
+    post:
+      tags: [feed-service]
+      summary: Send a Pulse reaction on a Memory
+      security:
+        - BearerAuth: []
+        - Scope: ['feed:read']
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [memory_id]
+              properties:
+                memory_id:
+                  type: string
+                  format: uuid
+      responses:
+        '201':
+          description: Pulse reaction recorded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  pulse_id:
+                    type: string
+                    format: uuid
+                  memory_id:
+                    type: string
+                    format: uuid
+                  new_pulse_count:
+                    type: integer
+                  timestamp:
+                    type: string
+                    format: date-time
+
+  /discovery/dismiss:
+    post:
+      tags: [discovery-service]
+      summary: Dismiss a candidate — applies x0.30 KC penalty for 30 days
+      security:
+        - BearerAuth: []
+        - Scope: ['discovery:read']
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [candidate_id, penalty]
+              properties:
+                candidate_id:
+                  type: string
+                  format: uuid
+                penalty:
+                  type: number
+                  format: float
+                  default: 0.30
+      responses:
+        '204':
+          description: Dismissed
+
+  /webhooks/revenuecat:
+    post:
+      tags: [payment-service]
+      summary: RevenueCat IAP webhook — sync entitlements to backend
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RevenueCatWebhook'
+      responses:
+        '200':
+          description: Processed
+        '409':
+          description: Duplicate event — idempotent, ignored

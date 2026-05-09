@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import os
-from kin_score_algorithm import KCKernel
+from app.kin_score_algorithm import KCKernel
 
 app = FastAPI(title="Kinnection Coefficient Kernel", version="1.0.0")
 
