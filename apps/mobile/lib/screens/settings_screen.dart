@@ -3,22 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../cubits/settings_cubit.dart';
-import '../models/dtos/settings_state_dto.dart';
 import '../router/app_nav.dart';
 import '../theme/colors.dart';
 import '../theme/typography.dart';
 
 /// PRD Section 12.0 -- Top-Level Settings Menu.
 ///
-/// Parent-child expandable structure:
-/// - Balance -> navigate
-/// - Personal tools -> navigate
-/// - Activity Center -> EXPAND INLINE (History, Time & Engagement, Content Permissions)
-/// - Offline videos -> navigate
-/// - Your QR code -> navigate
-/// - Creation & business tools -> navigate
-/// - Memory Box -> navigate to /settings/memory-box
-/// - Settings and privacy -> EXPAND INLINE (Content Preferences, Time & Well-being, Family Pairing, Account, Security, Notifications, Privacy)
+/// 8 top-level items. Activity Center and Settings & Privacy expand inline
+/// to show sub-category headers that each navigate to their own screen.
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
 
@@ -27,8 +19,8 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  bool _activityCenterExpanded = false;
-  bool _settingsPrivacyExpanded = false;
+  bool _activityExpanded = false;
+  bool _settingsExpanded = false;
 
   @override
   Widget build(BuildContext context) {
@@ -42,154 +34,140 @@ class _SettingsScreenState extends State<SettingsScreen> {
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: BlocBuilder<SettingsCubit, SettingsState>(
-        builder: (context, state) {
-          return ListView(
+      body: ListView(
+        children: [
+          // 1. Balance
+          _TopItem(icon: PhosphorIcons.wallet, label: 'Balance', subtitle: 'Bloom Credits, Vault+, Kinnect Card', onTap: () => AppNav.push(context, '/settings/balance')),
+          // 2. Personal tools
+          _TopItem(icon: PhosphorIcons.wrench, label: 'Personal tools', subtitle: 'Voiceprint, Family Crest, Restore, DNA Kit', onTap: () => AppNav.push(context, '/settings/personal-tools')),
+          // 3. Activity Center (expand to sub-categories)
+          _ExpandableItem(
+            icon: PhosphorIcons.clockCounterClockwise,
+            label: 'Activity Center',
+            subtitle: 'History, Time & Engagement, Content Permissions',
+            expanded: _activityExpanded,
+            onTap: () => setState(() => _activityExpanded = !_activityExpanded),
             children: [
-              // 1. Balance
-              _navItem(PhosphorIcons.wallet(), 'Balance', 'Bloom Credits, Vault+, Kinnect Card', '/settings/balance'),
-              // 2. Personal tools
-              _navItem(PhosphorIcons.wrench(), 'Personal tools', 'Voiceprint, Family Crest, Restore, DNA Kit', '/settings/personal-tools'),
-              // 3. Activity Center (EXPANDS INLINE)
-              _expandItem(
-                PhosphorIcons.clockCounterClockwise(),
-                'Activity Center',
-                'History, Time & Engagement, Content Permissions',
-                _activityCenterExpanded,
-                () => setState(() => _activityCenterExpanded = !_activityCenterExpanded),
-                _buildActivityCenterChildren(),
-              ),
-              // 4. Offline videos
-              _navItem(PhosphorIcons.downloadSimple(), 'Offline videos', 'Downloaded Memories', '/settings/offline-videos'),
-              // 5. Your QR code
-              _navItem(PhosphorIcons.qrCode(), 'Your QR code', 'Share your Root profile', '/settings/qr-code'),
-              // 6. Creation & business tools
-              _navItem(PhosphorIcons.briefcase(), 'Creation & business tools', 'Analytics, Marketplace, API', '/settings/business-tools'),
-              // 7. Memory Box
-              _navItem(PhosphorIcons.lock(), 'Memory Box', 'Vault settings, Steward, triggers', '/settings/memory-box'),
-              // 8. Settings and privacy (EXPANDS INLINE)
-              _expandItem(
-                PhosphorIcons.gear(),
-                'Settings and privacy',
-                'Content Preferences, Well-being, Family, Account, Security, Notifications, Privacy',
-                _settingsPrivacyExpanded,
-                () => setState(() => _settingsPrivacyExpanded = !_settingsPrivacyExpanded),
-                _buildSettingsPrivacyChildren(),
-              ),
-              const SizedBox(height: 32),
+              _SubItem(label: 'History', subtitle: 'Watch, comment, search, mention, account', onTap: () => AppNav.push(context, '/settings/activity-center')),
+              _SubItem(label: 'Screen Time', subtitle: 'Daily and weekly usage stats', onTap: () => AppNav.push(context, '/time-wellbeing')),
+              _SubItem(label: 'Content Permissions', subtitle: 'Memory reuse, visibility, Pulse permissions', onTap: () => AppNav.push(context, '/settings/activity-center')),
             ],
-          );
-        },
+          ),
+          // 4. Offline videos
+          _TopItem(icon: PhosphorIcons.downloadSimple, label: 'Offline videos', subtitle: 'Downloaded Memories', onTap: () => AppNav.push(context, '/settings/offline-videos')),
+          // 5. QR code
+          _TopItem(icon: PhosphorIcons.qrCode, label: 'Your QR code', subtitle: 'Share your Root profile', onTap: () => AppNav.push(context, '/settings/qr-code')),
+          // 6. Creation & business tools
+          _TopItem(icon: PhosphorIcons.briefcase, label: 'Creation & business tools', subtitle: 'Analytics, Marketplace, API', onTap: () => AppNav.push(context, '/settings/business-tools')),
+          // 7. Memory Box
+          _TopItem(icon: PhosphorIcons.lock, label: 'Memory Box', subtitle: 'Vault settings, Steward, triggers, export', onTap: () => AppNav.push(context, '/settings/memory-box')),
+          // 8. Settings and privacy (expand to sub-categories)
+          _ExpandableItem(
+            icon: PhosphorIcons.gear,
+            label: 'Settings and privacy',
+            subtitle: 'Content, well-being, family, account, security, notifications, privacy',
+            expanded: _settingsExpanded,
+            onTap: () => setState(() => _settingsExpanded = !_settingsExpanded),
+            children: [
+              _SubItem(label: 'Content Preferences', subtitle: 'Filter keywords, Restricted Mode, STEM, topics', onTap: () => AppNav.push(context, '/settings/content-preferences')),
+              _SubItem(label: 'Time & Well-being', subtitle: 'Daily limits, breaks, night mode', onTap: () => AppNav.push(context, '/time-wellbeing')),
+              _SubItem(label: 'Family Pairing', subtitle: 'Teen safety controls (COPPA)', onTap: () => AppNav.push(context, '/settings/family-pairing')),
+              _SubItem(label: 'Account', subtitle: 'Password, Passkey, verification, data export, delete', onTap: () => AppNav.push(context, '/settings/account')),
+              _SubItem(label: 'Security & Permissions', subtitle: 'Devices, 2FA, app permissions, browser', onTap: () => AppNav.push(context, '/settings/security')),
+              _SubItem(label: 'Notifications', subtitle: '14 push + in-app notification toggles', onTap: () => AppNav.push(context, '/settings/notifications')),
+              _SubItem(label: 'Privacy', subtitle: 'Visibility, genomic data, tracking, ads', onTap: () => AppNav.push(context, '/settings/privacy')),
+            ],
+          ),
+          const SizedBox(height: 32),
+        ],
       ),
     );
   }
+}
 
-  // ---------------------------------------------------------------------------
-  // Activity Center inline expansion (PRD Section 2)
-  // ---------------------------------------------------------------------------
-  List<Widget> _buildActivityCenterChildren() {
-    return [
-      _sectionHeader('History'),
-      _childNav(PhosphorIcons.play(), 'Watch history', 'Videos and Blooms viewed', clearable: true),
-      _childNav(PhosphorIcons.chatCircleText(), 'Comment history', 'All comments made', clearable: true),
-      _childNav(PhosphorIcons.magnifyingGlass(), 'Search history', 'Search terms in Discovery', clearable: true),
-      _childNav(PhosphorIcons.at(), 'Mention history', '@mentions by other Kin'),
-      _childNav(PhosphorIcons.clockCounterClockwise(), 'Account history', 'Login events, device changes'),
-      _sectionHeader('Time & Engagement'),
-      _childNavRoute(PhosphorIcons.timer(), 'Screen time', 'Daily and weekly usage stats', '/time-wellbeing'),
-      _sectionHeader('Content Permissions'),
-      _childNav(PhosphorIcons.filmStrip(), 'Memory reuse history', 'Which Memories were Stitched'),
-      _childNav(PhosphorIcons.trash(), 'Recently deleted', 'Deleted content (30 days)'),
-      _childNav(PhosphorIcons.eye(), 'Manage Memory visibility', 'Per-Memory control'),
-      _childNav(PhosphorIcons.heart(), 'Manage Pulse permissions', 'Who can Pulse on Memories'),
-      _childNav(PhosphorIcons.gear(), 'Manage Memory reuse', 'Stitch/Rewind permissions'),
-    ];
-  }
+// ---------------------------------------------------------------------------
+// Top-level item (navigates directly)
+// ---------------------------------------------------------------------------
+class _TopItem extends StatelessWidget {
+  const _TopItem({required this.icon, required this.label, required this.subtitle, required this.onTap});
+  final IconData Function() icon;
+  final String label;
+  final String subtitle;
+  final VoidCallback onTap;
 
-  // ---------------------------------------------------------------------------
-  // Settings and privacy inline expansion (PRD Sections 3-7)
-  // ---------------------------------------------------------------------------
-  List<Widget> _buildSettingsPrivacyChildren() {
-    return [
-      _childNavRoute(PhosphorIcons.slidersHorizontal(), 'Content Preferences', 'Filter keywords, topics, Restricted Mode', '/settings/content-preferences'),
-      _childNavRoute(PhosphorIcons.timer(), 'Time & Well-being', 'Daily limits, breaks, night mode', '/time-wellbeing'),
-      _childNavRoute(PhosphorIcons.usersThree(), 'Family Pairing', 'Teen safety controls', '/settings/family-pairing'),
-      _childNavRoute(PhosphorIcons.user(), 'Account', 'Password, verification, data export', '/settings/account'),
-      _childNavRoute(PhosphorIcons.shieldCheck(), 'Security & Permissions', 'Devices, 2FA, app permissions', '/settings/security'),
-      _childNavRoute(PhosphorIcons.bell(), 'Notifications', 'Push and in-app notification toggles', '/settings/notifications'),
-      _childNavRoute(PhosphorIcons.eye(), 'Privacy', 'Visibility, data controls, genomic, tracking', '/settings/privacy'),
-    ];
-  }
-
-  // ---------------------------------------------------------------------------
-  // Widget builders
-  // ---------------------------------------------------------------------------
-
-  Widget _navItem(IconData Function() icon, String title, String subtitle, String route) {
+  @override
+  Widget build(BuildContext context) {
     return ListTile(
       leading: Icon(icon(), color: KinnectColors.accent),
-      title: Text(title, style: const TextStyle(color: KinnectColors.textPrimary)),
+      title: Text(label, style: const TextStyle(color: KinnectColors.textPrimary)),
       subtitle: Text(subtitle, style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
       trailing: Icon(PhosphorIcons.caretRight(), color: KinnectColors.textMuted),
-      onTap: () => AppNav.push(context, route),
+      onTap: onTap,
     );
   }
+}
 
-  Widget _expandItem(IconData Function() icon, String title, String subtitle, bool expanded, VoidCallback onTap, List<Widget> children) {
+// ---------------------------------------------------------------------------
+// Expandable item (shows sub-categories when tapped)
+// ---------------------------------------------------------------------------
+class _ExpandableItem extends StatelessWidget {
+  const _ExpandableItem({required this.icon, required this.label, required this.subtitle, required this.expanded, required this.onTap, required this.children});
+  final IconData Function() icon;
+  final String label;
+  final String subtitle;
+  final bool expanded;
+  final VoidCallback onTap;
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       children: [
         ListTile(
           leading: Icon(icon(), color: KinnectColors.accent),
-          title: Text(title, style: const TextStyle(color: KinnectColors.textPrimary)),
+          title: Text(label, style: const TextStyle(color: KinnectColors.textPrimary)),
           subtitle: Text(subtitle, style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
-          trailing: Icon(
-            expanded ? PhosphorIcons.caretUp() : PhosphorIcons.caretDown(),
-            color: KinnectColors.textMuted,
+          trailing: AnimatedRotation(
+            turns: expanded ? 0.5 : 0,
+            duration: const Duration(milliseconds: 200),
+            child: Icon(PhosphorIcons.caretDown(), color: KinnectColors.textMuted),
           ),
           onTap: onTap,
         ),
-        if (expanded)
-          Container(
-            color: KinnectColors.surfaceElevated.withOpacity(0.3),
+        AnimatedCrossFade(
+          firstChild: const SizedBox.shrink(),
+          secondChild: Container(
+            margin: const EdgeInsets.only(left: 24),
+            decoration: BoxDecoration(
+              border: Border(left: BorderSide(color: KinnectColors.accent.withOpacity(0.3), width: 2)),
+            ),
             child: Column(children: children),
           ),
+          crossFadeState: expanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+          duration: const Duration(milliseconds: 200),
+        ),
       ],
     );
   }
+}
 
-  Widget _sectionHeader(String title) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(56, 16, 16, 4),
-      child: Text(title, style: TextStyle(color: KinnectColors.accent, fontSize: 12, fontWeight: FontWeight.bold)),
-    );
-  }
+// ---------------------------------------------------------------------------
+// Sub-category item (navigates to its dedicated screen)
+// ---------------------------------------------------------------------------
+class _SubItem extends StatelessWidget {
+  const _SubItem({required this.label, required this.subtitle, required this.onTap});
+  final String label;
+  final String subtitle;
+  final VoidCallback onTap;
 
-  Widget _childNav(IconData Function() icon, String title, String subtitle, {bool clearable = false}) {
+  @override
+  Widget build(BuildContext context) {
     return ListTile(
-      contentPadding: const EdgeInsets.only(left: 56, right: 16),
-      leading: Icon(icon(), size: 20, color: KinnectColors.textSecondary),
-      title: Text(title, style: const TextStyle(color: KinnectColors.textPrimary, fontSize: 14)),
-      subtitle: Text(subtitle, style: TextStyle(color: KinnectColors.textSecondary, fontSize: 11)),
-      trailing: clearable
-          ? TextButton(
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$title cleared'), backgroundColor: KinnectColors.success));
-              },
-              child: Text('Clear', style: TextStyle(color: KinnectColors.primary, fontSize: 12)),
-            )
-          : Icon(PhosphorIcons.caretRight(), size: 16, color: KinnectColors.textMuted),
-      onTap: () {},
-    );
-  }
-
-  Widget _childNavRoute(IconData Function() icon, String title, String subtitle, String route) {
-    return ListTile(
-      contentPadding: const EdgeInsets.only(left: 56, right: 16),
-      leading: Icon(icon(), size: 20, color: KinnectColors.textSecondary),
-      title: Text(title, style: const TextStyle(color: KinnectColors.textPrimary, fontSize: 14)),
+      contentPadding: const EdgeInsets.only(left: 32, right: 16),
+      title: Text(label, style: const TextStyle(color: KinnectColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
       subtitle: Text(subtitle, style: TextStyle(color: KinnectColors.textSecondary, fontSize: 11)),
       trailing: Icon(PhosphorIcons.caretRight(), size: 16, color: KinnectColors.textMuted),
-      onTap: () => AppNav.push(context, route),
+      onTap: onTap,
     );
   }
 }
