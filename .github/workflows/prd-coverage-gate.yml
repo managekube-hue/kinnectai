@@ -1,0 +1,21 @@
+name: PRD Coverage Gate
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  prd-coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run PRD coverage gate
+        run: |
+          python tools/prd_coverage_gate/index.py docs/prd_traceability.json
