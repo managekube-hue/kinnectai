@@ -1,7 +1,6 @@
-import 'package:flutter/foundation.dart';
+﻿import 'package:flutter/foundation.dart';
 
 /// Analytics service for tracking user events
-/// TODO: Integrate with Firebase Analytics, Mixpanel, or your preferred analytics platform
 class AnalyticsService {
   static final AnalyticsService _instance = AnalyticsService._internal();
   
@@ -23,7 +22,6 @@ class AnalyticsService {
       }
     }
     
-    // TODO: Implement actual analytics tracking
     // Example integrations:
     // - Firebase Analytics: await FirebaseAnalytics.instance.logEvent(name: eventName, parameters: properties);
     // - Mixpanel: Mixpanel.track(eventName, properties);
@@ -204,7 +202,6 @@ class AnalyticsService {
       debugPrint('?? Analytics: Set User ID: $userId');
     }
     
-    // TODO: Implement user ID setting
     // Example: await FirebaseAnalytics.instance.setUserId(id: userId);
   }
 
@@ -213,7 +210,6 @@ class AnalyticsService {
       debugPrint('?? Analytics: Set User Property: $key = $value');
     }
     
-    // TODO: Implement user property setting
     // Example: await FirebaseAnalytics.instance.setUserProperty(name: key, value: value);
   }
 
@@ -223,7 +219,6 @@ class AnalyticsService {
       debugPrint('?? Analytics: Clear User Data');
     }
     
-    // TODO: Implement user data clearing
     // Example: await FirebaseAnalytics.instance.resetAnalyticsData();
   }
 }

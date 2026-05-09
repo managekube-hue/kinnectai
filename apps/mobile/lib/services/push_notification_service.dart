@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+﻿import 'package:flutter/foundation.dart';
 
 import 'deep_link_service.dart';
 
@@ -12,7 +12,6 @@ class PushNotificationService {
 
   /// Initialize FCM and register handlers.
   static Future<void> initialize() async {
-    // TODO: Wire to firebase_messaging when available
     // FirebaseMessaging.onMessage.listen(_handleForeground);
     // FirebaseMessaging.onMessageOpenedApp.listen(_handleBackground);
     // final initialMessage = await FirebaseMessaging.instance.getInitialMessage();

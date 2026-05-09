@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../services/api_service.dart';
@@ -105,7 +105,6 @@ class DnaKitCubit extends Cubit<DnaKitState> {
             kitId: kitId,
             haplogroup: (data['haplogroup'] ?? '').toString(),
             ethnicitySummary: (data['ethnicity'] as Map<String, dynamic>?)
-                    ?.map((k, v) => MapEntry(k, (v as num).toDouble())) ??
                 {},
           ));
         } else {

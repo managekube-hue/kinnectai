@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
@@ -33,7 +33,7 @@ class SubscriptionScreen extends StatelessWidget {
             isActive: true,
             features: const [
               '500 GB Memory Box storage',
-              'Priority Bloom rendering',
+              'Priority Photplay rendering',
               'Extended Legacy Reel duration',
               'Unlimited Strand collections',
               'Priority customer support',
@@ -72,7 +72,7 @@ class SubscriptionScreen extends StatelessWidget {
             isActive: false,
             features: const [
               '5 GB Memory Box storage',
-              'Standard Bloom (SadTalker)',
+              'Standard Photplay (SadTalker)',
               '3 Strand collections',
               'Basic Discovery',
             ],
@@ -88,7 +88,7 @@ class SubscriptionScreen extends StatelessWidget {
             isActive: true,
             features: const [
               '500 GB Memory Box storage',
-              'Priority Bloom rendering (D-ID)',
+              'Priority Photplay rendering (D-ID)',
               'Extended Legacy Reel duration',
               'Unlimited Strand collections',
               'Priority support',
@@ -114,11 +114,11 @@ class SubscriptionScreen extends StatelessWidget {
           ),
           const SizedBox(height: 32),
 
-          // Bloom Credits section
-          Text('Bloom Credits', style: KinnectTextStyles.headlineSmall),
+          // Photplay Credits section
+          Text('Photplay Credits', style: KinnectTextStyles.headlineSmall),
           const SizedBox(height: 12),
           Text(
-            'Consumable credits for Premium Bloom animations. 1 credit = 1 Premium Bloom.',
+            'Consumable credits for Premium Photplay animations. 1 credit = 1 Premium Photplay.',
             style: TextStyle(color: KinnectColors.textSecondary, fontSize: 14),
           ),
           const SizedBox(height: 16),
@@ -278,7 +278,7 @@ class _CreditOption extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Purchasing $amount Bloom Credits...'), backgroundColor: KinnectColors.accent),
+          SnackBar(content: Text('Purchasing $amount Photplay Credits...'), backgroundColor: KinnectColors.accent),
         );
       },
       child: Container(
@@ -301,3 +301,4 @@ class _CreditOption extends StatelessWidget {
     );
   }
 }
+

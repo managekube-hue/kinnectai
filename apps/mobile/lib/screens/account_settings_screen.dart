@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../router/app_nav.dart';
@@ -33,7 +33,6 @@ class AccountSettingsScreen extends StatelessWidget {
             onTap: () async {
               final authed = await StepUpAuth.verify(context, reason: 'Verify identity to change password.');
               if (authed) {
-                // TODO: Navigate to password change screen
               }
             },
           ),

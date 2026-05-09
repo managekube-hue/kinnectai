@@ -1,4 +1,4 @@
-import 'package:dio/dio.dart';
+﻿import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
 import '../models/memory.dart';
@@ -50,7 +50,6 @@ class InteractionService {
                 id: (j['id'] ?? '').toString(),
                 authorUsername: (j['author_username'] ?? '').toString(),
                 text: (j['text'] ?? '').toString(),
-                kinScore: (j['kin_score'] as num?)?.toDouble() ?? 0,
                 createdAt: DateTime.tryParse((j['created_at'] ?? '').toString()) ?? DateTime.now(),
               ))
           .toList();

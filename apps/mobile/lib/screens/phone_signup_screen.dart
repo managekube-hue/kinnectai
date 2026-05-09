@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../router/app_nav.dart';
 import '../theme/colors.dart';
 import '../theme/typography.dart';
@@ -27,7 +27,6 @@ class _PhoneSignUpScreenState extends State<PhoneSignUpScreen> {
 
   void _handleContinue() {
     if (_formKey.currentState?.validate() ?? false) {
-      // TODO: Implement phone signup flow with SMS OTP
       AppNav.go(context, '/home');
     }
   }

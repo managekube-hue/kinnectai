@@ -1,4 +1,4 @@
-import 'dart:convert';
+﻿import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -68,7 +68,6 @@ class VoiceprintCubit extends Cubit<VoiceprintState> {
       final request = http.MultipartRequest('POST', Uri.parse(_baseUrl));
       request.files.add(await http.MultipartFile.fromPath('audio', audioPath));
       // Token should come from auth; placeholder for now.
-      request.headers['Authorization'] = 'Bearer TODO';
 
       final streamed = await _client.send(request);
       final response = await http.Response.fromStream(streamed);
@@ -95,7 +94,6 @@ class VoiceprintCubit extends Cubit<VoiceprintState> {
     try {
       final response = await _client.delete(
         Uri.parse('$_baseUrl/$voiceprintId'),
-        headers: {'Authorization': 'Bearer TODO'},
       );
 
       if (response.statusCode == 200) {

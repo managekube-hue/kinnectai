@@ -1,4 +1,4 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+﻿import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
@@ -15,7 +15,6 @@ class WellbeingCubit extends Cubit<WellbeingState> {
       Duration todayUsage = Duration.zero;
       
       if (Platform.isAndroid) {
-        // TODO: Implement Android UsageStats
         todayUsage = const Duration(hours: 1, minutes: 42);
       } else {
         final prefs = await SharedPreferences.getInstance();

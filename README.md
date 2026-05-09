@@ -14,12 +14,23 @@ Biological kinship social platform — Go backend + Flutter mobile/desktop front
 
 ## Project Structure
 
-- `apps/mobile/` - Flutter mobile/desktop app
-- `services/go/feed-service/` - Go backend feed service
-- `services/python/kernel-service/` - Python kernel inference service skeleton
-- `docs/` - Documentation
-- `scripts/` - Development scripts
-- `.github/` - CI/CD workflows
+- `apps/mobile/` - Flutter mobile app
+- `apps/web/` - Web frontend
+- `services/gateway/` - API/security boundary service
+- `services/go/` - Go service group (feed, graph, media, rooms, memorybox, payment, notification, identity)
+- `services/python/` - Python service group (kernel, discovery, behavioral, dna-ingest, photoplay, moderation, voiceprint)
+- `packages/shared-contracts/` - OpenAPI/event/schema contracts
+- `infra/` - Unified infrastructure root (terraform, k8s, monitoring, data infra)
+- `migrations/postgres|neo4j|cassandra/` - Database migrations by datastore
+- `scripts/bootstrap|dev|ci|release|data/` - Operational scripts by lifecycle stage
+- `tests/integration|e2e|load|contracts/` - Cross-cutting test suites
+
+## Service Ownership
+
+- `services/go/feed-service/` = feed serving, ranking, and timeline assembly.
+- `services/python/kernel-service/` = orchestration and intelligence core.
+- `services/python/behavioral-service/` = telemetry ingestion and scoring pipelines.
+- `services/python/discovery-service/` = kin candidate generation and candidate ranking.
 
 ## Quick Start
 
@@ -28,7 +39,7 @@ Biological kinship social platform — Go backend + Flutter mobile/desktop front
 1. `cd services/go/feed-service`
 2. `cp ../../.env.example .env` and fill secrets
 3. `docker compose up postgres neo4j redis -d`
-4. Apply Neo4j constraints: Open http://localhost:7474, login, run `scripts/neo4j_constraints.cypher`
+4. Apply Neo4j constraints: Open http://localhost:7474, login, run `migrations/neo4j/002_constraints.cypher`
 5. `go mod download && go run ./cmd/api`
 
 ### Frontend
@@ -91,7 +102,7 @@ Wait for all health checks to pass (~30s).
 ```bash
 # Open Neo4j Browser at http://localhost:7474
 # Login: neo4j / kinnect_neo4j_password
-# Paste contents of scripts/neo4j_constraints.cypher and run
+# Paste contents of migrations/neo4j/002_constraints.cypher and run
 ```
 
 ### 4. Run the backend
@@ -153,9 +164,13 @@ docker compose up --build
 ## Run Scripts
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\dev-api.ps1
-powershell -ExecutionPolicy Bypass -File .\scripts\dev-stack.ps1
+powershell -ExecutionPolicy Bypass -File .\scripts\dev\dev-api.ps1
+powershell -ExecutionPolicy Bypass -File .\scripts\dev\dev-stack.ps1
 ```
+
+`dev-stack.ps1` now orchestrates database schema safely on each boot:
+- PostgreSQL: applies each `migrations/postgres/*.sql` file once via `schema_migrations` ledger.
+- Cassandra: reapplies `migrations/cassandra/001_initial_schema.cql` idempotently (uses `IF NOT EXISTS`).
 
 ## Environment Variables
 

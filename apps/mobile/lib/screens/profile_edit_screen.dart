@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../theme/colors.dart';
@@ -24,7 +24,6 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
   @override
   void initState() {
     super.initState();
-    // TODO: pre-populate from API
     _nameController = TextEditingController(text: 'Elara Vance');
     _bioController = TextEditingController(text: 'Exploring my roots, one Kin at a time.');
     _locationController = TextEditingController(text: 'Portland, OR');

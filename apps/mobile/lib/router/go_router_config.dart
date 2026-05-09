@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
@@ -12,7 +12,7 @@ import '../screens/marketplace_seller_dashboard_screen.dart';
 import '../screens/marketplace_wishlist_screen.dart';
 import '../screens/marketplace_create_listing_screen.dart';
 import '../screens/balance_screen.dart';
-import '../screens/bloom_screen.dart';
+import '../features/create/screens/photplay_studio_screen.dart';
 import '../screens/branch_detail_screen.dart';
 import '../screens/branch_discovery_screen.dart';
 import '../screens/branch_members_screen.dart';
@@ -22,8 +22,11 @@ import '../screens/comment_thread_screen.dart';
 import '../screens/content_preferences_screen.dart';
 import '../screens/data_export_screen.dart';
 import '../screens/deep_link_handler_screen.dart';
+import '../screens/discovery_card_screen.dart';
 import '../screens/discovery_page_screen.dart';
 import '../screens/echoes_feed_screen.dart';
+import '../screens/rooms_screen.dart';
+import '../guards/step_up_route_guard.dart';
 import '../screens/email_signup_screen.dart';
 import '../screens/family_pairing_screen.dart';
 import '../screens/gedcom_import_screen.dart';
@@ -41,6 +44,7 @@ import '../screens/memory_box_settings_screen.dart';
 import '../screens/messaging_screen.dart';
 import '../screens/memory_detail_screen.dart';
 import '../screens/memory_edit_screen.dart';
+import '../screens/otp_verification_screen.dart';
 import '../screens/night_mode_screen.dart';
 import '../screens/notifications_settings_screen.dart';
 import '../screens/offline_videos_screen.dart';
@@ -143,6 +147,11 @@ class AppGoRouter {
         path: '/email-signup',
         builder: (BuildContext context, GoRouterState state) =>
             const EmailSignUpScreen(),
+      ),
+      GoRoute(
+        path: '/otp-verification',
+        builder: (BuildContext context, GoRouterState state) =>
+            const OTPVerificationScreen(),
       ),
       GoRoute(
         path: '/phone-signup',
@@ -251,6 +260,16 @@ class AppGoRouter {
           return LegalDocumentScreen(documentType: documentType);
         },
       ),
+      // /vault/seal must be declared before /vault/:memoryId to avoid
+      // the literal segment 'seal' being captured as a memoryId.
+      GoRoute(
+        path: '/vault/seal',
+        builder: (BuildContext context, GoRouterState state) =>
+            const StepUpRouteGuard(
+              reason: 'Sealing a Memory Box requires additional verification.',
+              child: MemoryBoxScreen(),
+            ),
+      ),
       GoRoute(
         path: '/vault/:memoryId',
         builder: (BuildContext context, GoRouterState state) =>
@@ -266,6 +285,14 @@ class AppGoRouter {
         builder: (BuildContext context, GoRouterState state) {
           final branchId = state.pathParameters['branchId'];
           return BranchSubgraphScreen(branchId: branchId);
+        },
+      ),
+      // /memory/:id (direct detail view) must be declared before /memory/:memoryId/comments
+      GoRoute(
+        path: '/memory/:id',
+        builder: (BuildContext context, GoRouterState state) {
+          final memoryId = state.pathParameters['id'] ?? '';
+          return MemoryDetailScreen(memoryId: memoryId);
         },
       ),
       GoRoute(
@@ -342,11 +369,16 @@ class AppGoRouter {
           return KinScoreDetailScreen(targetUserId: target);
         },
       ),
-      // --- Bloom Studio ---
+      // --- Photplay Studio ---
       GoRoute(
-        path: '/create/bloom',
+        path: '/photplay',
         builder: (BuildContext context, GoRouterState state) =>
-            const BloomScreen(),
+        const PhotplayStudioScreen(),
+      ),
+      GoRoute(
+        path: '/create/photplay',
+        builder: (BuildContext context, GoRouterState state) =>
+        const PhotplayStudioScreen(),
       ),
       // --- Echoes Feed ---
       GoRoute(
@@ -445,11 +477,28 @@ class AppGoRouter {
         builder: (BuildContext context, GoRouterState state) =>
             const RoomListScreen(),
       ),
+      // /room/:roomId â€” deep-linked single room (kinnect://room/<id>)
+      GoRoute(
+        path: '/room/:roomId',
+        builder: (BuildContext context, GoRouterState state) {
+          final roomId = state.pathParameters['roomId'] ?? '';
+          return RoomsScreen(roomId: roomId);
+        },
+      ),
       // --- Data Deletion ---
       GoRoute(
         path: '/settings/delete-account',
         builder: (BuildContext context, GoRouterState state) =>
             const DataDeletionScreen(),
+      ),
+      // /settings/delete â€” spec alias, step-up guarded
+      GoRoute(
+        path: '/settings/delete',
+        builder: (BuildContext context, GoRouterState state) =>
+            const StepUpRouteGuard(
+              reason: 'Account deletion requires additional verification.',
+              child: DataDeletionScreen(),
+            ),
       ),
       // --- Ancestral Marketplace ---
       GoRoute(
@@ -503,6 +552,20 @@ class AppGoRouter {
             state.uri.queryParameters['score'] ?? '',
           );
           return KinScoreRequiredScreen(requiredScore: requiredScore);
+        },
+      ),
+      // /onboarding â€” spec alias for /welcome
+      GoRoute(
+        path: '/onboarding',
+        builder: (BuildContext context, GoRouterState state) =>
+            const WelcomeScreen(),
+      ),
+      // /discovery/:candidateId â€” deep-link to single candidate card
+      GoRoute(
+        path: '/discovery/:candidateId',
+        builder: (BuildContext context, GoRouterState state) {
+          final candidateId = state.pathParameters['candidateId'] ?? '';
+          return DiscoveryCardScreen(candidateId: candidateId);
         },
       ),
       GoRoute(
@@ -655,5 +718,6 @@ class _NavItem extends StatelessWidget {
     );
   }
 }
+
 
 

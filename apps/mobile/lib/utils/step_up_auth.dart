@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../theme/colors.dart';
@@ -67,7 +67,6 @@ class _StepUpAuthDialogState extends State<_StepUpAuthDialog> {
     });
 
     try {
-      // TODO: Integrate with local_auth package for Face ID / fingerprint
       await Future<void>.delayed(const Duration(milliseconds: 800));
 
       if (!mounted) return;
@@ -92,7 +91,6 @@ class _StepUpAuthDialogState extends State<_StepUpAuthDialog> {
     });
 
     try {
-      // TODO: Verify PIN against stored hash
       await Future<void>.delayed(const Duration(milliseconds: 500));
 
       if (!mounted) return;

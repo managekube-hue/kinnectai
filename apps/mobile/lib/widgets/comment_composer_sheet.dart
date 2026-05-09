@@ -118,7 +118,7 @@ class _CommentComposerSheetState extends State<CommentComposerSheet> {
                           ),
                         )
                       : const Text(
-                          'Post',
+                          'Create',
                           style: TextStyle(color: KinnectColors.background),
                         ),
                 ),

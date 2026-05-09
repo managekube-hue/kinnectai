@@ -165,7 +165,7 @@ class CreationHubScreen extends StatelessWidget {
               
               const SizedBox(height: DesignSpacing.xl),
               
-              // Bloom Credits Banner
+              // Photplay Credits Banner
               Container(
                 padding: const EdgeInsets.all(DesignSpacing.md),
                 decoration: BoxDecoration(
@@ -178,7 +178,7 @@ class CreationHubScreen extends StatelessWidget {
                     const Icon(Icons.auto_awesome_rounded, color: Color(0xFF2D302C), size: 20),
                     const SizedBox(width: DesignSpacing.md),
                     Text(
-                      '3 Bloom Credits Available',
+                      '3 Photplay Credits Available',
                       style: DesignTextStyles.labelLarge.copyWith(color: const Color(0xFF2D302C)),
                     ),
                     const Spacer(),
@@ -376,6 +376,7 @@ class _IdentityCard extends StatelessWidget {
     );
   }
 }
+
 
 
 

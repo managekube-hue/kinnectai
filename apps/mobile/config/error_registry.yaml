@@ -1,0 +1,21 @@
+errors:
+  KIN-NET-001:
+    type: network_unreachable
+    severity: high
+    user_message: "Network unavailable. Check your connection and retry."
+  KIN-NET-002:
+    type: request_timeout
+    severity: medium
+    user_message: "Request timed out. Please try again."
+  KIN-DATA-001:
+    type: malformed_payload
+    severity: high
+    user_message: "We received malformed data and could not continue."
+  KIN-STATE-001:
+    type: invalid_state
+    severity: high
+    user_message: "App state is inconsistent. Restart may be required."
+  KIN-UNK-000:
+    type: unknown
+    severity: critical
+    user_message: "Unexpected error occurred."

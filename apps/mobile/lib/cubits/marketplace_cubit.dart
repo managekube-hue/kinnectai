@@ -386,7 +386,7 @@ class MarketplaceCubit extends Cubit<MarketplaceState> {
         error: e,
         stackTrace: stack,
       );
-      emit(MarketplaceError('Payment setup failed. Please try again.'));
+      emit(const MarketplaceError('Payment setup failed. Please try again.'));
     }
   }
 
@@ -441,7 +441,7 @@ class MarketplaceCubit extends Cubit<MarketplaceState> {
       metadata: {'product_id': productId, 'rating': rating},
     );
 
-    fetchProductDetail(productId);
+    await fetchProductDetail(productId);
   }
 
   // -- Wishlist ---------------------------------------------------------------
@@ -453,7 +453,7 @@ class MarketplaceCubit extends Cubit<MarketplaceState> {
 
   Future<void> loadWishlist() async {
     emit(MarketplaceLoading());
-    final products = await _execute('loadWishlist', () => _repo.listWishlist());
+    final products = await _execute('loadWishlist', _repo.listWishlist);
     if (products == null) return;
     emit(MarketplaceWishlistLoaded(products));
   }
@@ -478,7 +478,7 @@ class MarketplaceCubit extends Cubit<MarketplaceState> {
 
   Future<void> loadSellerDashboard() async {
     emit(MarketplaceLoading());
-    final dashboard = await _execute('loadSellerDashboard', () => _repo.getSellerDashboard());
+    final dashboard = await _execute('loadSellerDashboard', _repo.getSellerDashboard);
     if (dashboard == null) return;
     emit(MarketplaceSellerDashboard(dashboard));
   }

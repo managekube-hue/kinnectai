@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../theme/colors.dart';
 
 class FamilyPairingScreen extends StatefulWidget {
@@ -120,7 +120,7 @@ class _FamilyPairingScreenState extends State<FamilyPairingScreen> {
                             style: const TextStyle(color: KinnectColors.textPrimary, fontSize: 18, fontWeight: FontWeight.bold),
                           ),
                           Text(
-                            'Age ${account.age} • ${account.accountType}',
+                            'Age ${account.age} â€¢ ${account.accountType}',
                             style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 14),
                           ),
                         ],
@@ -318,7 +318,6 @@ class _FamilyPairingScreenState extends State<FamilyPairingScreen> {
               style: const TextStyle(color: KinnectColors.accent, fontSize: 32, fontWeight: FontWeight.bold),
             ),
             Slider(
-              value: account.dailyLimit.toDouble(),
               min: 30,
               max: 300,
               divisions: 27,

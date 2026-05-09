@@ -44,7 +44,7 @@ class _LandingScreenState extends State<LandingScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
-                  'Every family has a story.',
+                  'Every family has a Memory.',
                   style: TextStyle(
                     fontSize: 48,
                     fontWeight: FontWeight.bold,
@@ -110,7 +110,7 @@ class _LandingScreenState extends State<LandingScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const Text(
-                  'Every family has a story.',
+                  'Every family has a Memory.',
                   style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
@@ -120,7 +120,7 @@ class _LandingScreenState extends State<LandingScreen> {
                 ),
                 const SizedBox(height: 16),
                 const Text(
-                  'Connect with your lineage. Discover forgotten stories and find your kin in our global family tree.',
+                  'Connect with your lineage. Discover forgotten Memories and find your kin in our global family tree.',
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.grey,
@@ -263,7 +263,7 @@ class _LandingScreenState extends State<LandingScreen> {
         ),
         const SizedBox(height: 24),
         const Text(
-          'Enter the global family archive',
+          'Enter your Memory Box',
           style: TextStyle(fontSize: 14, color: Colors.grey),
           textAlign: TextAlign.center,
         ),

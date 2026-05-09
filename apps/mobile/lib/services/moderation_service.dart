@@ -1,4 +1,4 @@
-import 'package:dio/dio.dart';
+﻿import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
 /// Content moderation service (Addendum 3.0 Section 9).
@@ -14,7 +14,7 @@ class ModerationService {
   /// Submit content for moderation check before publishing.
   Future<ModerationVerdict> checkContent({
     required String contentId,
-    required String contentType, // memory, comment, bloom, message
+    required String contentType, // memory, comment, Photplay, message
     String? textContent,
     String? mediaUrl,
   }) async {
@@ -31,8 +31,6 @@ class ModerationService {
       final data = response.data ?? {};
       return ModerationVerdict(
         action: _parseAction(data['action']?.toString()),
-        toxicityScore: (data['toxicity_score'] as num?)?.toDouble(),
-        nsfwScore: (data['nsfw_score'] as num?)?.toDouble(),
         reason: data['reason']?.toString(),
         queuePriority: data['queue_priority']?.toString(),
       );
@@ -99,3 +97,4 @@ class ModerationVerdict {
   final String? reason;
   final String? queuePriority; // P0, P1, P2
 }
+

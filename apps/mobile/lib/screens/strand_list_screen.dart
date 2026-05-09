@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../router/app_nav.dart';
@@ -15,7 +15,6 @@ class StrandListScreen extends StatefulWidget {
 }
 
 class _StrandListScreenState extends State<StrandListScreen> {
-  // TODO: fetch from repository
   static final _strands = [
     _StrandData(id: 's_1', name: 'Wedding Memories', count: 24, coverColor: const Color(0xFFD4A5A5)),
     _StrandData(id: 's_2', name: 'Summer Reunion 2025', count: 18, coverColor: const Color(0xFFA5C4D4)),

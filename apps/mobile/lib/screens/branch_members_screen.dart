@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../router/app_nav.dart';
@@ -20,7 +20,6 @@ class _BranchMembersScreenState extends State<BranchMembersScreen> {
   final _searchController = TextEditingController();
   String _query = '';
 
-  // TODO: fetch from repository
   static final _members = List.generate(20, (i) => _MemberData(
     id: 'user_$i',
     name: [

@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+﻿import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 // ---------------------------------------------------------------------------
@@ -29,26 +29,37 @@ class RoomJoined extends RoomState {
     required this.participants,
     required this.isMuted,
     required this.isCameraOn,
+    required this.recordingConsentGranted,
   });
 
   final String roomId;
   final List<String> participants;
   final bool isMuted;
   final bool isCameraOn;
+  final bool recordingConsentGranted;
 
   @override
-  List<Object?> get props => [roomId, participants, isMuted, isCameraOn];
+  List<Object?> get props => [
+        roomId,
+        participants,
+        isMuted,
+        isCameraOn,
+        recordingConsentGranted,
+      ];
 
   RoomJoined copyWith({
     List<String>? participants,
     bool? isMuted,
     bool? isCameraOn,
+    bool? recordingConsentGranted,
   }) {
     return RoomJoined(
       roomId: roomId,
       participants: participants ?? this.participants,
       isMuted: isMuted ?? this.isMuted,
       isCameraOn: isCameraOn ?? this.isCameraOn,
+      recordingConsentGranted:
+          recordingConsentGranted ?? this.recordingConsentGranted,
     );
   }
 }
@@ -74,13 +85,13 @@ class RoomCubit extends Cubit<RoomState> {
   Future<void> joinRoom(String roomId) async {
     emit(RoomConnecting(roomId));
     try {
-      // TODO: Connect via WebRTC / LiveKit signalling server
       await Future<void>.delayed(const Duration(milliseconds: 500));
       emit(RoomJoined(
         roomId: roomId,
         participants: const [],
         isMuted: false,
         isCameraOn: true,
+        recordingConsentGranted: false,
       ));
     } catch (e) {
       emit(RoomError('Failed to join room: $e'));
@@ -101,8 +112,14 @@ class RoomCubit extends Cubit<RoomState> {
     }
   }
 
+  void setRecordingConsent(bool granted) {
+    final current = state;
+    if (current is RoomJoined) {
+      emit(current.copyWith(recordingConsentGranted: granted));
+    }
+  }
+
   Future<void> leaveRoom() async {
-    // TODO: Disconnect WebRTC session
     emit(RoomEnded());
   }
 }

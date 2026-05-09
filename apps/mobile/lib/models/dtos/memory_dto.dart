@@ -1,11 +1,11 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+﻿import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../memory.dart';
 
 part 'memory_dto.freezed.dart';
 part 'memory_dto.g.dart';
 
-enum MemoryType { video, image, bloom, stitch, rewind, legacyReel, unknown }
+enum MemoryType { video, image, Photplay, stitch, rewind, legacyReel, unknown }
 
 @freezed
 abstract class MemoryDTO with _$MemoryDTO {
@@ -31,7 +31,6 @@ abstract class MemoryDTO with _$MemoryDTO {
   factory MemoryDTO.fromJson(Map<String, dynamic> json) =>
       _$MemoryDTOFromJson(json);
 
-  Memory toDomain({
     required String creatorUsername,
     required String creatorDisplayName,
   }) {
@@ -60,8 +59,8 @@ MemoryType _memoryTypeFromValue(dynamic value) {
       return MemoryType.video;
     case 'image':
       return MemoryType.image;
-    case 'bloom':
-      return MemoryType.bloom;
+    case 'Photplay':
+      return MemoryType.Photplay;
     case 'stitch':
       return MemoryType.stitch;
     case 'rewind':
@@ -79,3 +78,4 @@ DateTime _dateTimeFromJson(Object? raw) {
   final s = raw.toString();
   return DateTime.tryParse(s) ?? DateTime.fromMillisecondsSinceEpoch(0);
 }
+

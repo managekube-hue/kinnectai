@@ -8,9 +8,6 @@ analyzer:
     missing_return: error
     # Treat dead code as warning
     dead_code: warning
-  exclude:
-    - "**/*.g.dart"
-    - "**/*.freezed.dart"
 
 linter:
   rules:

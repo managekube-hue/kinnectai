@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../theme/colors.dart';
 
@@ -56,10 +56,10 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
           ],
         ),
         HelpTopic(
-          category: 'Bloom',
+          category: 'Photplay',
           icon: PhosphorIcons.sparkle(),
           articles: [
-            HelpArticle('How to create a Bloom', 'Animate photos with AI'),
+            HelpArticle('How to create a Photplay', 'Animate photos with AI'),
             HelpArticle('Standard vs Premium', 'Quality and processing time'),
             HelpArticle('Voiceprint capture', 'Voice cloning for Blooms'),
           ],
@@ -114,7 +114,6 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
                 ),
               ),
               onChanged: (value) {
-                // TODO: Implement search
               },
             ),
           ),
@@ -312,3 +311,4 @@ class HelpArticle {
 
   HelpArticle(this.title, this.subtitle);
 }
+

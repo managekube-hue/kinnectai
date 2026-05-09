@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../router/app_nav.dart';
+import '../services/auth_service.dart';
 import '../theme/colors.dart';
 import '../theme/typography.dart';
 import '../theme/spacing.dart';
 import '../widgets/auth_button.dart';
 
-/// Email Sign-Up Screen (Placeholder)
+/// Email Sign-Up Screen
 /// Screen 11.2 from PRD
 class EmailSignUpScreen extends StatefulWidget {
   const EmailSignUpScreen({super.key});
@@ -17,6 +19,7 @@ class EmailSignUpScreen extends StatefulWidget {
 class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
   final _emailController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -24,10 +27,32 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
     super.dispose();
   }
 
-  void _handleContinue() {
+  Future<void> _handleContinue() async {
     if (_formKey.currentState?.validate() ?? false) {
-      // TODO: Implement email signup flow with OTP
-      AppNav.go(context, '/home');
+      setState(() => _isLoading = true);
+
+      try {
+        final authService = Provider.of<AuthService>(context, listen: false);
+        await authService.sendOTPEmail(_emailController.text.trim());
+
+        if (mounted) {
+          // Navigate to OTP verification screen
+          AppNav.go(context, '/otp-verification');
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Failed to send verification email: $e'),
+              backgroundColor: KinnectColors.error,
+            ),
+          );
+        }
+      } finally {
+        if (mounted) {
+          setState(() => _isLoading = false);
+        }
+      }
     }
   }
 
@@ -95,8 +120,8 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
                 const Spacer(),
                 AuthButton(
                   type: AuthButtonType.email,
-                  text: 'Continue',
-                  onPressed: _handleContinue,
+                  text: _isLoading ? 'Sending...' : 'Continue',
+                  onPressed: _isLoading ? null : _handleContinue,
                   isPrimary: true,
                 ),
                 const SizedBox(height: KinnectSpacing.lg),

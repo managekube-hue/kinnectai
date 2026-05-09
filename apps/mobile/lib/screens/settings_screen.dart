@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
@@ -37,7 +37,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       body: ListView(
         children: [
           // 1. Balance
-          _TopItem(icon: PhosphorIcons.wallet, label: 'Balance', subtitle: 'Bloom Credits, Vault+, Kinnect Card', onTap: () => AppNav.push(context, '/settings/balance')),
+          _TopItem(icon: PhosphorIcons.wallet, label: 'Balance', subtitle: 'Photplay Credits, Vault+, Kinnect Card', onTap: () => AppNav.push(context, '/settings/balance')),
           // 2. Personal tools
           _TopItem(icon: PhosphorIcons.wrench, label: 'Personal tools', subtitle: 'Voiceprint, Family Crest, Restore, DNA Kit', onTap: () => AppNav.push(context, '/settings/personal-tools')),
           // 3. Activity Center (expand to sub-categories)
@@ -171,3 +171,4 @@ class _SubItem extends StatelessWidget {
     );
   }
 }
+

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
@@ -26,7 +26,6 @@ class _StewardAgreementScreenState extends State<StewardAgreementScreen> {
 
   static const _stepLabels = ['Select Steward', 'Agreement', 'Confirmation', 'Complete'];
 
-  // TODO: fetch from confirmed Kinnections
   static final _kinnections = [
     _KinOption(id: 'user_1', name: 'Emily Harrington', relationship: 'Parent', kinScore: 0.50),
     _KinOption(id: 'user_2', name: 'James Harrington', relationship: '1st Cousin', kinScore: 0.25),

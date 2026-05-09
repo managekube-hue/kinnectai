@@ -1,4 +1,4 @@
-import 'package:dio/dio.dart';
+﻿import 'package:dio/dio.dart';
 
 import '../models/dtos/payment_session_dto.dart';
 import 'commerce_repository.dart';
@@ -38,6 +38,5 @@ class CommerceRepositoryImpl implements CommerceRepository {
   @override
   Future<double> getBloomCreditBalance() async {
     final response = await _dio.get<Map<String, dynamic>>('$basePath/payments/balance');
-    return (response.data?['bloom_credits'] as num?)?.toDouble() ?? 0;
   }
 }

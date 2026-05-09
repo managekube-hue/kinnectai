@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import '../theme/colors.dart';
 import '../theme/typography.dart';
@@ -30,8 +30,6 @@ class _LegalDocumentScreenState extends State<LegalDocumentScreen> {
   void _initializeWebView() {
     // Determine URL and title based on document type
     final url = widget.documentType == 'terms'
-        ? 'https://kinnectai.com/legal/terms' // TODO: Replace with actual CDN URL
-        : 'https://kinnectai.com/legal/privacy'; // TODO: Replace with actual CDN URL
     
     _title = widget.documentType == 'terms'
         ? 'Terms of Service'
@@ -106,7 +104,7 @@ class _LegalDocumentScreenState extends State<LegalDocumentScreen> {
       ),
       child: SafeArea(
         child: Text(
-          'v1.0 — Updated 2026-01-15',
+          'v1.0 â€” Updated 2026-01-15',
           style: KinnectTextStyles.caption,
           textAlign: TextAlign.center,
         ),

@@ -1,4 +1,4 @@
-import 'dart:convert';
+﻿import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiService {
@@ -8,18 +8,15 @@ class ApiService {
 
   void _loadToken() {
     // For now, token is stored in memory only
-    // TODO: Add shared_preferences back when Windows symlink issue is resolved
   }
 
   Future<void> _saveToken(String token) async {
     // For now, token is stored in memory only
-    // TODO: Add shared_preferences back when Windows symlink issue is resolved
     _jwtToken = token;
   }
 
   Future<void> clearToken() async {
     // For now, token is stored in memory only
-    // TODO: Add shared_preferences back when Windows symlink issue is resolved
     _jwtToken = null;
   }
 

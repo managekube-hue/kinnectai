@@ -1,11 +1,11 @@
-import 'dart:convert';
+﻿import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 
 /// Conflict resolution logic (Addendum 2.0 S5).
 ///
 /// Server-wins for graph/Kinnections data.
-/// Local-wins for Memory Box drafts & Bloom credits balance
+/// Local-wins for Memory Box drafts & Photplay credits balance
 /// (local optimistic, reconcile on sync).
 class ConflictResolver {
   ConflictResolver._();
@@ -46,7 +46,7 @@ class ConflictResolver {
       case 'profile':
         return ConflictStrategy.serverWins;
 
-      // Local-wins: Memory Box drafts, Bloom credits (optimistic)
+      // Local-wins: Memory Box drafts, Photplay credits (optimistic)
       case 'memory_box_draft':
       case 'bloom_credit_balance':
       case 'settings_draft':
@@ -129,7 +129,7 @@ class ConflictResolver {
     return merged;
   }
 
-  /// Reconcile Bloom credit balance after sync.
+  /// Reconcile Photplay credit balance after sync.
   /// Local: optimistic count. Server: actual count.
   /// Delta = local_changes_since_last_sync applied to server count.
   static int reconcileBloomCredits({
@@ -141,7 +141,7 @@ class ConflictResolver {
     // Server balance + pending purchases - pending spends
     final reconciled = serverBalance + pendingPurchases - pendingSpends;
     debugPrint(
-      '[ConflictResolver] Bloom credits reconciled: '
+      '[ConflictResolver] Photplay credits reconciled: '
       'server=$serverBalance + pending_purchases=$pendingPurchases '
       '- pending_spends=$pendingSpends = $reconciled',
     );
@@ -153,7 +153,7 @@ enum ConflictStrategy {
   /// Server data always wins (graph, Kinnections, Tree).
   serverWins,
 
-  /// Local data always wins (Memory Box drafts, Bloom credits).
+  /// Local data always wins (Memory Box drafts, Photplay credits).
   localWins,
 
   /// Most recent write wins (comments, Pulses).
@@ -162,3 +162,4 @@ enum ConflictStrategy {
   /// Merge fields from both (settings).
   merge,
 }
+

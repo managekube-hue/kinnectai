@@ -1,0 +1,15 @@
+enum ConsentFlag {
+  layer1Identity,
+  layer2Bioidentity,
+  layer3Socialgraph,
+  layer4Behavioral,
+  layer5Commercial,
+  biometricFace,
+  biometricVoice,
+  offplatformTracking,
+  thirdpartySharing,
+  posthumousDelivery,
+  minorGuardian,
+  researchOptIn,
+  stitchAutoPublish,
+}

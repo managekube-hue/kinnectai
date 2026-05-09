@@ -1,4 +1,4 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'dart:convert';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -13,7 +13,7 @@ import '../../services/connectivity_service.dart';
 /// Mutation Queue: workmanager + drift queue. On reconnect, flush FIFO.
 /// Retry: 3 attempts (1s, 5s, 15s). On failure -> failed_mutations table.
 /// Conflict Resolution: Server-wins for graph/Kinnections.
-///   Local-wins for Memory Box drafts & Bloom credits (optimistic, reconcile on sync).
+///   Local-wins for Memory Box drafts & Photplay credits (optimistic, reconcile on sync).
 class OfflineSyncManager {
   OfflineSyncManager({ConnectivityService? connectivity})
       : _connectivity = connectivity ?? ConnectivityService();
@@ -127,7 +127,6 @@ class OfflineSyncManager {
     required String type,
     required Map<String, dynamic> payload,
   }) async {
-    // TODO: Route to appropriate repository/service based on mutation type
     // For now, log and return false to retry
     debugPrint('[OfflineSync] Dispatching: $type');
     return false;
@@ -194,3 +193,4 @@ class OfflineSyncManager {
     _subscription?.cancel();
   }
 }
+

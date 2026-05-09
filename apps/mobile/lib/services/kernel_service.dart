@@ -1,4 +1,4 @@
-import 'package:dio/dio.dart';
+﻿import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
 import '../models/memory.dart';
@@ -49,7 +49,6 @@ class KernelService {
       );
       final data = response.data ?? {};
       return KinScoreBreakdown(
-        score: (data['normalized_score'] as num?)?.toDouble() ?? 0,
         relationship: (data['relationship_label'] ?? '').toString(),
         sharedBranches: (data['shared_branches'] as num?)?.toInt() ?? 0,
         sharedAncestors: (data['shared_ancestors'] as num?)?.toInt() ?? 0,
@@ -80,7 +79,6 @@ class KernelService {
   Future<double> _fetchAndCache(String userAId, String userBId) async {
     try {
       final response = await _dio.get<Map<String, dynamic>>('/kin-score/$userBId');
-      final score = (response.data?['normalized_score'] as num?)?.toDouble() ?? 0;
       _putCache(_cacheKey(userAId, userBId), score);
       return score;
     } catch (e) {

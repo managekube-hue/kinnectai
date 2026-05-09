@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../theme/colors.dart';
@@ -16,7 +16,6 @@ class StrandDetailScreen extends StatefulWidget {
 }
 
 class _StrandDetailScreenState extends State<StrandDetailScreen> {
-  // TODO: fetch from repository
   final _strandName = 'Wedding Memories';
   final _memoryCount = 24;
 

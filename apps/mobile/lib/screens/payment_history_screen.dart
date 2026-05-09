@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../theme/colors.dart';
@@ -13,14 +13,13 @@ class PaymentHistoryScreen extends StatefulWidget {
 }
 
 class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
-  // TODO: fetch from CommerceCubit / API
   static final _transactions = [
-    _TxData(title: '10 Bloom Credits', amount: '\$8.99', date: 'May 5, 2026', status: 'completed', icon: PhosphorIcons.flower),
+    _TxData(title: '10 Photplay Credits', amount: '\$8.99', date: 'May 5, 2026', status: 'completed', icon: PhosphorIcons.flower),
     _TxData(title: 'Vault+ Monthly', amount: '\$4.99', date: 'May 1, 2026', status: 'completed', icon: PhosphorIcons.lock),
-    _TxData(title: '5 Bloom Credits', amount: '\$4.49', date: 'Apr 22, 2026', status: 'completed', icon: PhosphorIcons.flower),
+    _TxData(title: '5 Photplay Credits', amount: '\$4.49', date: 'Apr 22, 2026', status: 'completed', icon: PhosphorIcons.flower),
     _TxData(title: 'Kinnect Kit Order', amount: '\$0.00', date: 'Apr 15, 2026', status: 'completed', icon: PhosphorIcons.dna),
     _TxData(title: 'Vault+ Monthly', amount: '\$4.99', date: 'Apr 1, 2026', status: 'completed', icon: PhosphorIcons.lock),
-    _TxData(title: '1 Bloom Credit', amount: '\$0.99', date: 'Mar 28, 2026', status: 'refunded', icon: PhosphorIcons.flower),
+    _TxData(title: '1 Photplay Credit', amount: '\$0.99', date: 'Mar 28, 2026', status: 'refunded', icon: PhosphorIcons.flower),
   ];
 
   @override
@@ -123,3 +122,4 @@ class _TransactionTile extends StatelessWidget {
     );
   }
 }
+

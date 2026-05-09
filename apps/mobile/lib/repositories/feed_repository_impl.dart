@@ -1,4 +1,4 @@
-import 'package:dio/dio.dart';
+﻿import 'package:dio/dio.dart';
 
 import '../models/dtos/discovery_candidate_dto.dart';
 import '../models/dtos/memory_dto.dart';
@@ -41,7 +41,6 @@ class FeedRepositoryImpl implements FeedRepository {
           .toList(),
       nextCursor: data['next_cursor']?.toString(),
       hasMore: data['has_more'] as bool? ?? false,
-      kinScoreContext: (meta['kin_score'] as num?)?.toDouble(),
     );
   }
 
@@ -75,7 +74,6 @@ class FeedRepositoryImpl implements FeedRepository {
           .toList(),
       nextCursor: data['next_cursor']?.toString(),
       hasMore: data['has_more'] as bool? ?? false,
-      kinScoreContext: (meta['kin_score'] as num?)?.toDouble(),
     );
   }
 

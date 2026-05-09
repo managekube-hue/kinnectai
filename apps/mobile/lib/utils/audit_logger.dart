@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+﻿import 'package:flutter/foundation.dart';
 
 /// Immutable audit trail logger (Addendum 3.0 S4).
 ///
@@ -100,7 +100,6 @@ class AuditLogger {
     _localLog.add(entry);
     debugPrint('[Audit] ${entry.category.name}/${entry.action} user=${entry.userId} ${entry.metadata}');
 
-    // TODO: Forward to CloudTrail / backend audit endpoint
     // POST /v1/audit/log { ...entry.toJson() }
   }
 

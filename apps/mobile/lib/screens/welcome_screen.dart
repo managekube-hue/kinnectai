@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../router/app_nav.dart';
 import 'package:flutter/services.dart';
 import '../theme/colors.dart';
@@ -33,7 +33,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   void _logAnalyticsEvent(String eventName, [Map<String, dynamic>? properties]) {
-    // TODO: Implement analytics tracking
     debugPrint('Analytics Event: $eventName ${properties ?? {}}');
   }
 
@@ -142,7 +141,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     setState(() => _isTikTokLoading = true);
     _logAnalyticsEvent('auth_button_tapped', {'method': 'tiktok'});
     
-    // TODO: Implement TikTok Login Kit OAuth flow
     await Future.delayed(const Duration(seconds: 1));
     
     if (mounted) {

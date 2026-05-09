@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../router/app_nav.dart';
@@ -15,7 +15,6 @@ class KinshipAlertMapScreen extends StatefulWidget {
 }
 
 class _KinshipAlertMapScreenState extends State<KinshipAlertMapScreen> {
-  // TODO: fetch from API + location service
   static final _alerts = [
     _AlertData(kinName: 'Emily Harrington', kinScore: 0.25, distance: '0.4 mi', time: '2 min ago', kinId: 'user_1'),
     _AlertData(kinName: 'Michael O\'Brien', kinScore: 0.125, distance: '1.2 mi', time: '15 min ago', kinId: 'user_2'),

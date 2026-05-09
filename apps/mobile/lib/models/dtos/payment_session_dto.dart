@@ -1,10 +1,10 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+﻿import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'payment_session_dto.freezed.dart';
 part 'payment_session_dto.g.dart';
 
 /// Represents a RevenueCat / Stripe payment session for in-app purchases
-/// such as Bloom Credits, Vault+ subscription, or Kinnect Card.
+/// such as Photplay Credits, Vault+ subscription, or Kinnect Card.
 @freezed
 abstract class PaymentSessionDTO with _$PaymentSessionDTO {
   const factory PaymentSessionDTO({
@@ -23,3 +23,4 @@ abstract class PaymentSessionDTO with _$PaymentSessionDTO {
   factory PaymentSessionDTO.fromJson(Map<String, dynamic> json) =>
       _$PaymentSessionDTOFromJson(json);
 }
+

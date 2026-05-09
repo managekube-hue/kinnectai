@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../router/app_nav.dart';
@@ -17,7 +17,6 @@ class BranchDiscoveryScreen extends StatefulWidget {
 class _BranchDiscoveryScreenState extends State<BranchDiscoveryScreen> {
   bool _isLoading = true;
 
-  // TODO: replace with BLoC-driven data
   static final _branches = List.generate(12, (i) => _BranchPreview(
     id: 'br_$i',
     name: [

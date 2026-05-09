@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+﻿import 'package:flutter/widgets.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 /// PRD Addendum 1.0 S4 -- Immutable icon-to-feature mapping.
@@ -23,7 +23,7 @@ enum KinnectFeature {
   branch,
   notifications,
   marketplace,
-  bloom,
+  Photplay,
   memoryBox,
   voiceprint,
   restore,
@@ -82,7 +82,7 @@ const Map<KinnectFeature, IconData Function()> _iconMapFn = {
   KinnectFeature.branch: PhosphorIcons.usersThree,
   KinnectFeature.notifications: PhosphorIcons.bell,
   KinnectFeature.marketplace: PhosphorIcons.storefront,
-  KinnectFeature.bloom: PhosphorIcons.flower,
+  KinnectFeature.Photplay: PhosphorIcons.flower,
   KinnectFeature.memoryBox: PhosphorIcons.lock,
   KinnectFeature.voiceprint: PhosphorIcons.microphone,
   KinnectFeature.restore: PhosphorIcons.magicWand,
@@ -121,3 +121,4 @@ const Map<KinnectFeature, IconData Function()> _iconMapFn = {
 
 // Pre-resolved map (avoids calling functions repeatedly).
 final Map<KinnectFeature, IconData> _iconMap = _iconMapFn.map((k, fn) => MapEntry(k, fn()));
+

@@ -1,4 +1,4 @@
-import '../../services/error_boundary_service.dart';
+﻿import '../../services/error_boundary_service.dart';
 
 /// Error code -> UI behavior mapping table (Addendum 2.0 S6).
 ///
@@ -97,16 +97,20 @@ class ErrorMap {
 
   static const Map<String, Map<ErrorType, String>> _screenOverrides = {
     'the_line_screen': {
-      ErrorType.network: 'Offline: Showing cached Line. Swipe to refresh when connected.',
+      ErrorType.network:
+          'Offline: Showing cached Line. Swipe to refresh when connected.',
     },
     'discovery_page_screen': {
-      ErrorType.network: 'Discovery unavailable offline. Showing cached results.',
+      ErrorType.network:
+          'Discovery unavailable offline. Showing cached results.',
     },
-    'bloom_studio_screen': {
-      ErrorType.server: 'Premium animation service unavailable. Using standard quality.',
+    'photplay_studio_screen': {
+      ErrorType.server:
+          'Premium animation service unavailable. Using standard quality.',
     },
     'memory_box_screen': {
-      ErrorType.network: 'Memory Box unavailable offline. Showing cached vault.',
+      ErrorType.network:
+          'Memory Box unavailable offline. Showing cached vault.',
     },
     'tree_graph_screen': {
       ErrorType.graph: 'Branch subgraph incomplete. Showing known connections.',
@@ -116,3 +120,4 @@ class ErrorMap {
     },
   };
 }
+

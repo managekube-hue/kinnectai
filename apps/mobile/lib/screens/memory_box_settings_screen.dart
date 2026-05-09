@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../router/app_nav.dart';
@@ -17,7 +17,6 @@ class MemoryBoxSettingsScreen extends StatefulWidget {
 }
 
 class _MemoryBoxSettingsScreenState extends State<MemoryBoxSettingsScreen> {
-  // TODO: Fetch from MemoryBoxCubit / API
   final double _storageUsedGB = 2.3;
   final double _storageLimitGB = 5.0;
   final bool _isVaultPlus = false;

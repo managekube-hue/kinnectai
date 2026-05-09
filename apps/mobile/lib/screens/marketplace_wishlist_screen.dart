@@ -48,7 +48,7 @@ class _State extends State<MarketplaceWishlistScreen> {
                     const SizedBox(height: 16),
                     Text('Your wishlist is empty', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 16)),
                     const SizedBox(height: 8),
-                    Text('Tap the heart icon on products to save them here',
+                    Text('Tap the heart icon on products to add them to your Wishlist',
                         style: TextStyle(color: KinnectColors.textMuted, fontSize: 13)),
                   ],
                 ),

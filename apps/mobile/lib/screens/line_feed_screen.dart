@@ -133,7 +133,7 @@ class _LineFeedScreenState extends State<LineFeedScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Post a Memory'),
+        title: const Text('Create a Memory'),
         content: TextField(
           controller: controller,
           decoration: const InputDecoration(
@@ -161,7 +161,7 @@ class _LineFeedScreenState extends State<LineFeedScreen> {
                 }
               }
             },
-            child: const Text('Post'),
+            child: const Text('Create'),
           ),
         ],
       ),

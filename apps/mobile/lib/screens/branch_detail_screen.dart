@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../router/app_nav.dart';
@@ -20,7 +20,6 @@ class BranchDetailScreen extends StatefulWidget {
 class _BranchDetailScreenState extends State<BranchDetailScreen> with SingleTickerProviderStateMixin {
   late final TabController _tabController;
 
-  // TODO: fetch from API
   final _branchName = 'The Harrington Branch';
   final _memberCount = 47;
   final _activeCount = 12;

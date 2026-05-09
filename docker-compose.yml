@@ -7,6 +7,12 @@ services:
       - "8080:8080"
     env_file:
       - .env
+    environment:
+      POSTGRES_HOST: postgres
+      NEO4J_URI: bolt://neo4j:7687
+      REDIS_ADDR: redis:6379
+      KAFKA_BROKERS: kafka:9092
+      MINIO_ENDPOINT: http://minio:9000
     depends_on:
       postgres:
         condition: service_healthy
@@ -26,6 +32,12 @@ services:
       - "8000:8000"
     env_file:
       - .env
+    environment:
+      POSTGRES_HOST: postgres
+      NEO4J_URI: bolt://neo4j:7687
+      CASSANDRA_HOSTS: cassandra
+      KAFKA_BROKERS: kafka:9092
+      MINIO_ENDPOINT: http://minio:9000
     depends_on:
       postgres:
         condition: service_healthy
@@ -46,7 +58,7 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./migrations:/docker-entrypoint-initdb.d
+      - ./migrations/postgres:/docker-entrypoint-initdb.d
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U kinnect -d kinnectai"]
       interval: 5s
@@ -86,7 +98,7 @@ services:
 
   # ─── Kafka (DNA ingestion queue) ────────────────────────────
   kafka:
-    image: vectorized/redpanda:latest
+    image: redpandadata/redpanda:latest
     command:
       - redpanda
       - start
@@ -115,6 +127,7 @@ services:
       - "9042:9042"
     volumes:
       - cassandra_data:/var/lib/cassandra
+      - ./migrations/cassandra:/schema:ro
     environment:
       CASSANDRA_CLUSTER_NAME: "kinnectai"
       CASSANDRA_START_RPC: "true"

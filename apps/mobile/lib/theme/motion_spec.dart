@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 import 'colors.dart';
@@ -17,7 +17,7 @@ class KinnectMotion {
   /// Material standard: fast out, slow in.
   static const standardEasing = Curves.fastOutSlowIn;
 
-  /// Celebratory moments: Bloom complete, Kinnection confirmed.
+  /// Celebratory moments: Photplay complete, Kinnection confirmed.
   static const emphasisEasing = Curves.elasticInOut;
 
   /// Dismissals, transitions out.
@@ -33,7 +33,7 @@ class KinnectMotion {
   /// Button presses, tab switches.
   static const durationStandard = Duration(milliseconds: 200);
 
-  /// Bloom render complete, Kin Score threshold crossed.
+  /// Photplay render complete, Kin Score threshold crossed.
   static const durationEmphasis = Duration(milliseconds: 300);
 
   /// Screen transitions, Branch Map load.
@@ -107,3 +107,4 @@ class KinnectMotion {
   /// Returns Duration.zero if reduced motion, otherwise the provided duration.
   static Duration adaptive(Duration duration) => respectReducedMotion ? Duration.zero : duration;
 }
+

@@ -4,6 +4,7 @@ class AppRoutePolicy {
   static const Set<String> publicRoutes = <String>{
     '/splash',
     '/welcome',
+    '/onboarding',
     '/login',
     '/register',
     '/email-signup',
@@ -14,6 +15,7 @@ class AppRoutePolicy {
 
   static const Set<String> authRoutes = <String>{
     '/welcome',
+    '/onboarding',
     '/login',
     '/register',
     '/email-signup',
