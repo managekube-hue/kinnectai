@@ -4,8 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:dio/dio.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'cubits/cart_cubit.dart';
 import 'cubits/error_cubit.dart';
+import 'cubits/marketplace_cubit.dart';
 import 'cubits/settings_cubit.dart';
+import 'repositories/marketplace_repository_impl.dart';
 import 'repositories/settings_repository_impl.dart';
 import 'foundation/app_bootstrap.dart';
 import 'foundation/offline/offline_sync_manager.dart';
@@ -58,6 +61,14 @@ class MyApp extends StatelessWidget {
         BlocProvider<ErrorCubit>.value(value: appErrorCubit),
         BlocProvider<SettingsCubit>(
           create: (_) => SettingsCubit(SettingsRepositoryImpl(dio: Dio()))..load(),
+        ),
+        BlocProvider<MarketplaceCubit>(
+          create: (_) => MarketplaceCubit(
+            repository: MarketplaceRepositoryImpl(dio: Dio()),
+          ),
+        ),
+        BlocProvider<CartCubit>(
+          create: (_) => CartCubit()..load(),
         ),
       ],
       child: ChangeNotifierProvider<AuthService>.value(

@@ -6,3 +6,13 @@ targets:
       json_serializable|json_serializable:
         generate_for:
           - lib/models/dtos/kin_score_dto.dart
+          - lib/models/dtos/marketplace_product_dto.dart
+          - lib/models/dtos/cart_item_dto.dart
+          - lib/models/dtos/payment_session_dto.dart
+          - lib/models/dtos/paginated_response.dart
+      freezed|freezed:
+        generate_for:
+          - lib/models/dtos/marketplace_product_dto.dart
+          - lib/models/dtos/cart_item_dto.dart
+          - lib/models/dtos/payment_session_dto.dart
+          - lib/models/dtos/paginated_response.dart

@@ -5,6 +5,8 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../screens/account_settings_screen.dart';
 import '../screens/activity_center_screen.dart';
 import '../screens/ancestral_marketplace_screen.dart';
+import '../screens/marketplace_product_detail_screen.dart';
+import '../screens/marketplace_cart_screen.dart';
 import '../screens/balance_screen.dart';
 import '../screens/bloom_screen.dart';
 import '../screens/branch_detail_screen.dart';
@@ -450,6 +452,18 @@ class AppGoRouter {
         path: '/marketplace',
         builder: (BuildContext context, GoRouterState state) =>
             const AncestralMarketplaceScreen(),
+      ),
+      GoRoute(
+        path: '/marketplace/product/:id',
+        builder: (BuildContext context, GoRouterState state) {
+          final productId = state.pathParameters['id'] ?? '';
+          return MarketplaceProductDetailScreen(productId: productId);
+        },
+      ),
+      GoRoute(
+        path: '/marketplace/cart',
+        builder: (BuildContext context, GoRouterState state) =>
+            const MarketplaceCartScreen(),
       ),
       GoRoute(
         path: '/kinnect/:path(.*)',
