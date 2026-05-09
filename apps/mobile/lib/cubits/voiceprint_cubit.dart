@@ -1,37 +1,88 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:equatable/equatable.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-part 'voiceprint_state.dart';
+import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart' as http;
+
+import '../models/dtos/voiceprint_creation_dto.dart';
+import '../services/api_service.dart';
+
+// ---------------------------------------------------------------------------
+// States
+// ---------------------------------------------------------------------------
+
+sealed class VoiceprintState extends Equatable {
+  const VoiceprintState();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class VoiceprintInitial extends VoiceprintState {}
+
+class VoiceprintProcessing extends VoiceprintState {}
+
+class VoiceprintCreated extends VoiceprintState {
+  const VoiceprintCreated({
+    required this.voiceprintId,
+    required this.cloneId,
+    required this.embedding,
+  });
+
+  final String voiceprintId;
+  final String cloneId;
+  final List<double> embedding;
+
+  @override
+  List<Object?> get props => [voiceprintId, cloneId, embedding];
+}
+
+class VoiceprintDeleted extends VoiceprintState {}
+
+class VoiceprintError extends VoiceprintState {
+  const VoiceprintError(this.message);
+
+  final String message;
+
+  @override
+  List<Object?> get props => [message];
+}
+
+// ---------------------------------------------------------------------------
+// Cubit
+// ---------------------------------------------------------------------------
 
 class VoiceprintCubit extends Cubit<VoiceprintState> {
-  VoiceprintCubit() : super(VoiceprintInitial());
+  VoiceprintCubit({http.Client? httpClient})
+      : _client = httpClient ?? http.Client(),
+        super(VoiceprintInitial());
+
+  final http.Client _client;
+
+  static const _baseUrl = '${ApiService.baseUrl}/api/v1/voiceprints';
 
   Future<void> createVoiceprint(String audioPath) async {
     emit(VoiceprintProcessing());
 
     try {
-      final request = http.MultipartRequest(
-        'POST',
-        Uri.parse('https://api.kinnectai.com/v1/voiceprints'),
-      );
-
+      final request = http.MultipartRequest('POST', Uri.parse(_baseUrl));
       request.files.add(await http.MultipartFile.fromPath('audio', audioPath));
-      request.headers['Authorization'] = 'Bearer YOUR_TOKEN_HERE';
+      // Token should come from auth; placeholder for now.
+      request.headers['Authorization'] = 'Bearer TODO';
 
-      final response = await request.send();
-      final responseData = await http.Response.fromStream(response);
+      final streamed = await _client.send(request);
+      final response = await http.Response.fromStream(streamed);
 
-      if (response.statusCode == 201) {
-        final data = json.decode(responseData.body);
+      if (streamed.statusCode == 201) {
+        final data = json.decode(response.body) as Map<String, dynamic>;
+        final dto = VoiceprintCreationDTO.fromJson(data);
         emit(VoiceprintCreated(
-          voiceprintId: data['voiceprint_id'],
-          cloneId: data['elevenlabs_clone_id'],
-          embedding: List<double>.from(data['embedding']),
+          voiceprintId: dto.voiceprintId,
+          cloneId: dto.cloneId,
+          embedding: dto.embedding,
         ));
       } else {
-        emit(VoiceprintError('Failed to create voiceprint: ${responseData.body}'));
+        emit(VoiceprintError('Failed to create voiceprint: ${response.body}'));
       }
     } catch (e) {
       emit(VoiceprintError('Error creating voiceprint: $e'));
@@ -42,9 +93,9 @@ class VoiceprintCubit extends Cubit<VoiceprintState> {
     emit(VoiceprintProcessing());
 
     try {
-      final response = await http.delete(
-        Uri.parse('https://api.kinnectai.com/v1/voiceprints/$voiceprintId'),
-        headers: {'Authorization': 'Bearer YOUR_TOKEN_HERE'},
+      final response = await _client.delete(
+        Uri.parse('$_baseUrl/$voiceprintId'),
+        headers: {'Authorization': 'Bearer TODO'},
       );
 
       if (response.statusCode == 200) {
@@ -55,5 +106,11 @@ class VoiceprintCubit extends Cubit<VoiceprintState> {
     } catch (e) {
       emit(VoiceprintError('Error deleting voiceprint: $e'));
     }
+  }
+
+  @override
+  Future<void> close() {
+    _client.close();
+    return super.close();
   }
 }
