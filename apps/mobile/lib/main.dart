@@ -3,16 +3,22 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'cubits/error_cubit.dart';
 import 'foundation/app_bootstrap.dart';
+import 'foundation/offline/offline_sync_manager.dart';
 import 'router/go_router_config.dart';
 import 'services/auth_service.dart';
 import 'theme/design_system.dart';
+import 'widgets/accessible_scaffold.dart';
 
 final AuthService appAuthService = AuthService();
+final ErrorCubit appErrorCubit = ErrorCubit();
+final OfflineSyncManager appOfflineSync = OfflineSyncManager();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await AppBootstrap.initialize();
+  await appOfflineSync.initialize();
 
   Bloc.observer = const AppBlocObserver();
 
@@ -33,12 +39,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<AuthService>.value(
-      value: appAuthService,
-      child: MaterialApp.router(
-        title: 'KinnectAI',
-        debugShowCheckedModeBanner: false,
-        routerConfig: AppGoRouter.router(appAuthService),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<ErrorCubit>.value(value: appErrorCubit),
+      ],
+      child: ChangeNotifierProvider<AuthService>.value(
+        value: appAuthService,
+        child: MaterialApp.router(
+          title: 'KinnectAI',
+          debugShowCheckedModeBanner: false,
+          routerConfig: AppGoRouter.router(appAuthService),
+          // Global accessibility wrapper: FocusTraversalGroup + Semantics +
+          // reduced motion + AppErrorBoundary on every route
+          builder: (context, child) => AccessibleApp(child: child ?? const SizedBox.shrink()),
         theme: createDesignTheme(isDark: true).copyWith(
           textTheme:
               GoogleFonts.dmSansTextTheme(
@@ -66,6 +79,7 @@ class MyApp extends StatelessWidget {
                   textStyle: DesignTextStyles.labelSmall,
                 ),
               ),
+        ),
         ),
       ),
     );
