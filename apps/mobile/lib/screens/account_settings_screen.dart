@@ -4,6 +4,7 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../router/app_nav.dart';
 import '../theme/colors.dart';
 import '../theme/typography.dart';
+import '../utils/step_up_auth.dart';
 
 /// PRD Section 12.5 -- Account settings.
 class AccountSettingsScreen extends StatelessWidget {
@@ -29,7 +30,12 @@ class AccountSettingsScreen extends StatelessWidget {
             title: const Text('Password', style: TextStyle(color: KinnectColors.textPrimary)),
             subtitle: const Text('Change account password', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
             trailing: Icon(PhosphorIcons.caretRight(), color: KinnectColors.textMuted),
-            onTap: () {},
+            onTap: () async {
+              final authed = await StepUpAuth.verify(context, reason: 'Verify identity to change password.');
+              if (authed) {
+                // TODO: Navigate to password change screen
+              }
+            },
           ),
           ListTile(
             leading: Icon(PhosphorIcons.fingerprint(), color: KinnectColors.accent),
@@ -58,7 +64,7 @@ class AccountSettingsScreen extends StatelessWidget {
             title: const Text('Deactivate or delete', style: TextStyle(color: KinnectColors.error)),
             subtitle: const Text('Deactivate (30 days) or permanent deletion', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
             trailing: Icon(PhosphorIcons.caretRight(), color: KinnectColors.error),
-            onTap: () {},
+            onTap: () => AppNav.push(context, '/settings/delete-account'),
           ),
           _buildSectionTitle('Account Type'),
           ListTile(

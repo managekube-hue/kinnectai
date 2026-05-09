@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import '../cubits/settings_cubit.dart';
 import '../theme/colors.dart';
 
 class NotificationsSettingsScreen extends StatefulWidget {
@@ -231,7 +233,10 @@ class _NotificationsSettingsScreenState extends State<NotificationsSettingsScree
                         activeColor: KinnectColors.accent,
                         onChanged: required
                             ? null
-                            : (value) => setState(() => _notifications[key]!['push'] = value),
+                            : (value) {
+                                setState(() => _notifications[key]!['push'] = value);
+                                context.read<SettingsCubit>().toggleNotification(key, push: value);
+                              },
                       ),
                     ],
                   ),
@@ -244,7 +249,10 @@ class _NotificationsSettingsScreenState extends State<NotificationsSettingsScree
                       Switch(
                         value: _notifications[key]!['inApp']!,
                         activeColor: KinnectColors.accent,
-                        onChanged: (value) => setState(() => _notifications[key]!['inApp'] = value),
+                        onChanged: (value) {
+                                setState(() => _notifications[key]!['inApp'] = value);
+                                // In-app toggles are local UI only per PRD
+                              },
                       ),
                     ],
                   ),
