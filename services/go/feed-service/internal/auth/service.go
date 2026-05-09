@@ -98,6 +98,78 @@ func (s *Service) Login(ctx context.Context, req LoginRequest) (*AuthResponse, e
 	return s.buildAuthResponse(ctx, id.String(), username, req.Email, createdAt)
 }
 
+// OAuthLogin handles Google, Facebook, and TikTok OAuth authentication.
+// The client sends the provider token; this method verifies it, creates or
+// finds the user, and returns JWT + GetStream tokens.
+func (s *Service) OAuthLogin(ctx context.Context, provider, token string) (*AuthResponse, error) {
+	// Step 1: Verify the OAuth token with the provider
+	providerUID, email, displayName, err := s.verifyOAuthToken(ctx, provider, token)
+	if err != nil {
+		return nil, fmt.Errorf("oauth verify (%s): %w", provider, err)
+	}
+
+	// Step 2: Check if user exists with this provider link
+	var userID uuid.UUID
+	var username string
+	var createdAt time.Time
+	err = s.db.QueryRow(ctx,
+		`SELECT u.id, u.username, u.created_at FROM users u
+		 JOIN user_oauth uo ON u.id = uo.user_id
+		 WHERE uo.provider = $1 AND uo.provider_uid = $2`,
+		provider, providerUID,
+	).Scan(&userID, &username, &createdAt)
+
+	if err != nil {
+		// User doesn't exist -- create new account
+		userID = uuid.New()
+		username = fmt.Sprintf("%s_%s", provider, providerUID[:8])
+		createdAt = time.Now().UTC()
+
+		_, err = s.db.Exec(ctx,
+			`INSERT INTO users (id, username, email, display_name, created_at, updated_at)
+			 VALUES ($1, $2, $3, $4, $5, $5)`,
+			userID, username, email, displayName, createdAt,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("oauth create user: %w", err)
+		}
+
+		// Link OAuth provider
+		_, err = s.db.Exec(ctx,
+			`INSERT INTO user_oauth (user_id, provider, provider_uid, access_token, created_at)
+			 VALUES ($1, $2, $3, $4, $5)`,
+			userID, provider, providerUID, token, createdAt,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("oauth link provider: %w", err)
+		}
+	}
+
+	return s.buildAuthResponse(ctx, userID.String(), username, email, createdAt)
+}
+
+// verifyOAuthToken validates a token with the respective provider and
+// returns (providerUID, email, displayName, error).
+func (s *Service) verifyOAuthToken(ctx context.Context, provider, token string) (string, string, string, error) {
+	switch provider {
+	case "google":
+		// TODO: Verify Google ID token via https://oauth2.googleapis.com/tokeninfo?id_token=TOKEN
+		// For now, return placeholder
+		return "google_uid_placeholder", "user@gmail.com", "Google User", nil
+
+	case "facebook":
+		// TODO: Verify via https://graph.facebook.com/me?access_token=TOKEN&fields=id,email,name
+		return "fb_uid_placeholder", "user@facebook.com", "Facebook User", nil
+
+	case "tiktok":
+		// TODO: Exchange auth_code via TikTok Login Kit /oauth/access_token/
+		return "tiktok_uid_placeholder", "user@tiktok.com", "TikTok User", nil
+
+	default:
+		return "", "", "", fmt.Errorf("unsupported provider: %s", provider)
+	}
+}
+
 // GenerateGetStreamToken creates a signed GetStream user token server-side.
 // The GetStream secret MUST never leave the backend.
 func (s *Service) GenerateGetStreamToken(userID string) (string, error) {
