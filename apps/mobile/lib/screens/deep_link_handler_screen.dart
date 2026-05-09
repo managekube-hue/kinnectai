@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../theme/colors.dart';
 import '../theme/typography.dart';
 
@@ -128,8 +129,8 @@ class _DeepLinkHandlerState extends State<DeepLinkHandler> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(
-                  Icons.link_off,
+                Icon(
+                  PhosphorIcons.linkBreak(),
                   color: KinnectColors.textSecondary,
                   size: 64,
                 ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../theme/colors.dart';
 import '../theme/typography.dart';
 
@@ -32,8 +33,8 @@ class KinScoreRequiredScreen extends StatelessWidget {
                       width: 3,
                     ),
                   ),
-                  child: const Icon(
-                    Icons.lock_outline,
+                  child: Icon(
+                    PhosphorIcons.lock(),
                     color: KinnectColors.warning,
                     size: 48,
                   ),

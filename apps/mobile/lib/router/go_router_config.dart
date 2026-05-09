@@ -4,8 +4,11 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../screens/account_settings_screen.dart';
 import '../screens/activity_center_screen.dart';
+import '../screens/ancestral_marketplace_screen.dart';
 import '../screens/balance_screen.dart';
+import '../screens/bloom_screen.dart';
 import '../screens/branch_detail_screen.dart';
+import '../screens/branch_discovery_screen.dart';
 import '../screens/branch_members_screen.dart';
 import '../screens/branch_subgraph_screen.dart';
 import '../screens/business_tools_screen.dart';
@@ -14,23 +17,30 @@ import '../screens/content_preferences_screen.dart';
 import '../screens/data_export_screen.dart';
 import '../screens/deep_link_handler_screen.dart';
 import '../screens/discovery_page_screen.dart';
+import '../screens/echoes_feed_screen.dart';
 import '../screens/email_signup_screen.dart';
 import '../screens/family_pairing_screen.dart';
+import '../screens/gedcom_import_screen.dart';
 import '../screens/guidelines_screen.dart';
 import '../screens/help_center_screen.dart';
 import '../screens/kin_score_detail_screen.dart';
 import '../screens/kin_score_required_screen.dart';
+import '../screens/kinnections_feed_screen.dart';
 import '../screens/kinship_alert_map_screen.dart';
 import '../screens/legal_document_screen.dart';
 import '../screens/line_screen.dart';
 import '../screens/login_screen.dart';
 import '../screens/memory_box_screen.dart';
+import '../screens/memory_detail_screen.dart';
+import '../screens/memory_edit_screen.dart';
 import '../screens/night_mode_screen.dart';
 import '../screens/notifications_settings_screen.dart';
 import '../screens/offline_videos_screen.dart';
+import '../screens/payment_history_screen.dart';
 import '../screens/personal_tools_screen.dart';
 import '../screens/phone_signup_screen.dart';
 import '../screens/privacy_settings_screen.dart';
+import '../screens/profile_edit_screen.dart';
 import '../screens/register_screen.dart';
 import '../screens/repost_stitch_screen.dart';
 import '../screens/rewind_creator_screen.dart';
@@ -38,8 +48,10 @@ import '../screens/root_profile_screen.dart';
 import '../screens/security_settings_screen.dart';
 import '../screens/settings_screen.dart';
 import '../screens/splash_screen.dart';
+import '../screens/steward_agreement_screen.dart';
 import '../screens/strand_detail_screen.dart';
 import '../screens/strand_list_screen.dart';
+import '../screens/support_chat_screen.dart';
 import '../screens/time_wellbeing_screen.dart';
 import '../screens/tree_graph_screen.dart';
 import '../screens/voiceprint_capture_screen.dart';
@@ -318,6 +330,89 @@ class AppGoRouter {
           final target = state.uri.queryParameters['target'] ?? '';
           return KinScoreDetailScreen(targetUserId: target);
         },
+      ),
+      // --- Bloom Studio ---
+      GoRoute(
+        path: '/create/bloom',
+        builder: (BuildContext context, GoRouterState state) =>
+            const BloomScreen(),
+      ),
+      // --- Echoes Feed ---
+      GoRoute(
+        path: '/echoes',
+        builder: (BuildContext context, GoRouterState state) =>
+            const EchoesFeedScreen(),
+      ),
+      // --- Kinnections Feed ---
+      GoRoute(
+        path: '/kinnections',
+        builder: (BuildContext context, GoRouterState state) =>
+            const KinnectionsFeedScreen(),
+      ),
+      // --- Memory Detail + Edit ---
+      GoRoute(
+        path: '/memory/:memoryId',
+        builder: (BuildContext context, GoRouterState state) {
+          final memoryId = state.pathParameters['memoryId'] ?? '';
+          return MemoryDetailScreen(memoryId: memoryId);
+        },
+      ),
+      GoRoute(
+        path: '/memory/:memoryId/edit',
+        builder: (BuildContext context, GoRouterState state) {
+          final memoryId = state.pathParameters['memoryId'] ?? '';
+          return MemoryEditScreen(memoryId: memoryId);
+        },
+      ),
+      // --- Branch Discovery ---
+      GoRoute(
+        path: '/branches/discover',
+        builder: (BuildContext context, GoRouterState state) =>
+            const BranchDiscoveryScreen(),
+      ),
+      // --- GEDCOM Import ---
+      GoRoute(
+        path: '/import/gedcom',
+        builder: (BuildContext context, GoRouterState state) =>
+            const GedcomImportScreen(),
+      ),
+      // --- Profile Edit ---
+      GoRoute(
+        path: '/profile/edit',
+        builder: (BuildContext context, GoRouterState state) =>
+            const ProfileEditScreen(),
+      ),
+      // --- Steward Consent ---
+      GoRoute(
+        path: '/steward-consent',
+        builder: (BuildContext context, GoRouterState state) {
+          final memoryId = state.uri.queryParameters['memory_id'];
+          return StewardAgreementScreen(memoryId: memoryId);
+        },
+      ),
+      // --- Support Chat ---
+      GoRoute(
+        path: '/support',
+        builder: (BuildContext context, GoRouterState state) =>
+            const SupportChatScreen(),
+      ),
+      // --- Payment History ---
+      GoRoute(
+        path: '/settings/payment-history',
+        builder: (BuildContext context, GoRouterState state) =>
+            const PaymentHistoryScreen(),
+      ),
+      // --- Kinship Alerts ---
+      GoRoute(
+        path: '/kinship-alerts',
+        builder: (BuildContext context, GoRouterState state) =>
+            const KinshipAlertMapScreen(),
+      ),
+      // --- Ancestral Marketplace ---
+      GoRoute(
+        path: '/marketplace',
+        builder: (BuildContext context, GoRouterState state) =>
+            const AncestralMarketplaceScreen(),
       ),
       GoRoute(
         path: '/kinnect/:path(.*)',

@@ -263,10 +263,10 @@ class _MarkersTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       padding: const EdgeInsets.all(16),
-      children: const [
-        _MarkerTile(icon: Icons.sailing, title: 'Ellis Island Arrival', subtitle: 'Harrington, 1892', date: '1892'),
-        _MarkerTile(icon: Icons.flag, title: 'County of Origin', subtitle: 'Cork, Ireland', date: '1840s'),
-        _MarkerTile(icon: Icons.biotech, title: 'AADR Ancient DNA', subtitle: 'R1b haplogroup match', date: '~3000 BCE'),
+      children: [
+        _MarkerTile(icon: PhosphorIcons.boat(), title: 'Ellis Island Arrival', subtitle: 'Harrington, 1892', date: '1892'),
+        _MarkerTile(icon: PhosphorIcons.flag(), title: 'County of Origin', subtitle: 'Cork, Ireland', date: '1840s'),
+        _MarkerTile(icon: PhosphorIcons.dna(), title: 'AADR Ancient DNA', subtitle: 'R1b haplogroup match', date: '~3000 BCE'),
       ],
     );
   }
