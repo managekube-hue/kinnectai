@@ -2,8 +2,11 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
+import 'package:dio/dio.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'cubits/error_cubit.dart';
+import 'cubits/settings_cubit.dart';
+import 'repositories/settings_repository_impl.dart';
 import 'foundation/app_bootstrap.dart';
 import 'foundation/offline/offline_sync_manager.dart';
 import 'services/push_notification_service.dart';
@@ -53,6 +56,9 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<ErrorCubit>.value(value: appErrorCubit),
+        BlocProvider<SettingsCubit>(
+          create: (_) => SettingsCubit(SettingsRepositoryImpl(dio: Dio()))..load(),
+        ),
       ],
       child: ChangeNotifierProvider<AuthService>.value(
         value: appAuthService,
