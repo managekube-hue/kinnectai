@@ -10,6 +10,7 @@ import '../screens/marketplace_cart_screen.dart';
 import '../screens/marketplace_orders_screen.dart';
 import '../screens/marketplace_seller_dashboard_screen.dart';
 import '../screens/marketplace_wishlist_screen.dart';
+import '../screens/marketplace_create_listing_screen.dart';
 import '../screens/balance_screen.dart';
 import '../screens/bloom_screen.dart';
 import '../screens/branch_detail_screen.dart';
@@ -482,6 +483,11 @@ class AppGoRouter {
         path: '/marketplace/seller',
         builder: (BuildContext context, GoRouterState state) =>
             const MarketplaceSellerDashboardScreen(),
+      ),
+      GoRoute(
+        path: '/marketplace/create-listing',
+        builder: (BuildContext context, GoRouterState state) =>
+            const MarketplaceCreateListingScreen(),
       ),
       GoRoute(
         path: '/kinnect/:path(.*)',

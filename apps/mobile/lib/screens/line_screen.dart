@@ -4,6 +4,7 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../cubits/line_bloc.dart';
 import '../models/memory.dart';
 import '../feed_service.dart';
+import '../router/app_nav.dart';
 import '../theme/colors.dart';
 
 /// The Line - Vertical video feed screen (PRD Section 01)
@@ -40,7 +41,9 @@ class _LineScreenContentState extends State<_LineScreenContent> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: KinnectColors.background,
-      body: BlocBuilder<LineBloc, LineState>(
+      body: Stack(
+        children: [
+          BlocBuilder<LineBloc, LineState>(
         builder: (context, state) {
           if (state is LineLoading) {
             return const Center(
@@ -119,6 +122,46 @@ class _LineScreenContentState extends State<_LineScreenContent> {
 
           return const SizedBox.shrink();
         },
+      ),
+          // Floating top bar with marketplace storefront icon (PRD Section 00)
+          Positioned(
+            top: MediaQuery.of(context).padding.top + 8,
+            left: 16,
+            right: 16,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text('The Line', style: TextStyle(
+                  color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold,
+                  shadows: [Shadow(blurRadius: 8, color: Colors.black54)],
+                )),
+                Row(
+                  children: [
+                    _topBarIcon(PhosphorIcons.storefront(), 'Shop', () => AppNav.push(context, '/marketplace')),
+                    const SizedBox(width: 12),
+                    _topBarIcon(PhosphorIcons.bell(), 'Alerts', () => AppNav.push(context, '/pulse')),
+                    const SizedBox(width: 12),
+                    _topBarIcon(PhosphorIcons.magnifyingGlass(), 'Search', () {}),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _topBarIcon(IconData icon, String tooltip, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Colors.black.withOpacity(0.3),
+          shape: BoxShape.circle,
+        ),
+        child: Icon(icon, color: Colors.white, size: 22),
       ),
     );
   }

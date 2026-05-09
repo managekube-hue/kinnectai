@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
+import '../router/app_nav.dart';
 import '../theme/colors.dart';
 import '../theme/typography.dart';
 
@@ -41,7 +42,21 @@ class BusinessToolsScreen extends StatelessWidget {
             title: const Text('Marketplace Seller', style: TextStyle(color: KinnectColors.textPrimary)),
             subtitle: const Text('Ancestral products', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
             trailing: Icon(PhosphorIcons.caretRight(), color: KinnectColors.textMuted),
-            onTap: () {},
+            onTap: () => AppNav.push(context, '/marketplace/seller'),
+          ),
+          ListTile(
+            leading: Icon(PhosphorIcons.shoppingBag(), color: KinnectColors.accent),
+            title: const Text('Browse Marketplace', style: TextStyle(color: KinnectColors.textPrimary)),
+            subtitle: const Text('Shop ancestral treasures', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
+            trailing: Icon(PhosphorIcons.caretRight(), color: KinnectColors.textMuted),
+            onTap: () => AppNav.push(context, '/marketplace'),
+          ),
+          ListTile(
+            leading: Icon(PhosphorIcons.receipt(), color: KinnectColors.accent),
+            title: const Text('My Orders', style: TextStyle(color: KinnectColors.textPrimary)),
+            subtitle: const Text('Track purchases', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
+            trailing: Icon(PhosphorIcons.caretRight(), color: KinnectColors.textMuted),
+            onTap: () => AppNav.push(context, '/marketplace/orders'),
           ),
           ListTile(
             leading: Icon(PhosphorIcons.code(), color: KinnectColors.accent),
