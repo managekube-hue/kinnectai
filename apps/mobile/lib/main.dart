@@ -6,7 +6,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'cubits/error_cubit.dart';
 import 'foundation/app_bootstrap.dart';
 import 'foundation/offline/offline_sync_manager.dart';
+import 'services/push_notification_service.dart';
 import 'utils/consent_store.dart';
+import 'utils/performance_sla.dart';
 import 'router/go_router_config.dart';
 import 'services/auth_service.dart';
 import 'theme/design_system.dart';
@@ -17,12 +19,19 @@ final ErrorCubit appErrorCubit = ErrorCubit();
 final OfflineSyncManager appOfflineSync = OfflineSyncManager();
 
 void main() async {
+  PerformanceSLA.markColdStartBegin();
   WidgetsFlutterBinding.ensureInitialized();
   await AppBootstrap.initialize();
   await appOfflineSync.initialize();
   await ConsentStore.initialize();
+  await PushNotificationService.initialize();
 
   Bloc.observer = const AppBlocObserver();
+
+  // Mark cold start end after first frame renders
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    PerformanceSLA.markColdStartEnd();
+  });
 
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
