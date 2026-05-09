@@ -20,6 +20,8 @@ class _PrivacySettingsScreenState extends State<PrivacySettingsScreen> {
   bool _allowDMs = true;
   bool _allowStitch = true;
   bool _trackOffPlatform = false;
+  bool _contextualAds = true;
+  bool _feedbackSharing = false;
 
   @override
   Widget build(BuildContext context) {
@@ -108,6 +110,26 @@ class _PrivacySettingsScreenState extends State<PrivacySettingsScreen> {
               subtitle: const Text('NielsenIQ, Facteus data sharing', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
               trailing: Icon(PhosphorIcons.caretRight(), color: KinnectColors.textMuted),
               onTap: () {},
+            ),
+            SwitchListTile(
+              title: const Text('Contextual Ad Preferences', style: TextStyle(color: KinnectColors.textPrimary)),
+              subtitle: const Text('Bio-Identity-based contextual offer relevance', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
+              value: _contextualAds,
+              activeColor: KinnectColors.accent,
+              onChanged: (value) => setState(() => _contextualAds = value),
+            ),
+            ListTile(
+              title: const Text('Partner Muting', style: TextStyle(color: KinnectColors.textPrimary)),
+              subtitle: const Text('Mute specific partner brands from offers', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
+              trailing: Icon(PhosphorIcons.caretRight(), color: KinnectColors.textMuted),
+              onTap: () {},
+            ),
+            SwitchListTile(
+              title: const Text('Feedback Sharing', style: TextStyle(color: KinnectColors.textPrimary)),
+              subtitle: const Text('Allow anonymized usage data to improve KinnectAI. No PII or genomic data shared.', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
+              value: _feedbackSharing,
+              activeColor: KinnectColors.accent,
+              onChanged: (value) => setState(() => _feedbackSharing = value),
             ),
           ]),
         ],
