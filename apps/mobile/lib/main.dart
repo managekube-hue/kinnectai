@@ -30,11 +30,12 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await AppBootstrap.initialize();
 
-  // Initialize Stripe for marketplace checkout (Stripe Connect)
-  Stripe.publishableKey = const String.fromEnvironment(
-    'STRIPE_PUBLISHABLE_KEY',
-    defaultValue: 'pk_test_placeholder',
-  );
+  // Initialize Stripe for marketplace checkout (Stripe Connect).
+  // Pass via --dart-define=STRIPE_PUBLISHABLE_KEY=pk_live_xxx at build time.
+  const stripeKey = String.fromEnvironment('STRIPE_PUBLISHABLE_KEY');
+  if (stripeKey.isNotEmpty) {
+    Stripe.publishableKey = stripeKey;
+  }
   await appOfflineSync.initialize();
   await ConsentStore.initialize();
   await PushNotificationService.initialize();

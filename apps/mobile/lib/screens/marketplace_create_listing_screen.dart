@@ -1,5 +1,9 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../cubits/marketplace_cubit.dart';
@@ -25,6 +29,67 @@ class _State extends State<MarketplaceCreateListingScreen> {
   String _selectedCategory = 'genealogy_books';
   final List<String> _imageUrls = [];
   bool _isSubmitting = false;
+
+  final _imagePicker = ImagePicker();
+
+  /// Pick an image from gallery or camera, upload to the media service,
+  /// return the S3 URL. Returns null if user cancelled or upload failed.
+  Future<String?> _pickAndUploadImage() async {
+    final source = await showModalBottomSheet<ImageSource>(
+      context: context,
+      backgroundColor: KinnectColors.surface,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (ctx) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: Icon(PhosphorIcons.camera(), color: KinnectColors.accent),
+              title: const Text('Take Photo', style: TextStyle(color: KinnectColors.textPrimary)),
+              onTap: () => Navigator.pop(ctx, ImageSource.camera),
+            ),
+            ListTile(
+              leading: Icon(PhosphorIcons.image(), color: KinnectColors.accent),
+              title: const Text('Choose from Gallery', style: TextStyle(color: KinnectColors.textPrimary)),
+              onTap: () => Navigator.pop(ctx, ImageSource.gallery),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    if (source == null) return null;
+
+    final picked = await _imagePicker.pickImage(
+      source: source,
+      maxWidth: 1200,
+      maxHeight: 1200,
+      imageQuality: 85,
+    );
+    if (picked == null) return null;
+
+    try {
+      // Upload to backend media service which stores in S3
+      final dio = Dio();
+      final formData = FormData.fromMap({
+        'file': await MultipartFile.fromFile(picked.path, filename: picked.name),
+        'type': 'marketplace_product',
+      });
+      final response = await dio.post<Map<String, dynamic>>(
+        '/v1/media/upload',
+        data: formData,
+      );
+      return response.data?['data']?['url'] as String?;
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Image upload failed: $e'),
+          backgroundColor: KinnectColors.error,
+        ));
+      }
+      return null;
+    }
+  }
 
   static const _categories = {
     'heritage_travel': 'Heritage Travel',
@@ -84,10 +149,12 @@ class _State extends State<MarketplaceCreateListingScreen> {
                 const SizedBox(height: 8),
                 _ImageUploadArea(
                   imageUrls: _imageUrls,
-                  onAdd: () {
-                    // In production this opens image picker + uploads to S3
-                    // For now, add placeholder
-                    setState(() => _imageUrls.add('https://placeholder.com/product_${_imageUrls.length + 1}.jpg'));
+                  onAdd: () async {
+                    // Open image picker, upload to S3 via media service, get URL back
+                    final url = await _pickAndUploadImage();
+                    if (url != null) {
+                      setState(() => _imageUrls.add(url));
+                    }
                   },
                   onRemove: (i) => setState(() => _imageUrls.removeAt(i)),
                 ),
