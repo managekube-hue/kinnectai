@@ -1,94 +1,103 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+
 import '../models/memory.dart';
 
-/// Interaction service for pulse, comment, share actions (PRD Section 09)
-/// Writes to Cassandra, provides optimistic UI updates
+/// Interaction service for Pulse, Comment, Share, Save actions (PRD Section 09).
+/// Writes to backend (Cassandra-backed), provides optimistic UI updates.
 class InteractionService {
-  // TODO: Add dio HTTP client and Cassandra connection
-  // final Dio _dio;
-  
-  /// Toggle pulse on a memory
-  /// Optimistic: Update UI immediately, persist async to Cassandra
+  InteractionService({Dio? dio}) : _dio = dio ?? Dio(BaseOptions(baseUrl: 'http://localhost:8080/v1'));
+
+  final Dio _dio;
+
+  /// Toggle pulse on a memory. Returns new state.
   Future<bool> togglePulse(String memoryId, {required bool currentState}) async {
     try {
-      debugPrint('?? Toggling pulse: $memoryId (current: $currentState)');
-      
-      // TODO: Write to Cassandra interactions table
-      // INSERT INTO interactions (memory_id, actor_id, type, ts)
-      // VALUES ($memoryId, $currentUserId, 'pulse', NOW())
-      
-      // Simulate API call
-      await Future.delayed(const Duration(milliseconds: 100));
-      
+      final endpoint = currentState ? '/interactions/pulse/remove' : '/interactions/pulse/add';
+      await _dio.post<void>(endpoint, data: {'memory_id': memoryId});
       return !currentState;
     } catch (e) {
-      debugPrint('? Pulse error: $e');
+      debugPrint('Pulse error: $e');
       return currentState; // Revert on error
     }
   }
 
-  /// Add comment to a memory
-  Future<void> addComment(String memoryId, String text) async {
+  /// Add comment to a memory. CR-sorted on server.
+  Future<void> addComment(String memoryId, String text, {String? replyToId}) async {
     try {
-      debugPrint('?? Adding comment to $memoryId');
-      
-      // TODO: POST /v1/comments
-      // Body: { memory_id, text }
-      
-      await Future.delayed(const Duration(milliseconds: 200));
+      await _dio.post<void>('/comments', data: {
+        'memory_id': memoryId,
+        'text': text,
+        if (replyToId != null) 'reply_to_id': replyToId,
+      });
     } catch (e) {
-      debugPrint('? Comment error: $e');
+      debugPrint('Comment error: $e');
       rethrow;
     }
   }
 
-  /// Get comments for a memory (sorted by Kin Score, not chronological)
+  /// Get comments for a memory (sorted by Kin Score, not chronological per PRD).
   Future<List<Comment>> getComments(String memoryId) async {
     try {
-      debugPrint('?? Loading comments for $memoryId');
-      
-      // TODO: GET /v1/comments/$memoryId?sort=kin_score
-      // PostgreSQL: SELECT * FROM comments WHERE memory_id=$id ORDER BY kin_score DESC
-      
-      await Future.delayed(const Duration(milliseconds: 150));
-      return [];
+      final response = await _dio.get<Map<String, dynamic>>(
+        '/comments/$memoryId',
+        queryParameters: {'sort': 'kin_score'},
+      );
+      final items = (response.data?['items'] as List?) ?? [];
+      return items
+          .whereType<Map<String, dynamic>>()
+          .map((j) => Comment(
+                id: (j['id'] ?? '').toString(),
+                authorUsername: (j['author_username'] ?? '').toString(),
+                text: (j['text'] ?? '').toString(),
+                kinScore: (j['kin_score'] as num?)?.toDouble() ?? 0,
+                createdAt: DateTime.tryParse((j['created_at'] ?? '').toString()) ?? DateTime.now(),
+              ))
+          .toList();
     } catch (e) {
-      debugPrint('? Load comments error: $e');
+      debugPrint('Load comments error: $e');
       return [];
     }
   }
 
-  /// Toggle save/strand
-  Future<bool> toggleSave(String memoryId, {required bool currentState}) async {
+  /// Toggle save to Strand.
+  Future<bool> toggleSave(String memoryId, {required bool currentState, String? strandId}) async {
     try {
-      debugPrint('? Toggling save: $memoryId');
-      
-      // TODO: POST /v1/strands/add
-      // Body: { memory_id, strand_id }
-      
-      await Future.delayed(const Duration(milliseconds: 100));
+      final endpoint = currentState ? '/strands/remove' : '/strands/add';
+      await _dio.post<void>(endpoint, data: {
+        'memory_id': memoryId,
+        if (strandId != null) 'strand_id': strandId,
+      });
       return !currentState;
     } catch (e) {
-      debugPrint('? Save error: $e');
+      debugPrint('Save error: $e');
       return currentState;
     }
   }
 
-  /// Share memory (Branch/Kin only, never external)
-  Future<void> shareMemory(String memoryId, {
-    String? branchId,
-    List<String>? kinIds,
-  }) async {
+  /// Share memory (Branch/Kin only, never external per PRD 00).
+  Future<void> shareMemory(String memoryId, {String? branchId, List<String>? kinIds}) async {
     try {
-      debugPrint('?? Sharing memory $memoryId');
-      
-      // TODO: POST /v1/share
-      // Body: { memory_id, branch_id?, kin_ids? }
-      // Constraint: Never external platforms (PRD 00)
-      
-      await Future.delayed(const Duration(milliseconds: 200));
+      await _dio.post<void>('/share', data: {
+        'memory_id': memoryId,
+        if (branchId != null) 'branch_id': branchId,
+        if (kinIds != null) 'kin_ids': kinIds,
+      });
     } catch (e) {
-      debugPrint('? Share error: $e');
+      debugPrint('Share error: $e');
+      rethrow;
+    }
+  }
+
+  /// Repost a memory to your Branch feed.
+  Future<void> repost(String memoryId, {String? caption}) async {
+    try {
+      await _dio.post<void>('/repost', data: {
+        'memory_id': memoryId,
+        if (caption != null) 'caption': caption,
+      });
+    } catch (e) {
+      debugPrint('Repost error: $e');
       rethrow;
     }
   }
