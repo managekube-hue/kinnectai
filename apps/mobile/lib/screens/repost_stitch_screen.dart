@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../router/app_nav.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../theme/colors.dart';
@@ -76,7 +77,7 @@ class _RepostStitchScreenState extends State<RepostStitchScreen> with SingleTick
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.repeat, size: 64, color: KinnectColors.textMuted),
+            Icon(PhosphorIcons.repeat(), size: 64, color: KinnectColors.textMuted),
             const SizedBox(height: 16),
             const Text(
               'No eligible Memories',
@@ -111,7 +112,7 @@ class _RepostStitchScreenState extends State<RepostStitchScreen> with SingleTick
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.video_library, size: 64, color: KinnectColors.textMuted),
+            Icon(PhosphorIcons.filmStrip(), size: 64, color: KinnectColors.textMuted),
             const SizedBox(height: 16),
             const Text(
               'No eligible Memories',
@@ -155,7 +156,7 @@ class _RepostStitchScreenState extends State<RepostStitchScreen> with SingleTick
                 ),
                 child: memory.thumbnailUrl != null
                     ? Image.network(memory.thumbnailUrl!, fit: BoxFit.cover)
-                    : const Icon(Icons.videocam, color: KinnectColors.textMuted, size: 32),
+                    : const Icon(PhosphorIcons.videoCamera(), color: KinnectColors.textMuted, size: 32),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -180,7 +181,7 @@ class _RepostStitchScreenState extends State<RepostStitchScreen> with SingleTick
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        Icon(Icons.favorite, size: 16, color: KinnectColors.error),
+                        Icon(PhosphorIcons.heart(), size: 16, color: KinnectColors.error),
                         const SizedBox(width: 4),
                         Text(
                           memory.formattedPulseCount,
@@ -208,7 +209,7 @@ class _RepostStitchScreenState extends State<RepostStitchScreen> with SingleTick
                 ),
               ),
               Icon(
-                isStitch ? Icons.video_library : Icons.repeat,
+                isStitch ? PhosphorIcons.filmStrip() : PhosphorIcons.repeat(),
                 color: KinnectColors.accent,
                 size: 32,
               ),

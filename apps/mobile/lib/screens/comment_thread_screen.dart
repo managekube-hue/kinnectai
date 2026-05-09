@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../theme/colors.dart';
 import '../theme/typography.dart';
 import '../theme/spacing.dart';
@@ -223,7 +224,7 @@ class _CommentInput extends StatelessWidget {
           ),
           const SizedBox(width: KinnectSpacing.sm),
           IconButton(
-            icon: const Icon(Icons.send, color: KinnectColors.accent),
+            icon: const Icon(PhosphorIcons.paperPlaneTilt(), color: KinnectColors.accent),
             onPressed: onSend,
           ),
         ],

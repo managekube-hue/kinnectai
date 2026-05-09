@@ -56,11 +56,11 @@ class _ActivityCenterScreenState extends State<ActivityCenterScreen> with Single
   Widget _buildHistoryTab() {
     return ListView(
       children: [
-        _buildListItem('Watch history', 'All videos and Blooms viewed', Icons.play_circle_outline, true, () {}),
-        _buildListItem('Comment history', 'All comments made', Icons.comment, true, () {}),
-        _buildListItem('Search history', 'Search terms in Discovery', Icons.search, true, () {}),
-        _buildListItem('Mention history', '@mentions by other Kin', Icons.alternate_email, false, () {}),
-        _buildListItem('Account history', 'Login events, device changes', Icons.history, false, () {}),
+        _buildListItem('Watch history', 'All videos and Blooms viewed', PhosphorIcons.play(), true, () {}),
+        _buildListItem('Comment history', 'All comments made', PhosphorIcons.chatCircleText(), true, () {}),
+        _buildListItem('Search history', 'Search terms in Discovery', PhosphorIcons.magnifyingGlass(), true, () {}),
+        _buildListItem('Mention history', '@mentions by other Kin', PhosphorIcons.at(), false, () {}),
+        _buildListItem('Account history', 'Login events, device changes', PhosphorIcons.clockCounterClockwise(), false, () {}),
       ],
     );
   }
@@ -68,11 +68,11 @@ class _ActivityCenterScreenState extends State<ActivityCenterScreen> with Single
   Widget _buildTimeTab() {
     return ListView(
       children: [
-        _buildListItem('Screen time', 'Daily and weekly usage stats', Icons.timer, false, () {
+        _buildListItem('Screen time', 'Daily and weekly usage stats', PhosphorIcons.timer(), false, () {
           AppNav.push(context, '/time-wellbeing');
         }),
-        _buildListItem('Daily time limit', 'Set maximum daily usage', Icons.alarm, false, () {}),
-        _buildListItem('Break reminders', 'Timed nudges during sessions', Icons.pause_circle, false, () {}),
+        _buildListItem('Daily time limit', 'Set maximum daily usage', PhosphorIcons.alarm(), false, () {}),
+        _buildListItem('Break reminders', 'Timed nudges during sessions', PhosphorIcons.pause(), false, () {}),
       ],
     );
   }
@@ -80,11 +80,11 @@ class _ActivityCenterScreenState extends State<ActivityCenterScreen> with Single
   Widget _buildPermissionsTab() {
     return ListView(
       children: [
-        _buildListItem('Memory reuse history', 'Which Memories were Stitched', Icons.video_library, false, () {}),
-        _buildListItem('Recently deleted', 'Deleted content (30 days)', Icons.delete_outline, false, () {}),
-        _buildListItem('Manage Memory visibility', 'Per-Memory control', Icons.visibility, false, () {}),
-        _buildListItem('Manage Pulse permissions', 'Who can Pulse on Memories', Icons.favorite_border, false, () {}),
-        _buildListItem('Manage Memory reuse', 'Stitch/Rewind permissions', Icons.settings, false, () {}),
+        _buildListItem('Memory reuse history', 'Which Memories were Stitched', PhosphorIcons.filmStrip(), false, () {}),
+        _buildListItem('Recently deleted', 'Deleted content (30 days)', PhosphorIcons.trash(), false, () {}),
+        _buildListItem('Manage Memory visibility', 'Per-Memory control', PhosphorIcons.eye(), false, () {}),
+        _buildListItem('Manage Pulse permissions', 'Who can Pulse on Memories', PhosphorIcons.heart(), false, () {}),
+        _buildListItem('Manage Memory reuse', 'Stitch/Rewind permissions', PhosphorIcons.gear(), false, () {}),
       ],
     );
   }

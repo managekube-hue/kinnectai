@@ -30,7 +30,7 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
       _topics.addAll([
         HelpTopic(
           category: 'Getting Started',
-          icon: Icons.rocket_launch,
+          icon: PhosphorIcons.rocket(),
           articles: [
             HelpArticle('How to create your first Memory', 'Learn the basics of recording and sharing'),
             HelpArticle('Understanding Kin Score', 'What the percentage means'),
@@ -39,7 +39,7 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
         ),
         HelpTopic(
           category: 'The Line',
-          icon: Icons.view_timeline,
+          icon: PhosphorIcons.rows(),
           articles: [
             HelpArticle('How The Line algorithm works', 'CR-based ranking explained'),
             HelpArticle('Discovery vs Kinnections', 'Understanding the tabs'),
@@ -48,7 +48,7 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
         ),
         HelpTopic(
           category: 'Memory Box',
-          icon: Icons.lock,
+          icon: PhosphorIcons.lock(),
           articles: [
             HelpArticle('Creating a Memory Box', 'Sealed delivery system'),
             HelpArticle('Trigger types explained', 'Time, Milestone, Posthumous, Geofence'),
@@ -57,7 +57,7 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
         ),
         HelpTopic(
           category: 'Bloom',
-          icon: Icons.auto_awesome,
+          icon: PhosphorIcons.sparkle(),
           articles: [
             HelpArticle('How to create a Bloom', 'Animate photos with AI'),
             HelpArticle('Standard vs Premium', 'Quality and processing time'),
@@ -66,7 +66,7 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
         ),
         HelpTopic(
           category: 'Privacy & Safety',
-          icon: Icons.shield,
+          icon: PhosphorIcons.shield(),
           articles: [
             HelpArticle('Privacy controls', 'Public vs Private account'),
             HelpArticle('DNA data security', 'How we protect your data'),
@@ -75,7 +75,7 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
         ),
         HelpTopic(
           category: 'Account',
-          icon: Icons.person,
+          icon: PhosphorIcons.user(),
           articles: [
             HelpArticle('Password and Passkey', 'Authentication options'),
             HelpArticle('Download your data', 'GDPR export'),
@@ -105,7 +105,7 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
               decoration: InputDecoration(
                 hintText: 'Search help articles',
                 hintStyle: const TextStyle(color: KinnectColors.textSecondary),
-                prefixIcon: const Icon(Icons.search, color: KinnectColors.textSecondary),
+                prefixIcon: const Icon(PhosphorIcons.magnifyingGlass(), color: KinnectColors.textSecondary),
                 filled: true,
                 fillColor: KinnectColors.background,
                 border: OutlineInputBorder(
@@ -183,7 +183,7 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
               Expanded(
                 child: OutlinedButton.icon(
                   onPressed: () => _contactSupport('email'),
-                  icon: const Icon(Icons.email),
+                  icon: const Icon(PhosphorIcons.envelope()),
                   label: const Text('Email'),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: KinnectColors.accent,
@@ -195,7 +195,7 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
               Expanded(
                 child: ElevatedButton.icon(
                   onPressed: () => _contactSupport('chat'),
-                  icon: const Icon(Icons.chat),
+                  icon: const Icon(PhosphorIcons.chatCircle()),
                   label: const Text('Live Chat'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: KinnectColors.accent,
@@ -268,11 +268,11 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
                   ),
                   const Spacer(),
                   IconButton(
-                    icon: const Icon(Icons.thumb_up_outlined, color: KinnectColors.success),
+                    icon: const Icon(PhosphorIcons.thumbsUp(), color: KinnectColors.success),
                     onPressed: () {},
                   ),
                   IconButton(
-                    icon: const Icon(Icons.thumb_down_outlined, color: KinnectColors.error),
+                    icon: const Icon(PhosphorIcons.thumbsDown(), color: KinnectColors.error),
                     onPressed: () {},
                   ),
                 ],

@@ -51,6 +51,7 @@ import '../screens/splash_screen.dart';
 import '../screens/steward_agreement_screen.dart';
 import '../screens/strand_detail_screen.dart';
 import '../screens/strand_list_screen.dart';
+import '../screens/subscription_screen.dart';
 import '../screens/support_chat_screen.dart';
 import '../screens/time_wellbeing_screen.dart';
 import '../screens/tree_graph_screen.dart';
@@ -407,6 +408,12 @@ class AppGoRouter {
         path: '/kinship-alerts',
         builder: (BuildContext context, GoRouterState state) =>
             const KinshipAlertMapScreen(),
+      ),
+      // --- Subscription ---
+      GoRoute(
+        path: '/subscription',
+        builder: (BuildContext context, GoRouterState state) =>
+            const SubscriptionScreen(),
       ),
       // --- Ancestral Marketplace ---
       GoRoute(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../router/app_nav.dart';
 import '../theme/colors.dart';
 import '../models/memory.dart';
@@ -82,7 +83,7 @@ class _PulseInboxScreenState extends State<PulseInboxScreen> with SingleTickerPr
         title: const Text('Pulse Inbox'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.done_all),
+            icon: const Icon(PhosphorIcons.checks(), color: KinnectColors.textPrimary),
             onPressed: _markAllAsRead,
             tooltip: 'Mark all as read',
           ),
@@ -116,7 +117,7 @@ class _PulseInboxScreenState extends State<PulseInboxScreen> with SingleTickerPr
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.favorite_border, size: 64, color: KinnectColors.textMuted),
+            Icon(PhosphorIcons.heart(), size: 64, color: KinnectColors.textMuted),
             SizedBox(height: 16),
             Text(
               'No new Pulses',
@@ -151,7 +152,7 @@ class _PulseInboxScreenState extends State<PulseInboxScreen> with SingleTickerPr
         color: KinnectColors.error,
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: 16),
-        child: const Icon(Icons.delete, color: KinnectColors.textPrimary),
+        child: const Icon(PhosphorIcons.trash(), color: KinnectColors.textPrimary),
       ),
       child: InkWell(
         onTap: () => _handleNotificationTap(notification),
@@ -212,13 +213,13 @@ class _PulseInboxScreenState extends State<PulseInboxScreen> with SingleTickerPr
   IconData _getTypeIcon(PulseType type) {
     switch (type) {
       case PulseType.pulse:
-        return Icons.favorite;
+        return PhosphorIcons.heart();
       case PulseType.comment:
-        return Icons.comment;
+        return PhosphorIcons.chatCircleText();
       case PulseType.kinnection:
-        return Icons.people;
+        return PhosphorIcons.usersThree();
       case PulseType.rewind:
-        return Icons.replay;
+        return PhosphorIcons.arrowUDownLeft();
     }
   }
 

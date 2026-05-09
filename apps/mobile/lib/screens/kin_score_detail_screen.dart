@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../theme/colors.dart';
 import '../theme/typography.dart';
 import '../theme/spacing.dart';
@@ -73,26 +74,26 @@ class _KinScoreDetailScreenState extends State<KinScoreDetailScreen> {
                       _InfoCard(
                         title: 'Relationship',
                         value: _breakdown!.relationship,
-                        icon: Icons.people,
+                        icon: PhosphorIcons.usersThree(),
                       ),
                       const SizedBox(height: KinnectSpacing.md),
                       _InfoCard(
                         title: 'Shared Branches',
                         value: '${_breakdown!.sharedBranches}',
-                        icon: Icons.account_tree,
+                        icon: PhosphorIcons.treeStructure(),
                       ),
                       const SizedBox(height: KinnectSpacing.md),
                       _InfoCard(
                         title: 'Shared Ancestors',
                         value: '${_breakdown!.sharedAncestors}',
-                        icon: Icons.family_restroom,
+                        icon: PhosphorIcons.usersThree(),
                       ),
                       if (_breakdown!.haplogroup != null) ...[
                         const SizedBox(height: KinnectSpacing.md),
                         _InfoCard(
                           title: 'Haplogroup',
                           value: _breakdown!.haplogroup!,
-                          icon: Icons.biotech,
+                          icon: PhosphorIcons.dna(),
                         ),
                       ],
                       if (_breakdown!.connectionPath.isNotEmpty) ...[
@@ -257,7 +258,7 @@ class _ConnectionPath extends StatelessWidget {
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: 8),
                   child: Icon(
-                    Icons.arrow_downward,
+                    PhosphorIcons.arrowDown(),
                     color: KinnectColors.accent,
                     size: 20,
                   ),

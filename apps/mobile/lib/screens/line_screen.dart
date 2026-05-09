@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../cubits/line_bloc.dart';
 import '../models/memory.dart';
 import '../feed_service.dart';
@@ -52,7 +53,7 @@ class _LineScreenContentState extends State<_LineScreenContent> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.people_outline,
+                  const Icon(PhosphorIcons.usersThree(),
                       size: 64, color: KinnectColors.textMuted),
                   const SizedBox(height: 16),
                   const Text(
@@ -77,7 +78,7 @@ class _LineScreenContentState extends State<_LineScreenContent> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.error_outline,
+                  const Icon(PhosphorIcons.warningCircle(),
                       size: 64, color: KinnectColors.error),
                   const SizedBox(height: 16),
                   Text(
@@ -136,7 +137,7 @@ class _LineScreenContentState extends State<_LineScreenContent> {
                   height: double.infinity,
                 )
               : const Center(
-                  child: Icon(Icons.play_circle_outline,
+                  child: Icon(PhosphorIcons.play(),
                       size: 80, color: Colors.white),
                 ),
         ),
@@ -148,20 +149,20 @@ class _LineScreenContentState extends State<_LineScreenContent> {
           child: Column(
             children: [
               _buildActionButton(
-                icon: memory.isPulsed ? Icons.favorite : Icons.favorite_border,
+                icon: memory.isPulsed ? PhosphorIcons.heartFill() : PhosphorIcons.heart(),
                 label: memory.formattedPulseCount,
                 color: memory.isPulsed ? KinnectColors.error : Colors.white,
                 onTap: () => context.read<LineBloc>().add(LinePulseTriggered(memory.id)),
               ),
               const SizedBox(height: 16),
               _buildActionButton(
-                icon: Icons.comment,
+                icon: PhosphorIcons.chatCircleText(),
                 label: '${memory.commentCount}',
                 onTap: () {},
               ),
               const SizedBox(height: 16),
               _buildActionButton(
-                icon: Icons.share,
+                icon: PhosphorIcons.shareNetwork(),
                 label: 'Share',
                 onTap: () {},
               ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../router/app_nav.dart';
 import '../theme/colors.dart';
 
@@ -18,7 +19,7 @@ class RootProfileScreen extends StatelessWidget {
         title: const Text('Profile'),
         actions: isOwnProfile ? [
           IconButton(
-            icon: const Icon(Icons.settings),
+            icon: const Icon(PhosphorIcons.gear(), color: KinnectColors.textPrimary),
             onPressed: () => AppNav.push(context, '/settings'),
           ),
         ] : null,
@@ -30,7 +31,7 @@ class RootProfileScreen extends StatelessWidget {
             CircleAvatar(
               radius: 64,
               backgroundColor: KinnectColors.surface,
-              child: Icon(Icons.person, size: 64, color: KinnectColors.textMuted),
+              child: Icon(PhosphorIcons.user(), size: 64, color: KinnectColors.textMuted),
             ),
             SizedBox(height: 24),
             Text(
