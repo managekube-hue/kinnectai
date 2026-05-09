@@ -7,7 +7,16 @@ on:
     branches: [ main ]
 
 jobs:
+  structure:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Verify monorepo structure
+      shell: pwsh
+      run: ./scripts/ci/verify-monorepo-structure.ps1
+
   test:
+    needs: structure
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -19,6 +28,7 @@ jobs:
     - run: cd services/go/feed-service && go test ./...
 
   build:
+    needs: structure
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
