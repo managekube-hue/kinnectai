@@ -14,11 +14,20 @@ import (
 	stream "github.com/GetStream/stream-go2/v8"
 	"github.com/gin-gonic/gin"
 	"github.com/kinnectai/backend/internal/auth"
+	"github.com/kinnectai/backend/internal/discovery"
 	"github.com/kinnectai/backend/internal/dna"
 	"github.com/kinnectai/backend/internal/feed"
 	"github.com/kinnectai/backend/internal/graph"
+	"github.com/kinnectai/backend/internal/interaction"
 	"github.com/kinnectai/backend/internal/media"
+	"github.com/kinnectai/backend/internal/messaging"
+	"github.com/kinnectai/backend/internal/moderation"
+	"github.com/kinnectai/backend/internal/payment"
+	"github.com/kinnectai/backend/internal/room"
+	"github.com/kinnectai/backend/internal/settings"
 	"github.com/kinnectai/backend/internal/user"
+	"github.com/kinnectai/backend/internal/vault"
+	"github.com/kinnectai/backend/internal/voiceprint"
 	"github.com/kinnectai/backend/pkg/config"
 	"github.com/kinnectai/backend/pkg/database"
 	"github.com/kinnectai/backend/pkg/middleware"
@@ -106,6 +115,15 @@ func main() {
 	feedHandler := feed.NewHandler(feedSvc)
 	dnaHandler := dna.NewHandler(dnaSvc)
 	mediaHandler := media.NewHandler(mediaSvc)
+	discoveryHandler := discovery.NewHandler()
+	vaultHandler := vault.NewHandler()
+	interactionHandler := interaction.NewHandler()
+	voiceprintHandler := voiceprint.NewHandler()
+	paymentHandler := payment.NewHandler()
+	roomHandler := room.NewHandler()
+	messagingHandler := messaging.NewHandler()
+	moderationHandler := moderation.NewHandler()
+	settingsHandler := settings.NewHandler()
 
 	// ── Router ───────────────────────────────────────────────────────────────
 	r := gin.New()
@@ -137,6 +155,15 @@ func main() {
 	feedHandler.RegisterRoutes(protected.Group("/feed"))
 	dnaHandler.RegisterRoutes(protected.Group("/dna"))
 	mediaHandler.RegisterRoutes(protected.Group("/media"))
+	discoveryHandler.RegisterRoutes(protected.Group("/discovery"))
+	vaultHandler.RegisterRoutes(protected.Group("/memories"))
+	interactionHandler.RegisterRoutes(protected.Group("/interactions"))
+	voiceprintHandler.RegisterRoutes(protected.Group("/voiceprints"))
+	paymentHandler.RegisterRoutes(protected.Group("/payments"))
+	roomHandler.RegisterRoutes(protected.Group("/rooms"))
+	messagingHandler.RegisterRoutes(protected.Group("/messages"))
+	moderationHandler.RegisterRoutes(protected.Group("/moderation"))
+	settingsHandler.RegisterRoutes(protected.Group("/settings"))
 
 	// ── Server ───────────────────────────────────────────────────────────────
 	srv := &http.Server{
