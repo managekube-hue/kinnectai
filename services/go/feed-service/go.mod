@@ -12,6 +12,7 @@ require (
 	github.com/neo4j/neo4j-go-driver/v5 v5.22.0
 	github.com/redis/go-redis/v9 v9.6.1
 	github.com/segmentio/kafka-go v0.4.28
+	github.com/stripe/stripe-go/v78 v78.12.0
 	golang.org/x/crypto v0.24.0
 )
 

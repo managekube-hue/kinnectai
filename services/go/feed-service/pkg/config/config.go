@@ -54,6 +54,10 @@ type Config struct {
 	AWSS3BucketMedia   string
 	AWSS3BucketDNACold string
 
+	// Stripe Connect (marketplace seller payouts)
+	StripeSecretKey     string
+	StripeWebhookSecret string
+
 	RateLimitRPM int
 }
 
@@ -106,6 +110,9 @@ func Load() (*Config, error) {
 
 		AWSS3BucketMedia:   getEnv("S3_BUCKET_MEDIA", "kinnectai-media"),
 		AWSS3BucketDNACold: getEnv("S3_BUCKET_DNA_COLD", "kinnectai-dna-glacier"),
+
+		StripeSecretKey:     getEnv("STRIPE_SECRET_KEY", ""),
+		StripeWebhookSecret: getEnv("STRIPE_WEBHOOK_SECRET", ""),
 
 		RateLimitRPM: getEnvInt("RATE_LIMIT_REQUESTS_PER_MINUTE", 60),
 	}

@@ -40,6 +40,7 @@ func (h *Handler) RegisterRoutes(rg *gin.RouterGroup) {
 	rg.POST("/products", h.createListing)
 	rg.GET("/seller/dashboard", h.sellerDashboard)
 	rg.POST("/seller/onboard", h.onboardSeller)
+	rg.POST("/seller/onboard/complete", h.completeSeller)
 
 	// Stripe webhook (no auth -- validated by signature)
 	rg.POST("/webhook/stripe", h.stripeWebhook)
@@ -291,6 +292,29 @@ func (h *Handler) onboardSeller(c *gin.Context) {
 		"data": gin.H{
 			"profile":     profile,
 			"onboard_url": onboardURL,
+		},
+	})
+}
+
+// POST /api/v1/marketplace/seller/onboard/complete
+// Called when seller returns from Stripe Express onboarding.
+// Checks charges_enabled + payouts_enabled (bank/ACH verified).
+func (h *Handler) completeSeller(c *gin.Context) {
+	userID, ok := middleware.GetUserID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
+		return
+	}
+	profile, err := h.svc.CompleteSellerOnboarding(c.Request.Context(), userID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"data": gin.H{
+			"profile":          profile,
+			"payouts_enabled":  profile.StripeOnboarded,
+			"bank_connected":   profile.StripeOnboarded,
 		},
 	})
 }

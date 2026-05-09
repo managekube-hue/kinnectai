@@ -605,22 +605,42 @@ func (s *Service) ListWishlist(ctx context.Context, userID string) ([]Product, e
 // ---------------------------------------------------------------------------
 
 func (s *Service) OnboardSeller(ctx context.Context, userID string, storeName, storeSlug string) (*SellerProfile, string, error) {
-	// Create Stripe Connect Express account
+	// Create Stripe Connect Express account.
+	// Express accounts collect:
+	// - Identity verification (SSN last 4, DOB, address)
+	// - Bank account (routing + account number) for ACH payouts
+	// - Tax information (W-9 / 1099 reporting)
+	// Stripe handles all KYC/AML compliance.
 	params := &stripe.AccountParams{
-		Type: stripe.String("express"),
+		Type:    stripe.String("express"),
+		Country: stripe.String("US"),
 		Capabilities: &stripe.AccountCapabilitiesParams{
 			CardPayments: &stripe.AccountCapabilitiesCardPaymentsParams{Requested: stripe.Bool(true)},
 			Transfers:    &stripe.AccountCapabilitiesTransfersParams{Requested: stripe.Bool(true)},
 		},
+		BusinessType: stripe.String("individual"),
+		// Default payout schedule: weekly on Fridays via ACH
+		Settings: &stripe.AccountSettingsParams{
+			Payouts: &stripe.AccountSettingsPayoutsParams{
+				Schedule: &stripe.PayoutScheduleParams{
+					Interval:  stripe.String("weekly"),
+					WeeklyAnchor: stripe.String("friday"),
+				},
+				// ACH is the default for US accounts -- Stripe collects bank
+				// routing + account number during the Express onboarding flow.
+				// No manual external_account creation needed.
+			},
+		},
 	}
 	params.AddMetadata("kinnect_user_id", userID)
+	params.AddMetadata("kinnect_store_name", storeName)
 
 	acct, err := account.New(params)
 	if err != nil {
-		return nil, "", fmt.Errorf("stripe connect account: %w", err)
+		return nil, "", fmt.Errorf("stripe connect account creation failed: %w", err)
 	}
 
-	// Upsert seller profile
+	// Upsert seller profile with the Stripe account ID
 	_, err = s.db.Exec(ctx, `
 		INSERT INTO seller_profiles (seller_id, store_name, store_slug, stripe_account_id, status)
 		VALUES ($1, $2, $3, $4, 'pending')
@@ -628,19 +648,26 @@ func (s *Service) OnboardSeller(ctx context.Context, userID string, storeName, s
 			store_name = $2, store_slug = $3, stripe_account_id = $4
 	`, userID, storeName, storeSlug, acct.ID)
 	if err != nil {
-		return nil, "", fmt.Errorf("upsert seller: %w", err)
+		return nil, "", fmt.Errorf("upsert seller profile: %w", err)
 	}
 
-	// Create account link for onboarding flow
+	// Create account link for the Express onboarding flow.
+	// This is the URL where Stripe collects:
+	// 1. Legal name + DOB
+	// 2. SSN (last 4 or full depending on volume)
+	// 3. Home address
+	// 4. Bank account (routing number + account number) for ACH payouts
+	// 5. Terms of service acceptance
 	linkParams := &stripe.AccountLinkParams{
 		Account:    stripe.String(acct.ID),
 		RefreshURL: stripe.String("https://kinnect.ai/seller/onboard/refresh"),
 		ReturnURL:  stripe.String("https://kinnect.ai/seller/onboard/complete"),
 		Type:       stripe.String("account_onboarding"),
+		Collect:    stripe.String("eventually_due"),
 	}
 	link, err := accountlink.New(linkParams)
 	if err != nil {
-		return nil, "", fmt.Errorf("stripe account link: %w", err)
+		return nil, "", fmt.Errorf("stripe account link creation failed: %w", err)
 	}
 
 	return &SellerProfile{
@@ -650,6 +677,45 @@ func (s *Service) OnboardSeller(ctx context.Context, userID string, storeName, s
 		StripeAccountID: acct.ID,
 		Status:          "pending",
 	}, link.URL, nil
+}
+
+// CompleteSellerOnboarding is called when the seller returns from Stripe Express.
+// It checks the account's charges_enabled + payouts_enabled status and updates
+// the seller profile accordingly. The bank account (ACH) is now on file.
+func (s *Service) CompleteSellerOnboarding(ctx context.Context, userID string) (*SellerProfile, error) {
+	var stripeAccountID string
+	err := s.db.QueryRow(ctx,
+		`SELECT stripe_account_id FROM seller_profiles WHERE seller_id = $1`, userID,
+	).Scan(&stripeAccountID)
+	if err != nil {
+		return nil, fmt.Errorf("seller not found: %w", err)
+	}
+
+	// Retrieve the account to check onboarding status
+	acct, err := account.GetByID(stripeAccountID, nil)
+	if err != nil {
+		return nil, fmt.Errorf("stripe account retrieval failed: %w", err)
+	}
+
+	// charges_enabled = can accept payments
+	// payouts_enabled = bank account (ACH) is verified and payouts will work
+	onboarded := acct.ChargesEnabled && acct.PayoutsEnabled
+	status := "pending"
+	if onboarded {
+		status = "active"
+	}
+
+	s.db.Exec(ctx, `
+		UPDATE seller_profiles SET stripe_onboarded = $1, status = $2, updated_at = NOW()
+		WHERE seller_id = $3
+	`, onboarded, status, userID)
+
+	return &SellerProfile{
+		SellerID:         userID,
+		StripeAccountID:  stripeAccountID,
+		StripeOnboarded:  onboarded,
+		Status:           status,
+	}, nil
 }
 
 func (s *Service) GetSellerDashboard(ctx context.Context, sellerID string) (*SellerProfile, error) {
