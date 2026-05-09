@@ -19,6 +19,7 @@ import (
 	"github.com/kinnectai/backend/internal/feed"
 	"github.com/kinnectai/backend/internal/graph"
 	"github.com/kinnectai/backend/internal/interaction"
+	"github.com/kinnectai/backend/internal/marketplace"
 	"github.com/kinnectai/backend/internal/media"
 	"github.com/kinnectai/backend/internal/messaging"
 	"github.com/kinnectai/backend/internal/moderation"
@@ -124,6 +125,7 @@ func main() {
 	messagingHandler := messaging.NewHandler()
 	moderationHandler := moderation.NewHandler()
 	settingsHandler := settings.NewHandler()
+	marketplaceHandler := marketplace.NewHandler()
 
 	// ── Router ───────────────────────────────────────────────────────────────
 	r := gin.New()
@@ -164,6 +166,7 @@ func main() {
 	messagingHandler.RegisterRoutes(protected.Group("/messages"))
 	moderationHandler.RegisterRoutes(protected.Group("/moderation"))
 	settingsHandler.RegisterRoutes(protected.Group("/settings"))
+	marketplaceHandler.RegisterRoutes(protected.Group("/marketplace"))
 
 	// ── Server ───────────────────────────────────────────────────────────────
 	srv := &http.Server{
