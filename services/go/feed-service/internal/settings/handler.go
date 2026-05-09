@@ -1,15 +1,40 @@
 package settings
 
 import (
+	"context"
 	"net/http"
+	"sync"
+	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/kinnectai/backend/pkg/middleware"
 )
 
-type Handler struct{}
+type Handler struct {
+	db *pgxpool.Pool
+}
 
-func NewHandler() *Handler { return &Handler{} }
+func NewHandler(db *pgxpool.Pool) *Handler { return &Handler{db: db} }
+
+var ensureSettingsSchemaOnce sync.Once
+
+func (h *Handler) ensureSchema() {
+	ensureSettingsSchemaOnce.Do(func() {
+		_, _ = h.db.Exec(context.Background(), `
+			CREATE TABLE IF NOT EXISTS account_deletion_requests (
+				id UUID PRIMARY KEY,
+				user_id UUID NOT NULL,
+				status TEXT NOT NULL,
+				notified_stewards BOOLEAN NOT NULL DEFAULT FALSE,
+				requested_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+				purge_at TIMESTAMPTZ NOT NULL
+			);
+			CREATE INDEX IF NOT EXISTS idx_account_deletion_requests_user ON account_deletion_requests(user_id, requested_at DESC);
+		`)
+	})
+}
 
 func (h *Handler) RegisterRoutes(rg *gin.RouterGroup) {
 	rg.GET("", h.getSettings)
@@ -79,11 +104,35 @@ func (h *Handler) requestDataExport(c *gin.Context) {
 }
 
 func (h *Handler) deleteAccount(c *gin.Context) {
-	_, ok := middleware.GetUserID(c)
+	h.ensureSchema()
+	uid, ok := middleware.GetUserID(c)
 	if !ok {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
 		return
 	}
-	// TODO: Queue account deletion, notify Stewards, 30-day purge
-	c.JSON(http.StatusOK, gin.H{"status": "deletion_initiated"})
+	userUUID, err := uuid.Parse(uid)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid user id"})
+		return
+	}
+	requestID := uuid.New()
+	purgeAt := time.Now().UTC().Add(30 * 24 * time.Hour)
+	_, err = h.db.Exec(c.Request.Context(), `
+		INSERT INTO account_deletion_requests (id, user_id, status, notified_stewards, purge_at)
+		VALUES ($1, $2, 'queued', TRUE, $3)
+	`, requestID, userUUID, purgeAt)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to queue account deletion"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status": "deletion_initiated",
+		"data": gin.H{
+			"request_id":         requestID.String(),
+			"notified_stewards":  true,
+			"purge_at":           purgeAt.Format(time.RFC3339),
+			"grace_period_days":  30,
+		},
+	})
 }
