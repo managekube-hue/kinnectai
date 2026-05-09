@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../theme/colors.dart';
 
 class NotificationsSettingsScreen extends StatefulWidget {
@@ -47,87 +48,87 @@ class _NotificationsSettingsScreenState extends State<NotificationsSettingsScree
           _buildNotificationTile(
             'Pulses',
             'Reactions and comments on your Memories',
-            Icons.favorite,
+            PhosphorIcons.heart(),
             'pulses',
           ),
           _buildNotificationTile(
             'New Kinnections',
             'Confirmed connections and Discovery matches',
-            Icons.people,
+            PhosphorIcons.usersThree(),
             'kinnections',
           ),
           _buildNotificationTile(
             'Mentions',
             'When you\'re tagged in Memories or comments',
-            Icons.alternate_email,
+            PhosphorIcons.at(),
             'mentions',
           ),
           _buildNotificationTile(
             'Comments',
             'Replies to your Memories',
-            Icons.comment,
+            PhosphorIcons.chatCircleText(),
             'comments',
           ),
           _buildNotificationTile(
             'Messages',
             'Direct messages from Kinnections',
-            Icons.message,
+            PhosphorIcons.chatDots(),
             'messages',
           ),
           _buildNotificationTile(
             'Gatherings',
             'Room invites and reminders',
-            Icons.event,
+            PhosphorIcons.calendarBlank(),
             'gatherings',
           ),
           _buildNotificationTile(
             'Branch Activity',
             'New Memories, Merges, Markers',
-            Icons.account_tree,
+            PhosphorIcons.treeStructure(),
             'branch',
           ),
           _buildNotificationTile(
             'Heartbeat',
             'Daily morning digest (recommended)',
-            Icons.favorite_border,
+            PhosphorIcons.heartbeat(),
             'heartbeat',
             recommended: true,
           ),
           _buildNotificationTile(
             'Echoes',
             'On This Day memory matches',
-            Icons.history,
+            PhosphorIcons.clockCounterClockwise(),
             'echoes',
           ),
           _buildNotificationTile(
             'Memory Box',
             'Vault deliveries and Steward alerts',
-            Icons.lock,
+            PhosphorIcons.lock(),
             'memorybox',
             required: true,
           ),
           _buildNotificationTile(
             'Kinship Alerts',
             'Kin proximity geofence triggers',
-            Icons.location_on,
+            PhosphorIcons.mapPin(),
             'kinshipalerts',
           ),
           _buildNotificationTile(
             'Ripples',
             'Your Memory reaches high engagement',
-            Icons.trending_up,
+            PhosphorIcons.trendUp(),
             'ripples',
           ),
           _buildNotificationTile(
             'Lost Branches',
             'New probable Kinnections found',
-            Icons.search,
+            PhosphorIcons.magnifyingGlass(),
             'lostbranches',
           ),
           _buildNotificationTile(
             'Live Broadcasts',
             'Kin converts Room to Live',
-            Icons.live_tv,
+            PhosphorIcons.broadcast(),
             'live',
           ),
         ],
@@ -148,7 +149,7 @@ class _NotificationsSettingsScreenState extends State<NotificationsSettingsScree
         children: [
           Row(
             children: [
-              Icon(Icons.info_outline, color: KinnectColors.accent, size: 20),
+              Icon(PhosphorIcons.info(), color: KinnectColors.accent, size: 20),
               SizedBox(width: 8),
               Text('Push vs In-App', style: TextStyle(color: KinnectColors.textPrimary, fontWeight: FontWeight.bold)),
             ],

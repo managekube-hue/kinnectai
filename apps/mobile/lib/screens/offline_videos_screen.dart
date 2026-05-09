@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../theme/colors.dart';
 
 class OfflineVideosScreen extends StatelessWidget {
@@ -12,14 +13,14 @@ class OfflineVideosScreen extends StatelessWidget {
         backgroundColor: KinnectColors.surface,
         title: const Text('Offline Videos'),
         actions: [
-          IconButton(icon: const Icon(Icons.delete_sweep), onPressed: () {}),
+          IconButton(icon: Icon(PhosphorIcons.trash(), color: KinnectColors.textPrimary), onPressed: () {}),
         ],
       ),
       body: const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.download_outlined, size: 64, color: KinnectColors.textMuted),
+            Icon(PhosphorIcons.downloadSimple(), size: 64, color: KinnectColors.textMuted),
             SizedBox(height: 16),
             Text('No downloaded Memories', style: TextStyle(color: KinnectColors.textPrimary, fontSize: 18)),
             SizedBox(height: 8),

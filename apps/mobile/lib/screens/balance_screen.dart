@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../theme/colors.dart';
 
 class BalanceScreen extends StatelessWidget {
@@ -16,11 +17,11 @@ class BalanceScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            _buildBalanceCard('Bloom Credits', '12', Icons.auto_awesome, KinnectColors.accent),
+            _buildBalanceCard('Bloom Credits', '12', PhosphorIcons.flower(), KinnectColors.accent),
             const SizedBox(height: 16),
-            _buildBalanceCard('Vault+ Storage', '47 GB / 500 GB', Icons.cloud, KinnectColors.success),
+            _buildBalanceCard('Vault+ Storage', '47 GB / 500 GB', PhosphorIcons.cloud(), KinnectColors.success),
             const SizedBox(height: 16),
-            _buildBalanceCard('Kinnect Card', '\$25.00', Icons.credit_card, KinnectColors.warning),
+            _buildBalanceCard('Kinnect Card', '\$25.00', PhosphorIcons.creditCard(), KinnectColors.warning),
             const Spacer(),
             ElevatedButton(
               onPressed: () {},
