@@ -1,29 +1,20 @@
-class PaginatedResponse<T> {
-  const PaginatedResponse({
-    required this.items,
-    required this.nextCursor,
-    required this.hasMore,
-    this.kinScoreContext,
-  });
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  final List<T> items;
-  final String? nextCursor;
-  final bool hasMore;
-  final double? kinScoreContext;
+part 'paginated_response.freezed.dart';
+part 'paginated_response.g.dart';
+
+@Freezed(genericArgumentFactories: true)
+abstract class PaginatedResponse<T> with _$PaginatedResponse<T> {
+  const factory PaginatedResponse({
+    required List<T> items,
+    @JsonKey(name: 'next_cursor') String? nextCursor,
+    @JsonKey(name: 'has_more') @Default(false) bool hasMore,
+    @JsonKey(name: 'kin_score_context') double? kinScoreContext,
+  }) = _PaginatedResponse<T>;
 
   factory PaginatedResponse.fromJson(
     Map<String, dynamic> json,
-    T Function(Map<String, dynamic>) itemFromJson,
-  ) {
-    final rawItems = (json['items'] as List?) ?? const <dynamic>[];
-    return PaginatedResponse<T>(
-      items: rawItems
-          .whereType<Map<String, dynamic>>()
-          .map(itemFromJson)
-          .toList(),
-      nextCursor: json['next_cursor']?.toString(),
-      hasMore: json['has_more'] as bool? ?? false,
-      kinScoreContext: (json['kin_score_context'] as num?)?.toDouble(),
-    );
-  }
+    T Function(Object?) fromJsonT,
+  ) =>
+      _$PaginatedResponseFromJson(json, fromJsonT);
 }

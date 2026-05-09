@@ -1,44 +1,16 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class SettingsStateDTO extends Equatable {
-  const SettingsStateDTO({
-    required this.pushEnabled,
-    required this.privateAccount,
-    required this.discoveryEnabled,
-  });
+part 'settings_state_dto.freezed.dart';
+part 'settings_state_dto.g.dart';
 
-  final bool pushEnabled;
-  final bool privateAccount;
-  final bool discoveryEnabled;
+@freezed
+abstract class SettingsStateDTO with _$SettingsStateDTO {
+  const factory SettingsStateDTO({
+    @JsonKey(name: 'push_enabled') @Default(true) bool pushEnabled,
+    @JsonKey(name: 'private_account') @Default(true) bool privateAccount,
+    @JsonKey(name: 'discovery_enabled') @Default(true) bool discoveryEnabled,
+  }) = _SettingsStateDTO;
 
-  factory SettingsStateDTO.fromJson(Map<String, dynamic> json) {
-    return SettingsStateDTO(
-      pushEnabled: json['push_enabled'] as bool? ?? true,
-      privateAccount: json['private_account'] as bool? ?? true,
-      discoveryEnabled: json['discovery_enabled'] as bool? ?? true,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'push_enabled': pushEnabled,
-      'private_account': privateAccount,
-      'discovery_enabled': discoveryEnabled,
-    };
-  }
-
-  SettingsStateDTO copyWith({
-    bool? pushEnabled,
-    bool? privateAccount,
-    bool? discoveryEnabled,
-  }) {
-    return SettingsStateDTO(
-      pushEnabled: pushEnabled ?? this.pushEnabled,
-      privateAccount: privateAccount ?? this.privateAccount,
-      discoveryEnabled: discoveryEnabled ?? this.discoveryEnabled,
-    );
-  }
-
-  @override
-  List<Object?> get props => [pushEnabled, privateAccount, discoveryEnabled];
+  factory SettingsStateDTO.fromJson(Map<String, dynamic> json) =>
+      _$SettingsStateDTOFromJson(json);
 }

@@ -1,76 +1,40 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class GraphNodeDTO extends Equatable {
-  const GraphNodeDTO({
-    required this.id,
-    required this.label,
-    required this.nodeType,
-  });
+part 'graph_response_dto.freezed.dart';
+part 'graph_response_dto.g.dart';
 
-  final String id;
-  final String label;
-  final String nodeType;
+@freezed
+abstract class GraphNodeDTO with _$GraphNodeDTO {
+  const factory GraphNodeDTO({
+    required String id,
+    required String label,
+    @JsonKey(name: 'node_type') required String nodeType,
+  }) = _GraphNodeDTO;
 
-  factory GraphNodeDTO.fromJson(Map<String, dynamic> json) {
-    return GraphNodeDTO(
-      id: (json['id'] ?? '').toString(),
-      label: (json['label'] ?? '').toString(),
-      nodeType: (json['node_type'] ?? '').toString(),
-    );
-  }
-
-  @override
-  List<Object?> get props => [id, label, nodeType];
+  factory GraphNodeDTO.fromJson(Map<String, dynamic> json) =>
+      _$GraphNodeDTOFromJson(json);
 }
 
-class GraphEdgeDTO extends Equatable {
-  const GraphEdgeDTO({
-    required this.from,
-    required this.to,
-    required this.relationship,
-    this.confidence,
-  });
+@freezed
+abstract class GraphEdgeDTO with _$GraphEdgeDTO {
+  const factory GraphEdgeDTO({
+    required String from,
+    required String to,
+    required String relationship,
+    double? confidence,
+  }) = _GraphEdgeDTO;
 
-  final String from;
-  final String to;
-  final String relationship;
-  final double? confidence;
-
-  factory GraphEdgeDTO.fromJson(Map<String, dynamic> json) {
-    return GraphEdgeDTO(
-      from: (json['from'] ?? '').toString(),
-      to: (json['to'] ?? '').toString(),
-      relationship: (json['relationship'] ?? '').toString(),
-      confidence: (json['confidence'] as num?)?.toDouble(),
-    );
-  }
-
-  @override
-  List<Object?> get props => [from, to, relationship, confidence];
+  factory GraphEdgeDTO.fromJson(Map<String, dynamic> json) =>
+      _$GraphEdgeDTOFromJson(json);
 }
 
-class GraphResponseDTO extends Equatable {
-  const GraphResponseDTO({required this.nodes, required this.edges});
+@freezed
+abstract class GraphResponseDTO with _$GraphResponseDTO {
+  const factory GraphResponseDTO({
+    required List<GraphNodeDTO> nodes,
+    required List<GraphEdgeDTO> edges,
+  }) = _GraphResponseDTO;
 
-  final List<GraphNodeDTO> nodes;
-  final List<GraphEdgeDTO> edges;
-
-  factory GraphResponseDTO.fromJson(Map<String, dynamic> json) {
-    final rawNodes = (json['nodes'] as List?) ?? const <dynamic>[];
-    final rawEdges = (json['edges'] as List?) ?? const <dynamic>[];
-
-    return GraphResponseDTO(
-      nodes: rawNodes
-          .whereType<Map<String, dynamic>>()
-          .map(GraphNodeDTO.fromJson)
-          .toList(),
-      edges: rawEdges
-          .whereType<Map<String, dynamic>>()
-          .map(GraphEdgeDTO.fromJson)
-          .toList(),
-    );
-  }
-
-  @override
-  List<Object?> get props => [nodes, edges];
+  factory GraphResponseDTO.fromJson(Map<String, dynamic> json) =>
+      _$GraphResponseDTOFromJson(json);
 }
