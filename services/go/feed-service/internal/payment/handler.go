@@ -2,11 +2,13 @@ package payment
 
 import (
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"github.com/kinnectai/backend/pkg/middleware"
+	"github.com/stripe/stripe-go/v78"
+	"github.com/stripe/stripe-go/v78/paymentintent"
 )
 
 type Handler struct{}
@@ -36,16 +38,35 @@ func (h *Handler) initCheckout(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	// TODO: Create Stripe/RevenueCat session
+	stripeKey := os.Getenv("STRIPE_SECRET_KEY")
+	if stripeKey == "" {
+		c.JSON(http.StatusServiceUnavailable, gin.H{"error": "stripe is not configured"})
+		return
+	}
+	stripe.Key = stripeKey
+	intent, err := paymentintent.New(&stripe.PaymentIntentParams{
+		Amount:   stripe.Int64(899),
+		Currency: stripe.String(req.Currency),
+		Metadata: map[string]string{
+			"user_id":    userID,
+			"product_id": req.ProductID,
+		},
+		AutomaticPaymentMethods: &stripe.PaymentIntentAutomaticPaymentMethodsParams{Enabled: stripe.Bool(true)},
+	})
+	if err != nil {
+		c.JSON(http.StatusBadGateway, gin.H{"error": "failed to create payment session"})
+		return
+	}
 	c.JSON(http.StatusCreated, gin.H{
 		"data": gin.H{
-			"session_id":  uuid.New().String(),
+			"session_id":  intent.ID,
 			"product_id":  req.ProductID,
 			"currency":    req.Currency,
 			"amount_cents": 899,
 			"status":      "pending",
 			"created_at":  time.Now().Format(time.RFC3339),
 			"user_id":     userID,
+			"client_secret": intent.ClientSecret,
 		},
 	})
 }

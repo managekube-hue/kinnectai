@@ -116,7 +116,7 @@ func main() {
 	feedHandler := feed.NewHandler(feedSvc)
 	dnaHandler := dna.NewHandler(dnaSvc)
 	mediaHandler := media.NewHandler(mediaSvc)
-	discoveryHandler := discovery.NewHandler()
+	discoveryHandler := discovery.NewHandler(redisClient)
 	vaultHandler := vault.NewHandler()
 	interactionHandler := interaction.NewHandler()
 	voiceprintHandler := voiceprint.NewHandler()

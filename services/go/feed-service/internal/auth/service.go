@@ -1,9 +1,15 @@
 package auth
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
+	"net/http"
+	"net/url"
+	"os"
 	"time"
 
 	"github.com/GetStream/stream-go2/v8"
@@ -151,23 +157,201 @@ func (s *Service) OAuthLogin(ctx context.Context, provider, token string) (*Auth
 // verifyOAuthToken validates a token with the respective provider and
 // returns (providerUID, email, displayName, error).
 func (s *Service) verifyOAuthToken(ctx context.Context, provider, token string) (string, string, string, error) {
+	httpClient := &http.Client{Timeout: 10 * time.Second}
+
 	switch provider {
 	case "google":
-		// TODO: Verify Google ID token via https://oauth2.googleapis.com/tokeninfo?id_token=TOKEN
-		// For now, return placeholder
-		return "google_uid_placeholder", "user@gmail.com", "Google User", nil
+		endpoint := "https://oauth2.googleapis.com/tokeninfo?id_token=" + url.QueryEscape(token)
+		req, _ := http.NewRequestWithContext(ctx, http.MethodGet, endpoint, nil)
+		resp, err := httpClient.Do(req)
+		if err != nil {
+			return "", "", "", fmt.Errorf("google verify request: %w", err)
+		}
+		defer resp.Body.Close()
+		if resp.StatusCode != http.StatusOK {
+			body, _ := io.ReadAll(resp.Body)
+			return "", "", "", fmt.Errorf("google verify failed: %s", string(body))
+		}
+		var payload struct {
+			Sub   string `json:"sub"`
+			Email string `json:"email"`
+			Name  string `json:"name"`
+		}
+		if err := json.NewDecoder(resp.Body).Decode(&payload); err != nil {
+			return "", "", "", fmt.Errorf("google verify decode: %w", err)
+		}
+		if payload.Sub == "" {
+			return "", "", "", errors.New("google token missing subject")
+		}
+		if payload.Email == "" {
+			payload.Email = payload.Sub + "@google.local"
+		}
+		if payload.Name == "" {
+			payload.Name = "Google User"
+		}
+		return payload.Sub, payload.Email, payload.Name, nil
 
 	case "facebook":
-		// TODO: Verify via https://graph.facebook.com/me?access_token=TOKEN&fields=id,email,name
-		return "fb_uid_placeholder", "user@facebook.com", "Facebook User", nil
+		endpoint := "https://graph.facebook.com/me?fields=id,email,name&access_token=" + url.QueryEscape(token)
+		req, _ := http.NewRequestWithContext(ctx, http.MethodGet, endpoint, nil)
+		resp, err := httpClient.Do(req)
+		if err != nil {
+			return "", "", "", fmt.Errorf("facebook verify request: %w", err)
+		}
+		defer resp.Body.Close()
+		if resp.StatusCode != http.StatusOK {
+			body, _ := io.ReadAll(resp.Body)
+			return "", "", "", fmt.Errorf("facebook verify failed: %s", string(body))
+		}
+		var payload struct {
+			ID    string `json:"id"`
+			Email string `json:"email"`
+			Name  string `json:"name"`
+		}
+		if err := json.NewDecoder(resp.Body).Decode(&payload); err != nil {
+			return "", "", "", fmt.Errorf("facebook verify decode: %w", err)
+		}
+		if payload.ID == "" {
+			return "", "", "", errors.New("facebook token missing id")
+		}
+		if payload.Email == "" {
+			payload.Email = payload.ID + "@facebook.local"
+		}
+		if payload.Name == "" {
+			payload.Name = "Facebook User"
+		}
+		return payload.ID, payload.Email, payload.Name, nil
 
 	case "tiktok":
-		// TODO: Exchange auth_code via TikTok Login Kit /oauth/access_token/
-		return "tiktok_uid_placeholder", "user@tiktok.com", "TikTok User", nil
+		clientKey := os.Getenv("TIKTOK_CLIENT_KEY")
+		clientSecret := os.Getenv("TIKTOK_CLIENT_SECRET")
+		redirectURI := os.Getenv("TIKTOK_REDIRECT_URI")
+		if clientKey == "" || clientSecret == "" || redirectURI == "" {
+			return "", "", "", errors.New("tiktok oauth env vars are not configured")
+		}
+
+		form := url.Values{}
+		form.Set("client_key", clientKey)
+		form.Set("client_secret", clientSecret)
+		form.Set("code", token)
+		form.Set("grant_type", "authorization_code")
+		form.Set("redirect_uri", redirectURI)
+
+		req, _ := http.NewRequestWithContext(ctx, http.MethodPost, "https://open.tiktokapis.com/v2/oauth/token/", bytes.NewBufferString(form.Encode()))
+		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+		resp, err := httpClient.Do(req)
+		if err != nil {
+			return "", "", "", fmt.Errorf("tiktok token exchange request: %w", err)
+		}
+		defer resp.Body.Close()
+		if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+			body, _ := io.ReadAll(resp.Body)
+			return "", "", "", fmt.Errorf("tiktok token exchange failed: %s", string(body))
+		}
+		var tokenPayload struct {
+			OpenID      string `json:"open_id"`
+			AccessToken string `json:"access_token"`
+		}
+		if err := json.NewDecoder(resp.Body).Decode(&tokenPayload); err != nil {
+			return "", "", "", fmt.Errorf("tiktok token decode: %w", err)
+		}
+		if tokenPayload.OpenID == "" {
+			return "", "", "", errors.New("tiktok open_id missing")
+		}
+
+		profileReqBody := bytes.NewBufferString(`{"fields":["open_id","display_name","avatar_url"]}`)
+		profileReq, _ := http.NewRequestWithContext(ctx, http.MethodPost, "https://open.tiktokapis.com/v2/user/info/", profileReqBody)
+		profileReq.Header.Set("Content-Type", "application/json")
+		profileReq.Header.Set("Authorization", "Bearer "+tokenPayload.AccessToken)
+		profileResp, err := httpClient.Do(profileReq)
+		if err != nil {
+			return "", "", "", fmt.Errorf("tiktok profile request: %w", err)
+		}
+		defer profileResp.Body.Close()
+		var displayName string
+		if profileResp.StatusCode >= 200 && profileResp.StatusCode < 300 {
+			var profile struct {
+				Data struct {
+					User struct {
+						DisplayName string `json:"display_name"`
+					} `json:"user"`
+				} `json:"data"`
+			}
+			_ = json.NewDecoder(profileResp.Body).Decode(&profile)
+			displayName = profile.Data.User.DisplayName
+		}
+		if displayName == "" {
+			displayName = "TikTok User"
+		}
+		return tokenPayload.OpenID, tokenPayload.OpenID + "@tiktok.local", displayName, nil
 
 	default:
 		return "", "", "", fmt.Errorf("unsupported provider: %s", provider)
 	}
+}
+
+func (s *Service) SendPhoneOTP(ctx context.Context, phone string) error {
+	accountSID := os.Getenv("TWILIO_ACCOUNT_SID")
+	authToken := os.Getenv("TWILIO_AUTH_TOKEN")
+	verifySID := os.Getenv("TWILIO_VERIFY_SERVICE_SID")
+	if accountSID == "" || authToken == "" || verifySID == "" {
+		return errors.New("twilio verify env vars are not configured")
+	}
+
+	endpoint := fmt.Sprintf("https://verify.twilio.com/v2/Services/%s/Verifications", verifySID)
+	form := url.Values{}
+	form.Set("To", phone)
+	form.Set("Channel", "sms")
+
+	req, _ := http.NewRequestWithContext(ctx, http.MethodPost, endpoint, bytes.NewBufferString(form.Encode()))
+	req.SetBasicAuth(accountSID, authToken)
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	resp, err := (&http.Client{Timeout: 10 * time.Second}).Do(req)
+	if err != nil {
+		return fmt.Errorf("twilio send otp request: %w", err)
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+		body, _ := io.ReadAll(resp.Body)
+		return fmt.Errorf("twilio send otp failed: %s", string(body))
+	}
+	return nil
+}
+
+func (s *Service) VerifyPhoneOTP(ctx context.Context, phone, code string) (bool, error) {
+	accountSID := os.Getenv("TWILIO_ACCOUNT_SID")
+	authToken := os.Getenv("TWILIO_AUTH_TOKEN")
+	verifySID := os.Getenv("TWILIO_VERIFY_SERVICE_SID")
+	if accountSID == "" || authToken == "" || verifySID == "" {
+		return false, errors.New("twilio verify env vars are not configured")
+	}
+
+	endpoint := fmt.Sprintf("https://verify.twilio.com/v2/Services/%s/VerificationCheck", verifySID)
+	form := url.Values{}
+	form.Set("To", phone)
+	form.Set("Code", code)
+
+	req, _ := http.NewRequestWithContext(ctx, http.MethodPost, endpoint, bytes.NewBufferString(form.Encode()))
+	req.SetBasicAuth(accountSID, authToken)
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	resp, err := (&http.Client{Timeout: 10 * time.Second}).Do(req)
+	if err != nil {
+		return false, fmt.Errorf("twilio verify otp request: %w", err)
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+		body, _ := io.ReadAll(resp.Body)
+		return false, fmt.Errorf("twilio verify otp failed: %s", string(body))
+	}
+	var payload struct {
+		Status string `json:"status"`
+	}
+	if err := json.NewDecoder(resp.Body).Decode(&payload); err != nil {
+		return false, fmt.Errorf("twilio verify otp decode: %w", err)
+	}
+	return payload.Status == "approved", nil
 }
 
 // GenerateGetStreamToken creates a signed GetStream user token server-side.

@@ -1,8 +1,12 @@
 package room
 
 import (
+	"fmt"
 	"net/http"
+	"os"
+	"time"
 
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/kinnectai/backend/pkg/middleware"
@@ -46,7 +50,7 @@ func (h *Handler) createRoom(c *gin.Context) {
 		"room_id":      uuid.New().String(),
 		"name":         req.Name,
 		"originator":   userID,
-		"sfu_token":    "placeholder_mediasoup_token",
+		"sfu_token":    issueRoomToken(userID, req.Name),
 	})
 }
 
@@ -69,12 +73,12 @@ func (h *Handler) listScheduled(c *gin.Context) {
 }
 
 func (h *Handler) joinRoom(c *gin.Context) {
-	_, ok := middleware.GetUserID(c)
+	uid, ok := middleware.GetUserID(c)
 	if !ok {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"room_id": c.Param("id"), "sfu_token": "placeholder"})
+	c.JSON(http.StatusOK, gin.H{"room_id": c.Param("id"), "sfu_token": issueRoomToken(uid, c.Param("id"))})
 }
 
 func (h *Handler) leaveRoom(c *gin.Context) {
@@ -119,7 +123,12 @@ func (h *Handler) goLive(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"status": "live", "hls_url": "placeholder"})
+	roomID := c.Param("id")
+	hlsBase := os.Getenv("ROOM_HLS_BASE_URL")
+	if hlsBase == "" {
+		hlsBase = "https://stream.kinnectai.com/hls"
+	}
+	c.JSON(http.StatusOK, gin.H{"status": "live", "hls_url": fmt.Sprintf("%s/%s/index.m3u8", hlsBase, roomID)})
 }
 
 func (h *Handler) muteParticipant(c *gin.Context) {
@@ -138,4 +147,26 @@ func (h *Handler) removeParticipant(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"status": "removed", "participant": c.Param("pid")})
+}
+
+func issueRoomToken(userID, roomRef string) string {
+	secret := os.Getenv("ROOM_TOKEN_SECRET")
+	if secret == "" {
+		secret = os.Getenv("JWT_SECRET")
+	}
+	if secret == "" {
+		return ""
+	}
+	claims := jwt.MapClaims{
+		"sub":  userID,
+		"room": roomRef,
+		"exp":  time.Now().Add(2 * time.Hour).Unix(),
+		"iat":  time.Now().Unix(),
+	}
+	t := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	signed, err := t.SignedString([]byte(secret))
+	if err != nil {
+		return ""
+	}
+	return signed
 }

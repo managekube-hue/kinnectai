@@ -136,7 +136,10 @@ func (h *Handler) sendPhoneOTP(c *gin.Context) {
 		return
 	}
 
-	// TODO: Send OTP via Firebase Auth or Twilio
+	if err := h.service.SendPhoneOTP(c.Request.Context(), req.Phone); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to send otp"})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{"status": "otp_sent", "phone": req.Phone})
 }
 
@@ -151,6 +154,14 @@ func (h *Handler) verifyPhoneOTP(c *gin.Context) {
 		return
 	}
 
-	// TODO: Verify OTP, create or login user
+	ok, err := h.service.VerifyPhoneOTP(c.Request.Context(), req.Phone, req.Code)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "otp verification failed"})
+		return
+	}
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid otp code"})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{"status": "verified", "phone": req.Phone})
 }

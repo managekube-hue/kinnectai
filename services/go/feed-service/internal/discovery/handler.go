@@ -1,16 +1,23 @@
 package discovery
 
 import (
+	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/kinnectai/backend/pkg/middleware"
+	"github.com/redis/go-redis/v9"
 )
 
-type Handler struct{}
+type Handler struct {
+	redis *redis.Client
+}
 
-func NewHandler() *Handler { return &Handler{} }
+func NewHandler(redisClient *redis.Client) *Handler {
+	return &Handler{redis: redisClient}
+}
 
 func (h *Handler) RegisterRoutes(rg *gin.RouterGroup) {
 	rg.POST("/candidates", h.fetchCandidates)
@@ -40,10 +47,24 @@ func (h *Handler) fetchCandidates(c *gin.Context) {
 		req.Limit = 10
 	}
 
-	// TODO: Query discovery-service Redis sorted set
+	key := fmt.Sprintf("discovery:candidates:%s", uid.String())
+	members, err := h.redis.ZRevRangeWithScores(c.Request.Context(), key, 0, int64(req.Limit-1)).Result()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to fetch candidates"})
+		return
+	}
+
+	items := make([]gin.H, 0, len(members))
+	for _, m := range members {
+		items = append(items, gin.H{
+			"user_id": m.Member,
+			"score":   m.Score,
+		})
+	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"data": gin.H{
-			"items":       []interface{}{},
+			"items":       items,
 			"next_cursor": nil,
 			"has_more":    false,
 		},
@@ -65,7 +86,15 @@ func (h *Handler) dismissCandidate(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	// TODO: Apply score *= 0.30 penalty in Redis, exclude for 30 days
+	ctx := c.Request.Context()
+	ownerID, _ := middleware.GetUserID(c)
+	candidateKey := fmt.Sprintf("discovery:candidates:%s", ownerID)
+	current, err := h.redis.ZScore(ctx, candidateKey, req.UserID).Result()
+	if err == nil {
+		_ = h.redis.ZAdd(ctx, candidateKey, redis.Z{Member: req.UserID, Score: current * 0.30}).Err()
+	}
+	excludeKey := fmt.Sprintf("discovery:excluded:%s", ownerID)
+	_ = h.redis.Set(ctx, excludeKey+":"+req.UserID, "1", 30*24*time.Hour).Err()
 	c.JSON(http.StatusOK, gin.H{"status": "dismissed"})
 }
 
@@ -76,10 +105,21 @@ func (h *Handler) weeklyBatch(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "unauthorized"})
 		return
 	}
-	// TODO: Return max 10 cards from Redis pool, Sunday reset
+	uid, _ := middleware.GetUserID(c)
+	week := time.Now().UTC().Format("2006-01-02")
+	key := fmt.Sprintf("discovery:weekly:%s:%s", uid, week)
+	members, err := h.redis.ZRevRangeWithScores(c.Request.Context(), key, 0, 9).Result()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to fetch weekly pool"})
+		return
+	}
+	items := make([]gin.H, 0, len(members))
+	for _, m := range members {
+		items = append(items, gin.H{"user_id": m.Member, "score": m.Score})
+	}
 	c.JSON(http.StatusOK, gin.H{
 		"data": gin.H{
-			"items":    []interface{}{},
+			"items":    items,
 			"has_more": false,
 		},
 	})
