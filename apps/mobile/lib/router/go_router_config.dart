@@ -566,15 +566,23 @@ class _NavItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = active ? KinnectColors.accent : KinnectColors.textSecondary;
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, color: color, size: 24),
-          const SizedBox(height: 2),
-          Text(label, style: TextStyle(color: color, fontSize: 11)),
-        ],
+    return Semantics(
+      label: '$label tab${active ? ", selected" : ""}',
+      button: true,
+      selected: active,
+      child: GestureDetector(
+        onTap: onTap,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, color: color, size: 24),
+              const SizedBox(height: 2),
+              ExcludeSemantics(child: Text(label, style: TextStyle(color: color, fontSize: 11))),
+            ],
+          ),
+        ),
       ),
     );
   }

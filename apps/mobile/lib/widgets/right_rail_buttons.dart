@@ -120,43 +120,54 @@ class _InteractionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.3),
-          borderRadius: BorderRadius.circular(KinnectSpacing.radiusLarge),
-        ),
-        padding: const EdgeInsets.all(8),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              icon,
-              color: iconColor,
-              size: KinnectSpacing.iconLarge,
-              shadows: const [
-                Shadow(
-                  color: Colors.black,
-                  blurRadius: 4,
+    return Semantics(
+      label: label.isNotEmpty ? '$label button' : null,
+      button: true,
+      child: GestureDetector(
+        onTap: onTap,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.3),
+              borderRadius: BorderRadius.circular(KinnectSpacing.radiusLarge),
+            ),
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ExcludeSemantics(
+                  child: Icon(
+                    icon,
+                    color: iconColor,
+                    size: KinnectSpacing.iconLarge,
+                    shadows: const [
+                      Shadow(
+                        color: Colors.black,
+                        blurRadius: 4,
+                      ),
+                    ],
+                  ),
                 ),
+                if (label.isNotEmpty) ...[
+                  const SizedBox(height: 4),
+                  ExcludeSemantics(
+                    child: Text(
+                      label,
+                      style: KinnectTextStyles.caption.copyWith(
+                        shadows: const [
+                          Shadow(
+                            color: Colors.black,
+                            blurRadius: 4,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ],
             ),
-            if (label.isNotEmpty) ...[
-              const SizedBox(height: 4),
-              Text(
-                label,
-                style: KinnectTextStyles.caption.copyWith(
-                  shadows: const [
-                    Shadow(
-                      color: Colors.black,
-                      blurRadius: 4,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ],
+          ),
         ),
       ),
     );
