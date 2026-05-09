@@ -2,7 +2,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'cubits/cart_cubit.dart';
@@ -10,9 +9,11 @@ import 'cubits/error_cubit.dart';
 import 'cubits/marketplace_cubit.dart';
 import 'cubits/settings_cubit.dart';
 import 'repositories/marketplace_repository_impl.dart';
+import 'repositories/hive_cart_repository.dart';
 import 'repositories/settings_repository_impl.dart';
 import 'foundation/app_bootstrap.dart';
 import 'foundation/offline/offline_sync_manager.dart';
+import 'services/network/dio_client.dart';
 import 'services/push_notification_service.dart';
 import 'utils/consent_store.dart';
 import 'utils/performance_sla.dart';
@@ -64,20 +65,22 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dio = DioClient.instance();
+
     return MultiBlocProvider(
       providers: [
         BlocProvider<ErrorCubit>.value(value: appErrorCubit),
         BlocProvider<SettingsCubit>(
-          create: (_) => SettingsCubit(SettingsRepositoryImpl(dio: Dio()))..load(),
+          create: (_) => SettingsCubit(SettingsRepositoryImpl(dio: dio))..load(),
         ),
         BlocProvider<MarketplaceCubit>(
           create: (_) => MarketplaceCubit(
-            repository: MarketplaceRepositoryImpl(dio: Dio()),
+            repository: MarketplaceRepositoryImpl(dio: dio),
             errorCubit: appErrorCubit,
           ),
         ),
         BlocProvider<CartCubit>(
-          create: (_) => CartCubit()..load(),
+          create: (_) => CartCubit(repository: HiveCartRepository())..load(),
         ),
       ],
       child: ChangeNotifierProvider<AuthService>.value(

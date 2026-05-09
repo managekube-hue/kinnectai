@@ -1,11 +1,9 @@
-import 'dart:convert';
-
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive/hive.dart';
 
 import '../models/dtos/cart_item_dto.dart';
 import '../models/dtos/marketplace_product_dto.dart';
+import '../repositories/cart_repository.dart';
 
 // ---------------------------------------------------------------------------
 // States
@@ -42,28 +40,16 @@ class CartLoaded extends CartState {
 // ---------------------------------------------------------------------------
 
 class CartCubit extends Cubit<CartState> {
-  CartCubit() : super(CartInitial());
+  CartCubit({required CartRepository repository})
+      : _repository = repository,
+        super(CartInitial());
 
-  static const _boxName = 'marketplace_cart';
-  static const _key = 'cart_items';
+  final CartRepository _repository;
 
   /// Load cart from Hive on startup.
   Future<void> load() async {
-    final box = await Hive.openBox<String>(_boxName);
-    final raw = box.get(_key);
-    if (raw == null || raw.isEmpty) {
-      emit(const CartLoaded([]));
-      return;
-    }
-    try {
-      final decoded = (jsonDecode(raw) as List)
-          .whereType<Map<String, dynamic>>()
-          .map(CartItemDTO.fromJson)
-          .toList();
-      emit(CartLoaded(decoded));
-    } catch (_) {
-      emit(const CartLoaded([]));
-    }
+    final decoded = await _repository.load();
+    emit(CartLoaded(decoded));
   }
 
   /// Add a marketplace product to the cart.
@@ -86,7 +72,7 @@ class CartCubit extends Cubit<CartState> {
           priceCents: product.priceCents,
           currency: product.currency,
           sellerName: product.sellerName,
-          imageUrl: product.imageUrl,
+          imageUrl: product.images.isEmpty ? null : product.images.first.url,
           quantity: quantity,
         ),
       ];
@@ -131,8 +117,6 @@ class CartCubit extends Cubit<CartState> {
   }
 
   Future<void> _persist(List<CartItemDTO> items) async {
-    final box = await Hive.openBox<String>(_boxName);
-    final encoded = jsonEncode(items.map((i) => i.toJson()).toList());
-    await box.put(_key, encoded);
+    await _repository.save(items);
   }
 }

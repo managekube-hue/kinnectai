@@ -44,6 +44,14 @@ class MarketplaceCartScreen extends StatelessWidget {
         listener: (context, mpState) {
           if (mpState is MarketplaceCheckoutReady) {
             context.read<MarketplaceCubit>().presentPaymentSheet();
+          } else if (mpState is MarketplaceCheckoutCompleted) {
+            context.read<CartCubit>().clear();
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Checkout completed successfully.'),
+                backgroundColor: KinnectColors.success,
+              ),
+            );
           }
         },
         builder: (context, mpState) {

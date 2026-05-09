@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 
@@ -99,6 +100,15 @@ class MarketplaceCheckoutReady extends MarketplaceState {
   List<Object?> get props => [session, order];
 }
 
+class MarketplaceCheckoutCompleted extends MarketplaceState {
+  const MarketplaceCheckoutCompleted(this.order);
+
+  final MarketplaceOrderDTO order;
+
+  @override
+  List<Object?> get props => [order];
+}
+
 class MarketplaceOrdersLoaded extends MarketplaceState {
   const MarketplaceOrdersLoaded(this.orders);
 
@@ -177,6 +187,7 @@ class MarketplaceCubit extends Cubit<MarketplaceState> {
   final MarketplaceRepository _repo;
   final ErrorCubit errorCubit;
   Timer? _searchDebounce;
+  CheckoutResult? _pendingCheckout;
 
   /// Wraps all marketplace operations with ErrorBoundaryService classification,
   /// NetworkErrorHandler retry, and ErrorCubit reporting.
@@ -365,6 +376,7 @@ class MarketplaceCubit extends Cubit<MarketplaceState> {
         ),
       );
 
+      _pendingCheckout = result;
       emit(MarketplaceCheckoutReady(result.session, result.order));
     } catch (e, stack) {
       errorCubit.report(
@@ -388,6 +400,11 @@ class MarketplaceCubit extends Cubit<MarketplaceState> {
         operation: 'marketplace_payment_completed',
         dataType: 'order',
       );
+
+      final checkout = _pendingCheckout;
+      if (checkout != null) {
+        emit(MarketplaceCheckoutCompleted(checkout.order));
+      }
     } on StripeException catch (e) {
       // Audit: payment cancelled/failed
       AuditLogger.logDataOperation(
@@ -404,6 +421,8 @@ class MarketplaceCubit extends Cubit<MarketplaceState> {
         error: e,
       );
       emit(MarketplaceError('Payment cancelled: ${e.error.localizedMessage}'));
+    } finally {
+      _pendingCheckout = null;
     }
   }
 
