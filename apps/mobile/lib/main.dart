@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'cubits/cart_cubit.dart';
 import 'cubits/error_cubit.dart';
@@ -28,6 +29,12 @@ void main() async {
   PerformanceSLA.markColdStartBegin();
   WidgetsFlutterBinding.ensureInitialized();
   await AppBootstrap.initialize();
+
+  // Initialize Stripe for marketplace checkout (Stripe Connect)
+  Stripe.publishableKey = const String.fromEnvironment(
+    'STRIPE_PUBLISHABLE_KEY',
+    defaultValue: 'pk_test_placeholder',
+  );
   await appOfflineSync.initialize();
   await ConsentStore.initialize();
   await PushNotificationService.initialize();

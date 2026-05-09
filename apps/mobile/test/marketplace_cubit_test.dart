@@ -8,8 +8,14 @@ import 'package:kinnectai_app/repositories/marketplace_repository.dart';
 
 class MockMarketplaceRepository extends Mock implements MarketplaceRepository {}
 
+class FakeCheckoutItem extends Fake implements CheckoutItem {}
+
 void main() {
   late MockMarketplaceRepository mockRepo;
+
+  setUpAll(() {
+    registerFallbackValue(FakeCheckoutItem());
+  });
 
   final sampleCategories = [
     const MarketplaceCategoryDTO(id: 'books', name: 'Books', icon: 'book', count: 5),
@@ -24,7 +30,9 @@ void main() {
       priceCents: 2999,
       currency: 'USD',
       sellerName: 'Test Seller',
-      rating: 4.5,
+      ratingAvg: 4.5,
+      ratingCount: 12,
+      salesCount: 50,
     ),
     const MarketplaceProductDTO(
       id: 'p2',
@@ -33,7 +41,9 @@ void main() {
       priceCents: 89900,
       currency: 'USD',
       sellerName: 'Travel Co',
-      rating: 4.9,
+      ratingAvg: 4.9,
+      ratingCount: 28,
+      featured: true,
     ),
   ];
 
@@ -43,6 +53,19 @@ void main() {
     hasMore: false,
   );
 
+  final sampleReviews = [
+    ReviewDTO(
+      reviewId: 'r1',
+      productId: 'p1',
+      reviewerName: 'Alice',
+      rating: 5,
+      title: 'Great book',
+      body: 'Loved the family history details.',
+      verifiedPurchase: true,
+      createdAt: DateTime(2024, 1, 1),
+    ),
+  ];
+
   setUp(() {
     mockRepo = MockMarketplaceRepository();
   });
@@ -51,10 +74,17 @@ void main() {
     blocTest<MarketplaceCubit, MarketplaceState>(
       'emits [Loading, Loaded] when load succeeds',
       build: () {
-        when(() => mockRepo.fetchCategories())
-            .thenAnswer((_) async => sampleCategories);
-        when(() => mockRepo.fetchProducts(category: any(named: 'category')))
-            .thenAnswer((_) async => samplePage);
+        when(() => mockRepo.fetchCategories()).thenAnswer((_) async => sampleCategories);
+        when(() => mockRepo.searchProducts(
+          query: any(named: 'query'),
+          category: any(named: 'category'),
+          minPrice: any(named: 'minPrice'),
+          maxPrice: any(named: 'maxPrice'),
+          minRating: any(named: 'minRating'),
+          sortBy: any(named: 'sortBy'),
+          cursor: any(named: 'cursor'),
+          limit: any(named: 'limit'),
+        )).thenAnswer((_) async => samplePage);
         return MarketplaceCubit(repository: mockRepo);
       },
       act: (cubit) => cubit.load(),
@@ -70,10 +100,17 @@ void main() {
     blocTest<MarketplaceCubit, MarketplaceState>(
       'emits [Loading, Error] when load fails',
       build: () {
-        when(() => mockRepo.fetchCategories())
-            .thenThrow(Exception('network error'));
-        when(() => mockRepo.fetchProducts(category: any(named: 'category')))
-            .thenAnswer((_) async => samplePage);
+        when(() => mockRepo.fetchCategories()).thenThrow(Exception('network error'));
+        when(() => mockRepo.searchProducts(
+          query: any(named: 'query'),
+          category: any(named: 'category'),
+          minPrice: any(named: 'minPrice'),
+          maxPrice: any(named: 'maxPrice'),
+          minRating: any(named: 'minRating'),
+          sortBy: any(named: 'sortBy'),
+          cursor: any(named: 'cursor'),
+          limit: any(named: 'limit'),
+        )).thenAnswer((_) async => samplePage);
         return MarketplaceCubit(repository: mockRepo);
       },
       act: (cubit) => cubit.load(),
@@ -86,15 +123,17 @@ void main() {
     blocTest<MarketplaceCubit, MarketplaceState>(
       'emits [Loading, ProductDetail] when fetchProductDetail succeeds',
       build: () {
-        when(() => mockRepo.fetchProduct('p1'))
-            .thenAnswer((_) async => sampleProducts[0]);
+        when(() => mockRepo.getProduct('p1')).thenAnswer((_) async => sampleProducts[0]);
+        when(() => mockRepo.listReviews('p1', cursor: any(named: 'cursor'), limit: any(named: 'limit')))
+            .thenAnswer((_) async => sampleReviews);
         return MarketplaceCubit(repository: mockRepo);
       },
       act: (cubit) => cubit.fetchProductDetail('p1'),
       expect: () => [
         isA<MarketplaceLoading>(),
         isA<MarketplaceProductDetail>()
-            .having((s) => s.product.id, 'product id', 'p1'),
+            .having((s) => s.product.id, 'product id', 'p1')
+            .having((s) => s.reviews.length, 'review count', 1),
       ],
     );
 
@@ -102,18 +141,19 @@ void main() {
       'emits [Loading, ListingCreated] when createListing succeeds',
       build: () {
         when(() => mockRepo.createListing(
-              title: any(named: 'title'),
-              description: any(named: 'description'),
-              category: any(named: 'category'),
-              priceCents: any(named: 'priceCents'),
-              currency: any(named: 'currency'),
-              imageUrl: any(named: 'imageUrl'),
-            )).thenAnswer((_) async => sampleProducts[0]);
+          title: any(named: 'title'),
+          description: any(named: 'description'),
+          category: any(named: 'category'),
+          priceCents: any(named: 'priceCents'),
+          currency: any(named: 'currency'),
+          imageUrls: any(named: 'imageUrls'),
+          tags: any(named: 'tags'),
+        )).thenAnswer((_) async => sampleProducts[0]);
         return MarketplaceCubit(repository: mockRepo);
       },
       act: (cubit) => cubit.createListing(
         title: 'New Book',
-        description: 'A great book',
+        description: 'A great book about genealogy',
         category: 'books',
         priceCents: 1999,
       ),
@@ -124,22 +164,52 @@ void main() {
     );
 
     blocTest<MarketplaceCubit, MarketplaceState>(
-      'emits [Loading, OrderCreated] when placeOrder succeeds',
+      'emits [Loading, OrdersLoaded] when loadOrders succeeds',
       build: () {
-        when(() => mockRepo.createOrder('p1')).thenAnswer((_) async =>
-            const MarketplaceOrderDTO(
-              orderId: 'ord_1',
-              productId: 'p1',
-              status: 'processing',
-              checkoutUrl: 'https://checkout.example.com',
-            ));
+        when(() => mockRepo.listOrders(role: any(named: 'role'))).thenAnswer((_) async => [
+          const MarketplaceOrderDTO(orderId: 'ord_1', status: 'paid', totalCents: 2999),
+        ]);
         return MarketplaceCubit(repository: mockRepo);
       },
-      act: (cubit) => cubit.placeOrder('p1'),
+      act: (cubit) => cubit.loadOrders(),
       expect: () => [
         isA<MarketplaceLoading>(),
-        isA<MarketplaceOrderCreated>()
-            .having((s) => s.order.orderId, 'order id', 'ord_1'),
+        isA<MarketplaceOrdersLoaded>().having((s) => s.orders.length, 'order count', 1),
+      ],
+    );
+
+    blocTest<MarketplaceCubit, MarketplaceState>(
+      'emits [Loading, WishlistLoaded] when loadWishlist succeeds',
+      build: () {
+        when(() => mockRepo.listWishlist()).thenAnswer((_) async => [sampleProducts[0]]);
+        return MarketplaceCubit(repository: mockRepo);
+      },
+      act: (cubit) => cubit.loadWishlist(),
+      expect: () => [
+        isA<MarketplaceLoading>(),
+        isA<MarketplaceWishlistLoaded>().having((s) => s.products.length, 'wishlist count', 1),
+      ],
+    );
+
+    blocTest<MarketplaceCubit, MarketplaceState>(
+      'emits [Loading, SellerDashboard] when loadSellerDashboard succeeds',
+      build: () {
+        when(() => mockRepo.getSellerDashboard()).thenAnswer((_) async => const SellerDashboardDTO(
+          storeName: 'Heritage Press',
+          activeListings: 5,
+          totalSales: 100,
+          totalEarningsCents: 250000,
+          pendingOrders: 3,
+          stripeOnboarded: true,
+        ));
+        return MarketplaceCubit(repository: mockRepo);
+      },
+      act: (cubit) => cubit.loadSellerDashboard(),
+      expect: () => [
+        isA<MarketplaceLoading>(),
+        isA<MarketplaceSellerDashboard>()
+            .having((s) => s.dashboard.storeName, 'store name', 'Heritage Press')
+            .having((s) => s.dashboard.activeListings, 'listings', 5),
       ],
     );
   });

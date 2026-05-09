@@ -1,45 +1,55 @@
 import '../models/dtos/marketplace_product_dto.dart';
 
 /// Contract for marketplace data access.
-/// Backend endpoints: GET /marketplace/products, GET /marketplace/products/:id,
-/// POST /marketplace/products, GET /marketplace/categories,
-/// POST /marketplace/orders, GET /marketplace/orders,
-/// GET /marketplace/seller/dashboard.
+/// Maps 1:1 to Go backend /api/v1/marketplace/* endpoints.
 abstract class MarketplaceRepository {
-  /// Fetch paginated product list, optionally filtered by [category].
-  Future<MarketplaceProductsPage> fetchProducts({
+  // -- Products --
+  Future<MarketplaceProductsPage> searchProducts({
+    String? query,
     String? category,
+    int? minPrice,
+    int? maxPrice,
+    double? minRating,
+    String sortBy = 'featured',
     String? cursor,
     int limit = 20,
   });
 
-  /// Fetch a single product by [id].
-  Future<MarketplaceProductDTO> fetchProduct(String id);
+  Future<MarketplaceProductDTO> getProduct(String id);
 
-  /// List marketplace categories.
-  Future<List<MarketplaceCategoryDTO>> fetchCategories();
-
-  /// Create a new seller listing.
   Future<MarketplaceProductDTO> createListing({
     required String title,
     required String description,
     required String category,
     required int priceCents,
     String currency = 'USD',
-    String? imageUrl,
+    List<String> imageUrls = const [],
+    List<String> tags = const [],
   });
 
-  /// Place an order for a product, returns a checkout URL.
-  Future<MarketplaceOrderDTO> createOrder(String productId);
+  // -- Categories --
+  Future<List<MarketplaceCategoryDTO>> fetchCategories();
 
-  /// Fetch current user's orders.
-  Future<List<MarketplaceOrderDTO>> fetchOrders();
+  // -- Checkout (Stripe Connect) --
+  Future<CheckoutResult> createCheckout(List<CheckoutItem> items);
 
-  /// Fetch seller dashboard stats.
-  Future<SellerDashboardDTO> fetchSellerDashboard();
+  // -- Orders --
+  Future<List<MarketplaceOrderDTO>> listOrders({String role = 'buyer'});
+  Future<MarketplaceOrderDTO> getOrder(String orderId);
+
+  // -- Reviews --
+  Future<List<ReviewDTO>> listReviews(String productId, {String? cursor, int limit = 20});
+  Future<ReviewDTO> createReview(String productId, {required int rating, String? title, String? body});
+
+  // -- Wishlist --
+  Future<bool> toggleWishlist(String productId);
+  Future<List<MarketplaceProductDTO>> listWishlist();
+
+  // -- Seller --
+  Future<SellerDashboardDTO> getSellerDashboard();
+  Future<SellerOnboardResult> onboardSeller({required String storeName, required String storeSlug});
 }
 
-/// Lightweight page wrapper for marketplace products.
 class MarketplaceProductsPage {
   const MarketplaceProductsPage({
     required this.items,
@@ -50,4 +60,27 @@ class MarketplaceProductsPage {
   final List<MarketplaceProductDTO> items;
   final String? nextCursor;
   final bool hasMore;
+}
+
+class CheckoutItem {
+  const CheckoutItem({required this.productId, this.quantity = 1});
+
+  final String productId;
+  final int quantity;
+
+  Map<String, dynamic> toJson() => {'product_id': productId, 'quantity': quantity};
+}
+
+class CheckoutResult {
+  const CheckoutResult({required this.session, required this.order});
+
+  final CheckoutSessionDTO session;
+  final MarketplaceOrderDTO order;
+}
+
+class SellerOnboardResult {
+  const SellerOnboardResult({required this.dashboard, required this.onboardUrl});
+
+  final SellerDashboardDTO dashboard;
+  final String onboardUrl;
 }

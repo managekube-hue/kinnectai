@@ -52,6 +52,19 @@ dependencies:
   libsignal_protocol_dart: ^0.7.0
   cached_network_image: ^3.4.1
 
+  # Marketplace / E-commerce OSS packages
+  flutter_stripe: ^11.3.0             # Production Stripe Connect checkout
+  infinite_scroll_pagination: ^4.1.0  # Battle-tested paginated lists
+  shimmer: ^3.0.0                     # Loading skeleton placeholders
+  carousel_slider: ^5.0.0             # Product image carousels
+  flutter_rating_bar: ^4.0.1          # Star ratings / reviews
+  flutter_slidable: ^3.1.1            # Swipe-to-delete cart items
+  badges: ^3.1.2                      # Cart badge count overlay
+  collection: ^1.18.0                 # groupBy, sorting utilities
+  intl: ^0.19.0                       # Currency formatting
+  share_plus: ^10.1.4                 # Share product links
+  flutter_staggered_grid_view: ^0.7.0 # Pinterest-style product grid
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

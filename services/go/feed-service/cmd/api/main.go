@@ -125,7 +125,8 @@ func main() {
 	messagingHandler := messaging.NewHandler()
 	moderationHandler := moderation.NewHandler()
 	settingsHandler := settings.NewHandler()
-	marketplaceHandler := marketplace.NewHandler()
+	marketplaceSvc := marketplace.NewService(pg, cfg.StripeSecretKey)
+	marketplaceHandler := marketplace.NewHandler(marketplaceSvc, cfg.StripeWebhookSecret)
 
 	// ── Router ───────────────────────────────────────────────────────────────
 	r := gin.New()

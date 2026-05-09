@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 
 import '../models/dtos/marketplace_product_dto.dart';
 import '../repositories/marketplace_repository.dart';
@@ -24,6 +27,8 @@ class MarketplaceLoaded extends MarketplaceState {
     required this.products,
     required this.categories,
     this.selectedCategory,
+    this.searchQuery,
+    this.sortBy = 'featured',
     this.nextCursor,
     this.hasMore = false,
     this.isLoadingMore = false,
@@ -32,6 +37,8 @@ class MarketplaceLoaded extends MarketplaceState {
   final List<MarketplaceProductDTO> products;
   final List<MarketplaceCategoryDTO> categories;
   final String? selectedCategory;
+  final String? searchQuery;
+  final String sortBy;
   final String? nextCursor;
   final bool hasMore;
   final bool isLoadingMore;
@@ -40,6 +47,8 @@ class MarketplaceLoaded extends MarketplaceState {
     List<MarketplaceProductDTO>? products,
     List<MarketplaceCategoryDTO>? categories,
     String? selectedCategory,
+    String? searchQuery,
+    String? sortBy,
     String? nextCursor,
     bool? hasMore,
     bool? isLoadingMore,
@@ -48,6 +57,8 @@ class MarketplaceLoaded extends MarketplaceState {
       products: products ?? this.products,
       categories: categories ?? this.categories,
       selectedCategory: selectedCategory ?? this.selectedCategory,
+      searchQuery: searchQuery ?? this.searchQuery,
+      sortBy: sortBy ?? this.sortBy,
       nextCursor: nextCursor ?? this.nextCursor,
       hasMore: hasMore ?? this.hasMore,
       isLoadingMore: isLoadingMore ?? this.isLoadingMore,
@@ -56,16 +67,59 @@ class MarketplaceLoaded extends MarketplaceState {
 
   @override
   List<Object?> get props =>
-      [products, categories, selectedCategory, nextCursor, hasMore, isLoadingMore];
+      [products, categories, selectedCategory, searchQuery, sortBy, nextCursor, hasMore, isLoadingMore];
 }
 
 class MarketplaceProductDetail extends MarketplaceState {
-  const MarketplaceProductDetail(this.product);
+  const MarketplaceProductDetail({
+    required this.product,
+    this.reviews = const [],
+    this.isWishlisted = false,
+  });
 
   final MarketplaceProductDTO product;
+  final List<ReviewDTO> reviews;
+  final bool isWishlisted;
 
   @override
-  List<Object?> get props => [product];
+  List<Object?> get props => [product, reviews, isWishlisted];
+}
+
+class MarketplaceCheckoutReady extends MarketplaceState {
+  const MarketplaceCheckoutReady(this.session, this.order);
+
+  final CheckoutSessionDTO session;
+  final MarketplaceOrderDTO order;
+
+  @override
+  List<Object?> get props => [session, order];
+}
+
+class MarketplaceOrdersLoaded extends MarketplaceState {
+  const MarketplaceOrdersLoaded(this.orders);
+
+  final List<MarketplaceOrderDTO> orders;
+
+  @override
+  List<Object?> get props => [orders];
+}
+
+class MarketplaceOrderDetail extends MarketplaceState {
+  const MarketplaceOrderDetail(this.order);
+
+  final MarketplaceOrderDTO order;
+
+  @override
+  List<Object?> get props => [order];
+}
+
+class MarketplaceSellerDashboard extends MarketplaceState {
+  const MarketplaceSellerDashboard(this.dashboard);
+
+  final SellerDashboardDTO dashboard;
+
+  @override
+  List<Object?> get props => [dashboard];
 }
 
 class MarketplaceListingCreated extends MarketplaceState {
@@ -77,13 +131,22 @@ class MarketplaceListingCreated extends MarketplaceState {
   List<Object?> get props => [product];
 }
 
-class MarketplaceOrderCreated extends MarketplaceState {
-  const MarketplaceOrderCreated(this.order);
+class MarketplaceSellerOnboarding extends MarketplaceState {
+  const MarketplaceSellerOnboarding(this.onboardUrl);
 
-  final MarketplaceOrderDTO order;
+  final String onboardUrl;
 
   @override
-  List<Object?> get props => [order];
+  List<Object?> get props => [onboardUrl];
+}
+
+class MarketplaceWishlistLoaded extends MarketplaceState {
+  const MarketplaceWishlistLoaded(this.products);
+
+  final List<MarketplaceProductDTO> products;
+
+  @override
+  List<Object?> get props => [products];
 }
 
 class MarketplaceError extends MarketplaceState {
@@ -101,43 +164,44 @@ class MarketplaceError extends MarketplaceState {
 
 class MarketplaceCubit extends Cubit<MarketplaceState> {
   MarketplaceCubit({required MarketplaceRepository repository})
-      : _repository = repository,
+      : _repo = repository,
         super(MarketplaceInitial());
 
-  final MarketplaceRepository _repository;
+  final MarketplaceRepository _repo;
+  Timer? _searchDebounce;
 
-  /// Load categories and the initial product page.
+  // -- Product browsing -------------------------------------------------------
+
   Future<void> load({String? category}) async {
     emit(MarketplaceLoading());
     try {
       final results = await Future.wait([
-        _repository.fetchCategories(),
-        _repository.fetchProducts(category: category),
+        _repo.fetchCategories(),
+        _repo.searchProducts(category: category),
       ]);
-
-      final categories = results[0] as List<MarketplaceCategoryDTO>;
-      final page = results[1] as MarketplaceProductsPage;
-
       emit(MarketplaceLoaded(
-        products: page.items,
-        categories: categories,
+        products: (results[1] as MarketplaceProductsPage).items,
+        categories: results[0] as List<MarketplaceCategoryDTO>,
         selectedCategory: category,
-        nextCursor: page.nextCursor,
-        hasMore: page.hasMore,
+        nextCursor: (results[1] as MarketplaceProductsPage).nextCursor,
+        hasMore: (results[1] as MarketplaceProductsPage).hasMore,
       ));
     } catch (e) {
       emit(MarketplaceError('Failed to load marketplace: $e'));
     }
   }
 
-  /// Filter by category. Pass null for "All".
   Future<void> filterByCategory(String? category) async {
     final current = state;
     if (current is! MarketplaceLoaded) return;
 
     emit(MarketplaceLoading());
     try {
-      final page = await _repository.fetchProducts(category: category);
+      final page = await _repo.searchProducts(
+        category: category,
+        query: current.searchQuery,
+        sortBy: current.sortBy,
+      );
       emit(current.copyWith(
         products: page.items,
         selectedCategory: category,
@@ -145,19 +209,72 @@ class MarketplaceCubit extends Cubit<MarketplaceState> {
         hasMore: page.hasMore,
       ));
     } catch (e) {
-      emit(MarketplaceError('Failed to filter products: $e'));
+      emit(MarketplaceError('Failed to filter: $e'));
     }
   }
 
-  /// Infinite scroll: load more products.
+  /// Debounced search -- waits 400ms after last keystroke.
+  void search(String query) {
+    _searchDebounce?.cancel();
+    _searchDebounce = Timer(const Duration(milliseconds: 400), () {
+      _executeSearch(query);
+    });
+  }
+
+  Future<void> _executeSearch(String query) async {
+    final current = state;
+    if (current is! MarketplaceLoaded) return;
+
+    emit(MarketplaceLoading());
+    try {
+      final page = await _repo.searchProducts(
+        query: query.isEmpty ? null : query,
+        category: current.selectedCategory,
+        sortBy: current.sortBy,
+      );
+      emit(current.copyWith(
+        products: page.items,
+        searchQuery: query,
+        nextCursor: page.nextCursor,
+        hasMore: page.hasMore,
+      ));
+    } catch (e) {
+      emit(MarketplaceError('Search failed: $e'));
+    }
+  }
+
+  Future<void> changeSortBy(String sortBy) async {
+    final current = state;
+    if (current is! MarketplaceLoaded) return;
+
+    emit(MarketplaceLoading());
+    try {
+      final page = await _repo.searchProducts(
+        query: current.searchQuery,
+        category: current.selectedCategory,
+        sortBy: sortBy,
+      );
+      emit(current.copyWith(
+        products: page.items,
+        sortBy: sortBy,
+        nextCursor: page.nextCursor,
+        hasMore: page.hasMore,
+      ));
+    } catch (e) {
+      emit(MarketplaceError('Sort failed: $e'));
+    }
+  }
+
   Future<void> loadMore() async {
     final current = state;
     if (current is! MarketplaceLoaded || !current.hasMore || current.isLoadingMore) return;
 
     emit(current.copyWith(isLoadingMore: true));
     try {
-      final page = await _repository.fetchProducts(
+      final page = await _repo.searchProducts(
+        query: current.searchQuery,
         category: current.selectedCategory,
+        sortBy: current.sortBy,
         cursor: current.nextCursor,
       );
       emit(current.copyWith(
@@ -166,40 +283,146 @@ class MarketplaceCubit extends Cubit<MarketplaceState> {
         hasMore: page.hasMore,
         isLoadingMore: false,
       ));
-    } catch (e) {
+    } catch (_) {
       emit(current.copyWith(isLoadingMore: false));
     }
   }
 
-  /// Fetch a single product's details.
+  // -- Product detail ---------------------------------------------------------
+
   Future<void> fetchProductDetail(String productId) async {
     emit(MarketplaceLoading());
     try {
-      final product = await _repository.fetchProduct(productId);
-      emit(MarketplaceProductDetail(product));
+      final results = await Future.wait([
+        _repo.getProduct(productId),
+        _repo.listReviews(productId),
+      ]);
+      emit(MarketplaceProductDetail(
+        product: results[0] as MarketplaceProductDTO,
+        reviews: results[1] as List<ReviewDTO>,
+      ));
     } catch (e) {
       emit(MarketplaceError('Failed to load product: $e'));
     }
   }
 
-  /// Create a seller listing.
+  // -- Checkout (Stripe Connect via flutter_stripe) ---------------------------
+
+  Future<void> initiateCheckout(List<CheckoutItem> items) async {
+    emit(MarketplaceLoading());
+    try {
+      final result = await _repo.createCheckout(items);
+
+      // Initialize Stripe payment sheet with the server-side session
+      await Stripe.instance.initPaymentSheet(
+        paymentSheetParameters: SetupPaymentSheetParameters(
+          paymentIntentClientSecret: result.session.clientSecret,
+          customerEphemeralKeySecret: result.session.ephemeralKey,
+          customerId: result.session.customerId,
+          merchantDisplayName: 'KinnectAI Marketplace',
+          style: ThemeMode.dark,
+        ),
+      );
+
+      emit(MarketplaceCheckoutReady(result.session, result.order));
+    } catch (e) {
+      emit(MarketplaceError('Checkout failed: $e'));
+    }
+  }
+
+  /// Call after MarketplaceCheckoutReady -- presents the Stripe payment sheet.
+  Future<void> presentPaymentSheet() async {
+    try {
+      await Stripe.instance.presentPaymentSheet();
+      // Payment succeeded -- webhook will update order status server-side
+    } on StripeException catch (e) {
+      emit(MarketplaceError('Payment cancelled: ${e.error.localizedMessage}'));
+    }
+  }
+
+  // -- Reviews ----------------------------------------------------------------
+
+  Future<void> submitReview(String productId, {required int rating, String? title, String? body}) async {
+    try {
+      await _repo.createReview(productId, rating: rating, title: title, body: body);
+      // Refresh product detail
+      fetchProductDetail(productId);
+    } catch (e) {
+      emit(MarketplaceError('Review failed: $e'));
+    }
+  }
+
+  // -- Wishlist ---------------------------------------------------------------
+
+  Future<void> toggleWishlist(String productId) async {
+    try {
+      await _repo.toggleWishlist(productId);
+    } catch (_) {
+      // Silently fail -- optimistic UI
+    }
+  }
+
+  Future<void> loadWishlist() async {
+    emit(MarketplaceLoading());
+    try {
+      final products = await _repo.listWishlist();
+      emit(MarketplaceWishlistLoaded(products));
+    } catch (e) {
+      emit(MarketplaceError('Failed to load wishlist: $e'));
+    }
+  }
+
+  // -- Orders -----------------------------------------------------------------
+
+  Future<void> loadOrders({String role = 'buyer'}) async {
+    emit(MarketplaceLoading());
+    try {
+      final orders = await _repo.listOrders(role: role);
+      emit(MarketplaceOrdersLoaded(orders));
+    } catch (e) {
+      emit(MarketplaceError('Failed to load orders: $e'));
+    }
+  }
+
+  Future<void> loadOrderDetail(String orderId) async {
+    emit(MarketplaceLoading());
+    try {
+      final order = await _repo.getOrder(orderId);
+      emit(MarketplaceOrderDetail(order));
+    } catch (e) {
+      emit(MarketplaceError('Failed to load order: $e'));
+    }
+  }
+
+  // -- Seller -----------------------------------------------------------------
+
+  Future<void> loadSellerDashboard() async {
+    emit(MarketplaceLoading());
+    try {
+      final dashboard = await _repo.getSellerDashboard();
+      emit(MarketplaceSellerDashboard(dashboard));
+    } catch (e) {
+      emit(MarketplaceError('Failed to load dashboard: $e'));
+    }
+  }
+
   Future<void> createListing({
     required String title,
     required String description,
     required String category,
     required int priceCents,
-    String currency = 'USD',
-    String? imageUrl,
+    List<String> imageUrls = const [],
+    List<String> tags = const [],
   }) async {
     emit(MarketplaceLoading());
     try {
-      final product = await _repository.createListing(
+      final product = await _repo.createListing(
         title: title,
         description: description,
         category: category,
         priceCents: priceCents,
-        currency: currency,
-        imageUrl: imageUrl,
+        imageUrls: imageUrls,
+        tags: tags,
       );
       emit(MarketplaceListingCreated(product));
     } catch (e) {
@@ -207,14 +430,19 @@ class MarketplaceCubit extends Cubit<MarketplaceState> {
     }
   }
 
-  /// Place an order (redirects to Stripe checkout).
-  Future<void> placeOrder(String productId) async {
+  Future<void> onboardAsSeller({required String storeName, required String storeSlug}) async {
     emit(MarketplaceLoading());
     try {
-      final order = await _repository.createOrder(productId);
-      emit(MarketplaceOrderCreated(order));
+      final result = await _repo.onboardSeller(storeName: storeName, storeSlug: storeSlug);
+      emit(MarketplaceSellerOnboarding(result.onboardUrl));
     } catch (e) {
-      emit(MarketplaceError('Failed to place order: $e'));
+      emit(MarketplaceError('Seller onboarding failed: $e'));
     }
+  }
+
+  @override
+  Future<void> close() {
+    _searchDebounce?.cancel();
+    return super.close();
   }
 }
