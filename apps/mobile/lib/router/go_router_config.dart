@@ -31,6 +31,7 @@ import '../screens/legal_document_screen.dart';
 import '../screens/line_screen.dart';
 import '../screens/login_screen.dart';
 import '../screens/memory_box_screen.dart';
+import '../screens/memory_box_settings_screen.dart';
 import '../screens/messaging_screen.dart';
 import '../screens/memory_detail_screen.dart';
 import '../screens/memory_edit_screen.dart';
@@ -417,6 +418,12 @@ class AppGoRouter {
         path: '/subscription',
         builder: (BuildContext context, GoRouterState state) =>
             const SubscriptionScreen(),
+      ),
+      // --- Memory Box Settings ---
+      GoRoute(
+        path: '/settings/memory-box',
+        builder: (BuildContext context, GoRouterState state) =>
+            const MemoryBoxSettingsScreen(),
       ),
       // --- DM / Messaging ---
       GoRoute(

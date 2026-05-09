@@ -39,7 +39,7 @@ class SettingsScreen extends StatelessWidget {
           ]),
           _buildSection(context, 'Family', [
             _buildItem(context, 'Family Pairing', 'Teen safety controls', PhosphorIcons.usersThree(), '/settings/family-pairing'),
-            _buildItem(context, 'Memory Box', 'Vault settings, Steward', PhosphorIcons.lock(), '/memory-box'),
+            _buildItem(context, 'Memory Box', 'Vault settings, Steward', PhosphorIcons.lock(), '/settings/memory-box'),
           ]),
           _buildSection(context, 'Account & Security', [
             _buildItem(context, 'Account', 'Password, verification, data', PhosphorIcons.user(), '/settings/account'),
