@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../theme/colors.dart';
 
 class HelpCenterScreen extends StatefulWidget {
@@ -145,7 +146,7 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
         children: topic.articles.map((article) => ListTile(
           title: Text(article.title, style: const TextStyle(color: KinnectColors.textPrimary, fontSize: 14)),
           subtitle: Text(article.subtitle, style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
-          trailing: const Icon(Icons.chevron_right, color: KinnectColors.textMuted, size: 20),
+          trailing: const Icon(PhosphorIcons.caretRight(), color: KinnectColors.textMuted, size: 20),
           onTap: () => _showArticle(article),
         )).toList(),
       ),

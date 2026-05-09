@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../router/app_nav.dart';
 import '../theme/colors.dart';
 
@@ -118,7 +119,7 @@ class _ActivityCenterScreenState extends State<ActivityCenterScreen> with Single
               },
               child: const Text('Clear', style: TextStyle(color: KinnectColors.error)),
             )
-          : const Icon(Icons.chevron_right, color: KinnectColors.textMuted),
+          : Icon(PhosphorIcons.caretRight(), color: KinnectColors.textMuted),
       onTap: onTap,
     );
   }

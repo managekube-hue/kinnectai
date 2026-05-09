@@ -1,4 +1,5 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../router/app_nav.dart';
 import 'package:provider/provider.dart';
 import '../services/auth_service.dart';
@@ -72,7 +73,7 @@ class _RootScreenState extends State<RootScreen> {
                 leading: const Icon(Icons.family_restroom, color: Colors.deepPurple),
                 title: const Text('Kinnections'),
                 subtitle: const Text('Manage your family connections'),
-                trailing: const Icon(Icons.chevron_right),
+                trailing: Icon(PhosphorIcons.caretRight()),
                 onTap: () {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Kinnections management coming soon!')),
@@ -86,7 +87,7 @@ class _RootScreenState extends State<RootScreen> {
                 leading: const Icon(Icons.science, color: Colors.deepPurple),
                 title: const Text('DNA Kit'),
                 subtitle: const Text('Submit or check DNA kit status'),
-                trailing: const Icon(Icons.chevron_right),
+                trailing: Icon(PhosphorIcons.caretRight()),
                 onTap: () {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('DNA kit management coming soon!')),
@@ -100,7 +101,7 @@ class _RootScreenState extends State<RootScreen> {
                 leading: const Icon(Icons.people, color: Colors.deepPurple),
                 title: const Text('Surname Search'),
                 subtitle: const Text('Find relatives by surname'),
-                trailing: const Icon(Icons.chevron_right),
+                trailing: Icon(PhosphorIcons.caretRight()),
                 onTap: () {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Surname search coming soon!')),

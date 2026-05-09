@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../theme/colors.dart';
 
 class PrivacySettingsScreen extends StatefulWidget {
@@ -64,7 +65,7 @@ class _PrivacySettingsScreenState extends State<PrivacySettingsScreen> {
             ListTile(
               title: const Text('Interaction Permissions', style: TextStyle(color: KinnectColors.textPrimary)),
               subtitle: const Text('Who can Pulse, DM, Stitch', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
-              trailing: const Icon(Icons.chevron_right, color: KinnectColors.textMuted),
+              trailing: Icon(PhosphorIcons.caretRight(), color: KinnectColors.textMuted),
               onTap: _showInteractionPermissions,
             ),
           ]),
@@ -84,13 +85,13 @@ class _PrivacySettingsScreenState extends State<PrivacySettingsScreen> {
             ListTile(
               title: const Text('DNA Kit Connection', style: TextStyle(color: KinnectColors.textPrimary)),
               subtitle: const Text('Manage Sequencing.com OAuth', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
-              trailing: const Icon(Icons.chevron_right, color: KinnectColors.textMuted),
+              trailing: Icon(PhosphorIcons.caretRight(), color: KinnectColors.textMuted),
               onTap: () {},
             ),
             ListTile(
               title: const Text('Raw Data Deletion', style: TextStyle(color: KinnectColors.error)),
               subtitle: const Text('Delete FASTQ/BAM files (irreversible)', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
-              trailing: const Icon(Icons.warning, color: KinnectColors.error),
+              trailing: Icon(PhosphorIcons.warning(), color: KinnectColors.error),
               onTap: _showDeleteDataWarning,
             ),
           ]),
@@ -105,7 +106,7 @@ class _PrivacySettingsScreenState extends State<PrivacySettingsScreen> {
             ListTile(
               title: const Text('Third-Party Sharing Opt-Out', style: TextStyle(color: KinnectColors.textPrimary)),
               subtitle: const Text('NielsenIQ, Facteus data sharing', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
-              trailing: const Icon(Icons.chevron_right, color: KinnectColors.textMuted),
+              trailing: Icon(PhosphorIcons.caretRight(), color: KinnectColors.textMuted),
               onTap: () {},
             ),
           ]),

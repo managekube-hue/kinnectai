@@ -1,4 +1,5 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../router/app_nav.dart';
 import '../theme/design_system.dart';
 
@@ -368,7 +369,7 @@ class _IdentityCard extends StatelessWidget {
                 ],
               ),
             ),
-            const Icon(Icons.chevron_right_rounded, color: DesignColors.darkSecondaryText),
+            const Icon(PhosphorIcons.caretRight()_rounded, color: DesignColors.darkSecondaryText),
           ],
         ),
       ),
