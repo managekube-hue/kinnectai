@@ -1,0 +1,4 @@
+# OpenTelemetry Collector
+# Centralizes metrics, logs, traces before delivery to Prometheus/Loki/Jaeger
+
+# Configuration: receivers (otlp, prometheus), exporters (prometheus, otlp), processors

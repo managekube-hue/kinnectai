@@ -1,0 +1,5 @@
+# Loki Log Aggregation
+# Structured logs from all services, GDPR Art. 15 audit trail
+
+# Configuration: logs_config, storage_config (S3/filesystem)
+# Query: search by user_id (hashed), service, timestamp, correlation_id

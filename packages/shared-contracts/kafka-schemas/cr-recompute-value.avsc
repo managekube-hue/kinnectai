@@ -1,0 +1,12 @@
+{
+  "namespace": "com.kinnectai.kernel",
+  "type": "record",
+  "name": "CRRecompute",
+  "fields": [
+    {"name": "pair_id", "type": "string", "doc": "user_a:user_b (lexicographically sorted)"},
+    {"name": "trigger_source", "type": {"type": "enum", "symbols": ["DNA_INGEST","IDENTITY_ENRICH","BEHAVIORAL_BATCH","DISCOVERY_SWIPE"]}},
+    {"name": "requested_at", "type": "long", "logicalType": "timestamp-millis"},
+    {"name": "priority", "type": {"type": "enum", "symbols": ["HIGH","NORMAL","LOW"]}, "default": "NORMAL"},
+    {"name": "model_version", "type": "string"}
+  ]
+}

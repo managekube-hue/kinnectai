@@ -1,0 +1,16 @@
+{
+  "namespace": "com.kinnectai.behavioral",
+  "type": "record",
+  "name": "BehavioralEvent",
+  "fields": [
+    {"name": "event_id", "type": "string"},
+    {"name": "user_id", "type": "string"},
+    {"name": "event_type", "type": {"type": "enum", "symbols": ["VIEW","PULSE","COMMENT","SEARCH","CREATE","SHARE","ROOM_JOIN","VAULT_SEAL"]}},
+    {"name": "source", "type": {"type": "enum", "symbols": ["INAPP","PIXEL","SDK","WEBHOOK"]}},
+    {"name": "timestamp", "type": "long", "logicalType": "timestamp-millis"},
+    {"name": "metadata", "type": ["null", "string"], "default": null},
+    {"name": "sampled", "type": "boolean", "default": true},
+    {"name": "sampling_rate", "type": ["null", "float"], "default": null},
+    {"name": "consent_flags_snapshot", "type": "int"}
+  ]
+}

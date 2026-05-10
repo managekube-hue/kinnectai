@@ -1,0 +1,18 @@
+{
+  "namespace": "com.kinnectai.media",
+  "type": "record",
+  "name": "PhotoplayJob",
+  "fields": [
+    {"name": "job_id", "type": "string"},
+    {"name": "user_id", "type": "string"},
+    {"name": "photo_s3_key", "type": "string"},
+    {"name": "audio_s3_key", "type": ["null", "string"], "default": null},
+    {"name": "voiceprint_id", "type": ["null", "string"], "default": null},
+    {"name": "quality_tier", "type": {"type": "enum", "symbols": ["STANDARD","PREMIUM"]}},
+    {"name": "c2pa_required", "type": "boolean", "default": true},
+    {"name": "created_at", "type": "long", "logicalType": "timestamp-millis"},
+    {"name": "status", "type": {"type": "enum", "symbols": ["QUEUED","PROCESSING","COMPLETED","FAILED","FALLBACK_ACTIVATED"]}},
+    {"name": "retry_count", "type": "int", "default": 0},
+    {"name": "error_code", "type": ["null", "string"], "default": null}
+  ]
+}

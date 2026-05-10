@@ -1,0 +1,5 @@
+# Jaeger Distributed Tracing
+# 100% trace coverage for user-facing requests
+# Trace ID propagated through all services via correlation_id header
+
+# Configuration: sampling_type (probabilistic), storage (Cassandra/Elasticsearch)

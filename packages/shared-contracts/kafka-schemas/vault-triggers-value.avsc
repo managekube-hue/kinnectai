@@ -1,0 +1,15 @@
+{
+  "namespace": "com.kinnectai.vault",
+  "type": "record",
+  "name": "VaultTrigger",
+  "fields": [
+    {"name": "trigger_id", "type": "string"},
+    {"name": "memory_id", "type": "string"},
+    {"name": "trigger_type", "type": {"type": "enum", "symbols": ["TIME_CAPSULE","MILESTONE","POSTHUMOUS","GEOFENCE"]}},
+    {"name": "evaluation_status", "type": {"type": "enum", "symbols": ["PENDING","VERIFIED","REJECTED","ESCALATED"]}},
+    {"name": "verification_signals", "type": {"type": "map", "values": "string"}},
+    {"name": "steward_notified_at", "type": ["null", "long"], "default": null},
+    {"name": "executed_at", "type": ["null", "long"], "default": null},
+    {"name": "audit_hash", "type": "string", "doc": "SHA-256 of trigger payload + verification state"}
+  ]
+}

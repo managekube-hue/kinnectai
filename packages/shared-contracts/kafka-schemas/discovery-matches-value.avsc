@@ -1,0 +1,15 @@
+{
+  "namespace": "com.kinnectai.discovery",
+  "type": "record",
+  "name": "DiscoveryMatch",
+  "fields": [
+    {"name": "candidate_id", "type": "string"},
+    {"name": "viewer_id", "type": "string"},
+    {"name": "kc_score_raw", "type": "float"},
+    {"name": "kc_score_display", "type": "int", "doc": "0-100 scale"},
+    {"name": "primary_signal", "type": {"type": "enum", "symbols": ["DNA","HAPLOGROUP","FACIAL","NAME_GEO","TREE","BEHAVIORAL"]}},
+    {"name": "relationship_guess", "type": "string"},
+    {"name": "confidence_interval", "type": {"type": "array", "items": "float"}},
+    {"name": "generated_at", "type": "long", "logicalType": "timestamp-millis"}
+  ]
+}
