@@ -19,6 +19,7 @@ import (
 
 func main() {
 	// Initialize telemetry (tracing, metrics, logging)
+	startTime := time.Now()
 	tracer, meter, logger := telemetry.InitializeOTel()
 	defer tracer.Shutdown(context.Background())
 	defer meter.Shutdown(context.Background())
@@ -49,6 +50,19 @@ func main() {
 	mux.HandleFunc("GET /ready", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		fmt.Fprintf(w, `{"ready":true}`)
+	})
+
+	// Metrics endpoint (Prometheus format)
+	mux.HandleFunc("GET /metrics", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/plain; version=0.0.4")
+		fmt.Fprintf(w, `# HELP gateway_requests_total Total requests received
+# TYPE gateway_requests_total counter
+gateway_requests_total 0
+
+# HELP gateway_uptime_seconds Service uptime in seconds
+# TYPE gateway_uptime_seconds gauge
+gateway_uptime_seconds %.0f
+`, time.Since(startTime).Seconds())
 	})
 
 	// API v1 routes

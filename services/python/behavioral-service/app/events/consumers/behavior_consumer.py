@@ -8,6 +8,7 @@ Handles event deserialization, parsing, and routing to domain logic.
 import asyncio
 import json
 import logging
+import os
 from typing import AsyncIterator, List, Dict, Any
 
 from confluent_kafka import Consumer, KafkaError
@@ -48,10 +49,15 @@ class BehaviorEventConsumer:
         """Initialize Kafka consumer and schema registry"""
         logger.info(f"Starting Kafka consumer: brokers={self.brokers}, group={self.group_id}")
 
-        # TODO: Initialize Schema Registry client
-        # schema_registry_url = "http://schema-registry:8081"
-        # schema_registry_client = SchemaRegistryClient({"url": schema_registry_url})
-        # self.deserializer = AvroDeserializer(schema_registry_client)
+        # Initialize Schema Registry client (optional for JSON format)
+        try:
+            schema_registry_url = os.getenv("SCHEMA_REGISTRY_URL", "http://schema-registry:8081")
+            schema_registry_client = SchemaRegistryClient({"url": schema_registry_url})
+            self.deserializer = AvroDeserializer(schema_registry_client)
+            logger.info(f"Schema Registry connected: {schema_registry_url}")
+        except Exception as e:
+            logger.warning(f"Schema Registry unavailable, using JSON format: {e}")
+            self.deserializer = None
 
         # Configure Kafka consumer
         conf = {
@@ -84,11 +90,17 @@ class BehaviorEventConsumer:
                         logger.error(f"Consumer error: {msg.error()}")
                     continue
 
-                # TODO: Deserialize using Avro schema
-                # value = self.deserializer(msg.value(), SerializationContext(...))
+                # Deserialize based on schema registry availability
+                if self.deserializer:
+                    try:
+                        event_data = self.deserializer(msg.value(), None)
+                    except Exception as e:
+                        logger.debug(f"Avro deserialization failed, falling back to JSON: {e}")
+                        event_data = json.loads(msg.value().decode("utf-8"))
+                else:
+                    # Assume JSON format
+                    event_data = json.loads(msg.value().decode("utf-8"))
                 
-                # For now, assume JSON format
-                event_data = json.loads(msg.value().decode("utf-8"))
                 event = BehaviorEvent(event_data)
                 
                 logger.debug(f"Received event: {event}")
@@ -112,10 +124,16 @@ class BehaviorEventConsumer:
     async def seek_to_beginning(self):
         """Seek to beginning of topics (for replaying)"""
         if self.consumer:
-            # TODO: Implement seek to beginning
-            pass
+            for partition in self.consumer.assignment():
+                self.consumer.seek(partition, 0)
+            logger.info("Seeked to beginning of all partitions")
 
     async def get_lag(self) -> Dict[str, int]:
         """Get current consumer lag per topic"""
-        # TODO: Implement lag calculation
-        return {}
+        lag = {}
+        if self.consumer:
+            for partition in self.consumer.assignment():
+                _, high = self.consumer.get_watermark_offsets(partition)
+                current_offset = self.consumer.position([partition])[0].offset()
+                lag[f"{partition.topic()}-{partition.partition()}"] = high - current_offset
+        return lag

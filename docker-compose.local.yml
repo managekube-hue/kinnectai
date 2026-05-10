@@ -1,0 +1,224 @@
+version: '3.8'
+
+services:
+  # ─── PostgreSQL (Primary Relational Store) ──────────────────────────────
+  postgres:
+    image: pgvector/pgvector:pg16-latest
+    container_name: kinnectai-postgres
+    environment:
+      POSTGRES_USER: kinnect
+      POSTGRES_PASSWORD: kinnect_dev_password
+      POSTGRES_DB: kinnectai
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./migrations/postgres:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kinnect -d kinnectai"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - kinnectai
+
+  # ─── Redis (Cache + Session Store) ──────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: kinnectai-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - kinnectai
+
+  # ─── Kafka (Event Streaming) ──────────────────────────────
+  kafka:
+    image: redpandadata/redpanda:latest
+    container_name: kinnectai-kafka
+    command:
+      - redpanda
+      - start
+      - --overprovisioned
+      - --smp=1
+      - --memory=1G
+      - --reserve-memory=0M
+      - --node-id=0
+      - --check=false
+      - --kafka-addr=PLAINTEXT://0.0.0.0:9092,OUTSIDE://0.0.0.0:9093
+      - --advertise-kafka-addr=PLAINTEXT://kafka:9092,OUTSIDE://localhost:9093
+    ports:
+      - "9092:9092"
+      - "9093:9093"
+    healthcheck:
+      test: ["CMD", "rpk", "topic", "list", "--brokers=localhost:9092"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - kinnectai
+
+  # ─── API Gateway (HTTP Entry Point) ──────────────────────────────
+  gateway:
+    build:
+      context: ./services/go/gateway
+      dockerfile: Dockerfile
+    container_name: kinnectai-gateway
+    ports:
+      - "8000:8000"
+    environment:
+      HTTP_PORT: "8000"
+      ENV: development
+      LOG_LEVEL: debug
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: kinnectai
+      POSTGRES_USER: kinnect
+      POSTGRES_PASSWORD: kinnect_dev_password
+      REDIS_ADDR: redis:6379
+      KAFKA_BROKERS: kafka:9092
+      IDENTITY_SERVICE_URL: http://identity-service:8001
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - kinnectai
+    restart: unless-stopped
+
+  # ─── Identity Service (JWT + User Management) ──────────────────────────────
+  identity-service:
+    build:
+      context: ./services/go/identity-service
+      dockerfile: Dockerfile
+    container_name: kinnectai-identity
+    ports:
+      - "8001:8001"
+    environment:
+      HTTP_PORT: "8001"
+      ENV: development
+      LOG_LEVEL: debug
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: kinnectai
+      POSTGRES_USER: kinnect
+      POSTGRES_PASSWORD: kinnect_dev_password
+      JWT_SECRET: "dev-secret-key-min-32-chars-required"
+      JWT_ISSUER: "kinnectai"
+      JWT_EXPIRY_HOURS: "24"
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - kinnectai
+    restart: unless-stopped
+
+  # ─── Behavioral Service (Event Ingestion) ──────────────────────────────
+  behavioral-service:
+    build:
+      context: ./services/python/behavioral-service
+      dockerfile: Dockerfile
+    container_name: kinnectai-behavioral
+    ports:
+      - "8002:8002"
+    environment:
+      HTTP_PORT: "8002"
+      ENV: development
+      LOG_LEVEL: debug
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: kinnectai
+      POSTGRES_USER: kinnect
+      POSTGRES_PASSWORD: kinnect_dev_password
+      KAFKA_BROKERS: kafka:9092
+      CASSANDRA_CONTACT_POINTS: cassandra:9042
+      CASSANDRA_KEYSPACE: behavioral
+      SCHEMA_REGISTRY_URL: http://schema-registry:8081
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+      cassandra:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8002/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - kinnectai
+    restart: unless-stopped
+
+  # ─── Cassandra (Time-Series Event Store) ──────────────────────────────
+  cassandra:
+    image: cassandra:4.1-latest
+    container_name: kinnectai-cassandra
+    ports:
+      - "9042:9042"
+    volumes:
+      - cassandra_data:/var/lib/cassandra
+    environment:
+      CASSANDRA_CLUSTER_NAME: "kinnectai"
+      CASSANDRA_LISTEN_ADDRESS: cassandra
+      CASSANDRA_BROADCAST_ADDRESS: cassandra
+      CASSANDRA_START_RPC: "true"
+    healthcheck:
+      test: ["CMD", "cqlsh", "-e", "describe keyspaces"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+    networks:
+      - kinnectai
+
+  # ─── Neo4j (Knowledge Graph) ──────────────────────────────
+  neo4j:
+    image: neo4j:5.20-community
+    container_name: kinnectai-neo4j
+    environment:
+      NEO4J_AUTH: neo4j/kinnect_neo4j_password
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - neo4j_data:/data
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:7474"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+    networks:
+      - kinnectai
+
+volumes:
+  postgres_data:
+  redis_data:
+  cassandra_data:
+  neo4j_data:
+
+networks:
+  kinnectai:
+    driver: bridge

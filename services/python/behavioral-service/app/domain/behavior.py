@@ -140,14 +140,20 @@ class BehaviorService:
         # Persist to Cassandra
         event_id = await self.repository.save_event(event)
         
-        # TODO: Update user aggregate asynchronously
-        # - Increment counters
-        # - Recalculate sentiment
-        # - Update last_active_at
+        # Update user aggregate asynchronously
+        aggregate = await self.repository.get_user_aggregate(event.user_id)
+        if aggregate:
+            aggregate.total_events += 1
+            if event.is_engagement():
+                aggregate.engagement_count += 1
+            if event.event_type == EventType.LIKE:
+                aggregate.like_count += 1
+            if event.event_type == EventType.SHARE:
+                aggregate.share_count += 1
+            aggregate.last_active_at = event.timestamp
+            await self.repository.update_aggregate(aggregate)
         
-        # TODO: Check for anomalies
-        # - Unusual event frequency
-        # - Unusual engagement patterns
+        return event_id
         # - Potential fraud/bot signals
         
         # TODO: Publish domain events for downstream systems

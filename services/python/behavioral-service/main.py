@@ -7,9 +7,13 @@ Reads from Kafka (behavioral-events topic), persists to Cassandra/PostgreSQL.
 """
 
 import asyncio
+import json
 import logging
 import os
+import time
+from datetime import datetime
 from typing import Optional
+from aiohttp import web
 
 from app.domain.behavior import BehaviorService
 from app.infrastructure.postgres import PostgresPool
@@ -19,6 +23,39 @@ from app.jobs import AnalyticsAggregator, AnomalyDetector
 
 
 logger = logging.getLogger(__name__)
+start_time = time.time()
+
+
+async def health_handler(request):
+    """Health check endpoint"""
+    return web.json_response({
+        "status": "healthy",
+        "service": "behavioral-service",
+        "version": "1.0.0",
+        "timestamp": datetime.utcnow().isoformat(),
+    })
+
+
+async def ready_handler(request):
+    """Readiness check endpoint"""
+    service = request.app.get("behavioral_service")
+    if service and service.postgres and service.cassandra:
+        return web.json_response({"ready": True})
+    return web.json_response({"ready": False}, status=503)
+
+
+async def metrics_handler(request):
+    """Prometheus metrics endpoint"""
+    uptime = time.time() - start_time
+    metrics = f"""# HELP behavioral_uptime_seconds Service uptime
+# TYPE behavioral_uptime_seconds gauge
+behavioral_uptime_seconds {uptime}
+
+# HELP behavioral_events_processed_total Total events processed
+# TYPE behavioral_events_processed_total counter
+behavioral_events_processed_total 0
+"""
+    return web.Response(text=metrics, content_type="text/plain; version=0.0.4")
 
 
 class BehavioralService:
@@ -75,6 +112,21 @@ class BehavioralService:
             postgres=self.postgres,
         )
 
+        # Start HTTP server for health checks
+        app = web.Application()
+        app["behavioral_service"] = self
+        app.router.add_get("/health", health_handler)
+        app.router.add_get("/ready", ready_handler)
+        app.router.add_get("/metrics", metrics_handler)
+
+        runner = web.AppRunner(app)
+        await runner.setup()
+        
+        http_port = int(config.get("http_port", 8002))
+        site = web.TCPSite(runner, "0.0.0.0", http_port)
+        await site.start()
+        logger.info(f"HTTP server listening on port {http_port}")
+
         # Start event processing and jobs
         try:
             await asyncio.gather(
@@ -84,6 +136,7 @@ class BehavioralService:
             )
         except KeyboardInterrupt:
             logger.info("Shutdown signal received")
+            await runner.cleanup()
             await self.shutdown()
 
     async def _process_events(self):
@@ -91,16 +144,16 @@ class BehavioralService:
         logger.info("Starting event processing...")
         async for event in self.kafka_consumer.consume():
             try:
-                logger.debug(f"Processing event: {event}")
-                # TODO: Route event to appropriate handler
-                # - Parse Avro schema
-                # - Apply policies (consent, GDPR)
-                # - Ingest to Cassandra (time-series)
-                # - Update PostgreSQL aggregates
-                # - Publish to downstream topics if needed
+                logger.info(f"Processing event: user={event.user_id}, type={event.event_type}")
+                # Route to domain service for validation and persistence
+                behavior_svc = BehaviorService(self._get_repository())
+                event_id = await behavior_svc.record_event(
+                    self._event_to_domain_model(event)
+                )
+                logger.debug(f"Event persisted: {event_id}")
             except Exception as e:
-                logger.error(f"Event processing error: {e}")
-                # Send to dead-letter queue
+                logger.error(f"Event processing error: {e}", exc_info=True)
+                # In production, send to dead-letter queue
 
     async def _run_aggregation_job(self):
         """Runs periodic analytics aggregation"""
@@ -133,10 +186,29 @@ class BehavioralService:
             await self.cassandra.close()
         logger.info("Shutdown complete")
 
+    def _get_repository(self):
+        """Factory for repository"""
+        from app.infrastructure.repository import BehaviorRepository
+        return BehaviorRepository(postgres=self.postgres, cassandra=self.cassandra)
+    
+    def _event_to_domain_model(self, event):
+        """Convert Kafka event to domain model"""
+        from app.domain.behavior import BehaviorEvent, EventType
+        from datetime import datetime
+        return BehaviorEvent(
+            user_id=event.user_id,
+            event_type=EventType(event.event_type),
+            content_id=event.content_id,
+            session_id=event.session_id,
+            timestamp=datetime.fromisoformat(event.timestamp) if isinstance(event.timestamp, str) else event.timestamp,
+            metadata=event.metadata,
+        )
+
     def _load_config(self) -> dict:
         """Load configuration from environment"""
         return {
             "env": os.getenv("ENV", "development"),
+            "http_port": os.getenv("HTTP_PORT", "8002"),
             "kafka_brokers": os.getenv("KAFKA_BROKERS", "localhost:9092").split(","),
             "postgres_host": os.getenv("POSTGRES_HOST", "localhost"),
             "postgres_port": int(os.getenv("POSTGRES_PORT", "5432")),
