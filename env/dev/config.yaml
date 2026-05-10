@@ -1,0 +1,72 @@
+# Development Environment Configuration
+# ======================================
+
+kubernetes:
+  cluster_name: kinnectai-dev-eks
+  namespace: kinnectai-dev
+  replicas: 1
+  
+postgres:
+  host: postgres-dev.kinnectai.internal
+  port: 5432
+  database: kinnectai_dev
+  ssl_mode: disable
+  connection_pool_size: 10
+  
+neo4j:
+  uri: bolt://neo4j-dev.kinnectai.internal:7687
+  connection_pool_size: 10
+  
+redis:
+  host: redis-dev.kinnectai.internal
+  port: 6379
+  db: 0
+  ttl_seconds: 3600
+  
+kafka:
+  brokers: kafka-dev.kinnectai.internal:9092
+  topic_retention_days: 7
+  consumer_group_suffix: -dev
+  
+cassandra:
+  contact_points: cassandra-dev.kinnectai.internal:9042
+  keyspace: kinnectai_dev
+  replication_factor: 1
+  
+s3:
+  bucket: kinnectai-dev-assets
+  region: us-east-1
+  
+jwt:
+  issuer: kinnectai-dev
+  expiration_hours: 24
+  
+otel:
+  sampler: always_on
+  endpoint: http://otel-collector-dev:4317
+  
+feature_flags:
+  url: http://feature-flags-dev:3000
+  
+logging:
+  level: DEBUG
+  format: json
+  
+cache:
+  enabled: true
+  ttl_seconds: 300
+  
+services_enabled:
+  feed-service: true
+  graph-service: true
+  behavioral-service: true
+  identity-service: true
+  notification-service: true
+  payment-service: true
+  media-service: true
+  rooms-service: true
+  memorybox-service: true
+  discovery-service: true
+  photoplay-service: true
+  kernel-service: true
+  dna-ingest-service: true

@@ -1,0 +1,68 @@
+# Schema Versioning Policy
+# =========================
+# Prevents breaking changes and enforces backward compatibility
+
+versioning_policy:
+  semantic_versioning: true
+  breaking_change_policy: "FORBIDDEN in PATCH, allowed in MINOR with deprecation, allowed in MAJOR"
+  
+schema_versions:
+  behavioral-events:
+    current: "1.0"
+    deprecated:
+      - version: "0.9"
+        sunset_date: "2026-08-01"
+        reason: "Incomplete event type coverage"
+    
+  cr-recompute:
+    current: "1.0"
+    deprecated: []
+    
+  vault-triggers:
+    current: "1.0"
+    deprecated: []
+    
+  discovery-matches:
+    current: "1.0"
+    deprecated: []
+    
+  photoplay-jobs:
+    current: "1.0"
+    deprecated: []
+
+# Schema Registry Configuration
+schema_registry:
+  url: "http://schema-registry:8081"
+  subject_name_strategy: "TopicNameStrategy"
+  validate_on_publish: true
+  require_schema_id: true
+
+# Breaking Change Detection
+breaking_changes:
+  - description: "Removing a required field"
+    severity: "CRITICAL"
+    allowed: false
+    
+  - description: "Changing field type"
+    severity: "CRITICAL"
+    allowed: false
+    
+  - description: "Renaming a field"
+    severity: "CRITICAL"
+    allowed: false
+    
+  - description: "Making a field required"
+    severity: "HIGH"
+    allowed: false
+    
+  - description: "Changing default value"
+    severity: "MEDIUM"
+    allowed: false_with_approval
+    
+  - description: "Adding optional field"
+    severity: "LOW"
+    allowed: true
+    
+  - description: "Deprecating field"
+    severity: "LOW"
+    allowed: true

@@ -1,0 +1,68 @@
+# CODEOWNERS - Service Ownership & Accountability
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Gateway (Platform Team - unblocks all service integration)
+/services/go/gateway/                    @platform-team @gateway-oncall
+
+# Feed Service (Behavioral Team - core personalization)
+/services/go/feed-service/              @behavioral-team @feed-oncall
+/packages/shared-libs/go/kafka/         @behavioral-team
+
+# Graph Service (Graph Team)
+/services/go/kin-graph-service/         @graph-team @graph-oncall
+
+# Identity Service (Platform Team - auth foundation)
+/services/go/identity-service/          @platform-team @identity-oncall
+/packages/shared-libs/go/auth/          @platform-team
+
+# Media Service (Content Team)
+/services/go/media-service/             @content-team @media-oncall
+
+# Rooms Service (Social Team)
+/services/go/rooms-service/             @social-team @rooms-oncall
+
+# Memorybox Service (Vault Team - ZK architecture)
+/services/go/memorybox-service/         @vault-team @vault-oncall
+
+# Notification Service (Engagement Team)
+/services/go/notification-service/      @engagement-team @notification-oncall
+
+# Payment Service (Platform Team)
+/services/go/payment-service/           @platform-team @payment-oncall
+
+# Behavioral Service (Behavioral Team - event ingestion)
+/services/python/behavioral-service/    @behavioral-team @behavioral-oncall
+
+# Photoplay Service (Content Team)
+/services/python/photoplay-service/     @content-team @photoplay-oncall
+
+# Kernel Service (ML Team)
+/services/python/kernel-service/        @ml-team @kernel-oncall
+
+# DNA Ingest Service (Data Team)
+/services/python/dna-ingest-service/    @data-team @dna-ingest-oncall
+
+# Discovery Service (Discovery Team)
+/services/python/discovery-service/     @discovery-team @discovery-oncall
+
+# Infrastructure & Platform
+/infra/terraform/                       @platform-team @devops-oncall
+/infra/kubernetes/                      @platform-team @devops-oncall
+/infra/helm/                            @platform-team @devops-oncall
+/migrations/                            @platform-team @database-oncall
+/packages/shared-contracts/             @platform-team
+/packages/shared-libs/                  @platform-team @platform-archs
+
+# Build & Deployment
+/.github/workflows/                     @platform-team @ci-cd
+/scripts/ci/                            @platform-team @ci-cd
+/scripts/deploy/                        @platform-team @devops-oncall
+
+# Documentation
+/docs/adr/                              @platform-archs
+/docs/runbooks/                         @platform-team @sre-oncall
+/docs/deployment/                       @devops-oncall
+/docs/service-ownership/                @platform-archs
+
+# Catch-all
+*                                       @codeowners-team

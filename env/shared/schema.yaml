@@ -1,0 +1,240 @@
+# Environment Schema Definition
+# ==============================
+# Required environment variables and configuration per environment
+
+required_vars:
+  # Kubernetes
+  - name: KUBERNETES_CLUSTER_NAME
+    type: string
+    description: "EKS cluster name"
+    validation: "^[a-z0-9-]+$"
+    required: true
+    
+  - name: KUBERNETES_NAMESPACE
+    type: string
+    description: "Deployment namespace"
+    validation: "^[a-z0-9-]+$"
+    required: true
+    
+  - name: KUBERNETES_REPLICAS
+    type: integer
+    description: "Default pod replicas"
+    validation: ">= 1"
+    required: true
+    
+  # Database Connections
+  - name: POSTGRES_HOST
+    type: string
+    description: "PostgreSQL primary host"
+    validation: "hostname"
+    required: true
+    secret: true
+    
+  - name: POSTGRES_PORT
+    type: integer
+    description: "PostgreSQL port"
+    validation: ">= 1024 && <= 65535"
+    required: true
+    
+  - name: POSTGRES_DATABASE
+    type: string
+    description: "Default database"
+    validation: "^[a-z_]+$"
+    required: true
+    
+  - name: POSTGRES_USER
+    type: string
+    description: "PostgreSQL user"
+    secret: true
+    required: true
+    
+  - name: POSTGRES_PASSWORD
+    type: string
+    description: "PostgreSQL password"
+    secret: true
+    required: true
+    
+  - name: NEO4J_URI
+    type: string
+    description: "Neo4j connection URI"
+    validation: "^(bolt|bolt\\+s)://"
+    required: true
+    secret: true
+    
+  - name: NEO4J_USERNAME
+    type: string
+    description: "Neo4j user"
+    secret: true
+    required: true
+    
+  - name: NEO4J_PASSWORD
+    type: string
+    description: "Neo4j password"
+    secret: true
+    required: true
+    
+  # Cache
+  - name: REDIS_HOST
+    type: string
+    description: "Redis primary host"
+    validation: "hostname"
+    required: true
+    
+  - name: REDIS_PORT
+    type: integer
+    description: "Redis port"
+    validation: ">= 1024 && <= 65535"
+    required: true
+    
+  - name: REDIS_PASSWORD
+    type: string
+    description: "Redis password"
+    secret: true
+    required: false
+    
+  # Message Queue
+  - name: KAFKA_BROKERS
+    type: string
+    description: "Comma-separated Kafka broker addresses"
+    validation: "csv_of_hostnames"
+    required: true
+    
+  - name: KAFKA_TOPIC_RETENTION_DAYS
+    type: integer
+    description: "Default Kafka retention"
+    validation: ">= 1"
+    required: true
+    
+  - name: SCHEMA_REGISTRY_URL
+    type: string
+    description: "Schema Registry URL"
+    validation: "^https?://"
+    required: true
+    
+  # Time Series DB
+  - name: CASSANDRA_CONTACT_POINTS
+    type: string
+    description: "Cassandra contact points"
+    validation: "csv_of_hostnames"
+    required: true
+    
+  - name: CASSANDRA_KEYSPACE
+    type: string
+    description: "Default keyspace"
+    validation: "^[a-z_]+$"
+    required: true
+    
+  # Object Storage
+  - name: AWS_S3_BUCKET
+    type: string
+    description: "Default S3 bucket"
+    validation: "^[a-z0-9-]+$"
+    required: true
+    
+  - name: AWS_REGION
+    type: string
+    description: "AWS region"
+    validation: "^[a-z]{2}-[a-z]+-\\d+$"
+    required: true
+    
+  # Authentication
+  - name: JWT_SECRET_KEY
+    type: string
+    description: "JWT signing key"
+    secret: true
+    required: true
+    
+  - name: JWT_ISSUER
+    type: string
+    description: "JWT issuer claim"
+    required: true
+    
+  - name: JWT_EXPIRATION_HOURS
+    type: integer
+    description: "Token expiration hours"
+    validation: ">= 1"
+    required: true
+    
+  # Observability
+  - name: OTEL_EXPORTER_OTLP_ENDPOINT
+    type: string
+    description: "OpenTelemetry collector endpoint"
+    validation: "^https?://"
+    required: true
+    
+  - name: OTEL_SAMPLING_RATIO
+    type: float
+    description: "Trace sampling ratio"
+    validation: ">= 0 && <= 1"
+    required: true
+    
+  - name: LOG_LEVEL
+    type: enum
+    description: "Application log level"
+    values: ["DEBUG", "INFO", "WARN", "ERROR"]
+    required: true
+    
+  # Feature Flags
+  - name: FEATURE_FLAGS_URL
+    type: string
+    description: "Feature flags API endpoint"
+    validation: "^https?://"
+    required: true
+    
+  - name: FEATURE_FLAGS_SDK_KEY
+    type: string
+    description: "Feature flags SDK key"
+    secret: true
+    required: true
+
+# Secret Mapping (AWS Secrets Manager)
+secrets_mapping:
+  /kinnectai/postgres/password: POSTGRES_PASSWORD
+  /kinnectai/neo4j/password: NEO4J_PASSWORD
+  /kinnectai/redis/password: REDIS_PASSWORD
+  /kinnectai/jwt/secret: JWT_SECRET_KEY
+  /kinnectai/feature-flags/sdk-key: FEATURE_FLAGS_SDK_KEY
+  /kinnectai/stripe/api-key: STRIPE_API_KEY
+  /kinnectai/fcm/credentials: FCM_SERVICE_ACCOUNT
+
+# Validation Rules
+validation:
+  connectivity_tests:
+    - postgres
+    - neo4j
+    - redis
+    - kafka
+    - cassandra
+    - s3
+  
+  consistency_checks:
+    - jwt_issuer_must_match_provider
+    - kafka_brokers_must_be_reachable
+    - schema_registry_must_have_schemas
+    
+  pre_deployment_checks:
+    - all_secrets_present
+    - all_required_vars_present
+    - connectivity_tests_pass
+    - consistency_checks_pass
+
+# Service Dependency Map
+service_dependencies:
+  feed-service:
+    requires:
+      - postgres
+      - neo4j
+      - redis
+      - kafka
+      - cassandra
+    
+  gateway:
+    requires:
+      - postgres (for identity-service)
+      - kafka
+    
+  behavioral-service:
+    requires:
+      - postgres
+      - cassandra
+      - kafka

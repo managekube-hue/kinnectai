@@ -1,0 +1,15 @@
+go 1.22
+
+use (
+	./services/go/feed-service
+	./services/go/kin-graph-service
+	./services/go/identity-service
+	./services/go/media-service
+	./services/go/rooms-service
+	./services/go/memorybox-service
+	./services/go/notification-service
+	./services/go/payment-service
+	./services/go/gateway
+
+	./packages/shared-libs/go
+)

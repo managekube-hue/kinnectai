@@ -1,0 +1,107 @@
+# Event Governance Registry
+# ==========================
+# Single source of truth for all Kafka events across platform
+# Prevents duplication, breaking changes, and version conflicts
+
+events:
+  behavioral-events:
+    topic: behavioral-events
+    schema_version: "1.0"
+    owner: behavioral-service
+    schema_file: "avro/behavioral-events.avsc"
+    compatibility: "BACKWARD_TRANSITIVE"
+    retention_days: 90
+    partitions: 10
+    replication_factor: 3
+    compression: "snappy"
+    consumers:
+      - feed-service
+      - discovery-service
+      - analytics-dashboard
+    description: "User behavioral signals (views, clicks, shares, saves)"
+    
+  cr-recompute:
+    topic: cr-recompute
+    schema_version: "1.0"
+    owner: feed-service
+    schema_file: "avro/cr-recompute.avsc"
+    compatibility: "BACKWARD_TRANSITIVE"
+    retention_days: 7
+    partitions: 5
+    replication_factor: 3
+    compression: "snappy"
+    consumers:
+      - feed-service
+    description: "Trigger feed recomputation after significant events"
+    
+  vault-triggers:
+    topic: vault-triggers
+    schema_version: "1.0"
+    owner: memorybox-service
+    schema_file: "avro/vault-triggers.avsc"
+    compatibility: "BACKWARD_TRANSITIVE"
+    retention_days: 30
+    partitions: 3
+    replication_factor: 3
+    compression: "snappy"
+    consumers:
+      - memorybox-service
+      - notification-service
+    description: "Memory vault lifecycle events and access triggers"
+    
+  discovery-matches:
+    topic: discovery-matches
+    schema_version: "1.0"
+    owner: discovery-service
+    schema_file: "avro/discovery-matches.avsc"
+    compatibility: "BACKWARD_TRANSITIVE"
+    retention_days: 7
+    partitions: 10
+    replication_factor: 3
+    compression: "snappy"
+    consumers:
+      - feed-service
+      - notification-service
+    description: "Candidate recommendations from discovery service"
+    
+  photoplay-jobs:
+    topic: photoplay-jobs
+    schema_version: "1.0"
+    owner: photoplay-service
+    schema_file: "avro/photoplay-jobs.avsc"
+    compatibility: "BACKWARD_TRANSITIVE"
+    retention_days: 30
+    partitions: 5
+    replication_factor: 3
+    compression: "snappy"
+    consumers:
+      - photoplay-service
+      - notification-service
+    description: "Async photo ranking and processing jobs"
+
+# Compatibility Modes
+compatibility_modes:
+  BACKWARD:
+    description: "New schema can read old data"
+    use_case: "Safe for consumer deployments first"
+  FORWARD:
+    description: "Old schema can read new data"
+    use_case: "Safe for producer deployments first"
+  BACKWARD_TRANSITIVE:
+    description: "Compatible with all previous versions"
+    use_case: "Recommended for production"
+  FORWARD_TRANSITIVE:
+    description: "Can work with all future versions"
+    use_case: "Very restrictive, rarely used"
+  NONE:
+    description: "Schema compatibility not enforced"
+    use_case: "Never use in production"
+
+# Dead Letter Queue Pattern
+dlq_policy:
+  enabled: true
+  max_retries: 3
+  retention_days: 30
+  pattern: "{topic}-dlq"
+  monitoring_required: true
+  pagerduty_alert: true

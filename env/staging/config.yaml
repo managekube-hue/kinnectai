@@ -1,0 +1,84 @@
+# Staging Environment Configuration
+# ==================================
+
+kubernetes:
+  cluster_name: kinnectai-staging-eks
+  namespace: kinnectai-staging
+  replicas: 2
+  
+postgres:
+  host: postgres-staging.kinnectai.internal
+  port: 5432
+  database: kinnectai_staging
+  ssl_mode: require
+  connection_pool_size: 25
+  read_replicas:
+    - postgres-staging-read1.kinnectai.internal
+    - postgres-staging-read2.kinnectai.internal
+  
+neo4j:
+  uri: bolt+s://neo4j-staging.kinnectai.internal:7687
+  connection_pool_size: 25
+  
+redis:
+  host: redis-staging.kinnectai.internal
+  port: 6379
+  mode: cluster
+  nodes: 6
+  db: 0
+  ttl_seconds: 7200
+  
+kafka:
+  brokers: kafka-staging-1:9092,kafka-staging-2:9092,kafka-staging-3:9092
+  topic_retention_days: 30
+  consumer_group_suffix: -staging
+  
+cassandra:
+  contact_points: cassandra-staging-1:9042,cassandra-staging-2:9042,cassandra-staging-3:9042
+  keyspace: kinnectai_staging
+  replication_factor: 3
+  
+s3:
+  bucket: kinnectai-staging-assets
+  region: us-east-1
+  versioning: enabled
+  
+jwt:
+  issuer: kinnectai-staging
+  expiration_hours: 12
+  
+otel:
+  sampler: probability
+  sampling_probability: 0.1
+  endpoint: http://otel-collector-staging:4317
+  
+feature_flags:
+  url: https://feature-flags-staging.kinnectai.com
+  
+logging:
+  level: INFO
+  format: json
+  
+cache:
+  enabled: true
+  ttl_seconds: 600
+  
+services_enabled:
+  feed-service: true
+  graph-service: true
+  behavioral-service: true
+  identity-service: true
+  notification-service: true
+  payment-service: true
+  media-service: true
+  rooms-service: true
+  memorybox-service: true
+  discovery-service: true
+  photoplay-service: true
+  kernel-service: true
+  dna-ingest-service: true
+
+monitoring:
+  datadog_enabled: true
+  sentry_enabled: true
+  pagerduty_enabled: true

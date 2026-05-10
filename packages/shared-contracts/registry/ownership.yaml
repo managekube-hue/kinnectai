@@ -1,0 +1,90 @@
+# Event Ownership Registry
+# ========================
+# Tracks who owns each event, when it was created, and who consumes it
+
+ownership:
+  behavioral-events:
+    producer: behavioral-service
+    owner_email: data-team@kinnectai.com
+    owner_team: data-team
+    created_date: "2026-04-01"
+    last_updated: "2026-05-09"
+    slo_target: 99.0
+    support_pagerduty: true
+    
+  cr-recompute:
+    producer: feed-service
+    owner_email: platform-team@kinnectai.com
+    owner_team: platform-team
+    created_date: "2026-04-15"
+    last_updated: "2026-05-09"
+    slo_target: 99.5
+    support_pagerduty: true
+    
+  vault-triggers:
+    producer: memorybox-service
+    owner_email: security-team@kinnectai.com
+    owner_team: security-team
+    created_date: "2026-04-20"
+    last_updated: "2026-05-09"
+    slo_target: 99.95
+    support_pagerduty: true
+    
+  discovery-matches:
+    producer: discovery-service
+    owner_email: data-team@kinnectai.com
+    owner_team: data-team
+    created_date: "2026-05-01"
+    last_updated: "2026-05-09"
+    slo_target: 99.0
+    support_pagerduty: true
+    
+  photoplay-jobs:
+    producer: photoplay-service
+    owner_email: engagement-team@kinnectai.com
+    owner_team: engagement-team
+    created_date: "2026-05-05"
+    last_updated: "2026-05-09"
+    slo_target: 98.0
+    support_pagerduty: false
+
+# Consumer Registration
+consumers:
+  feed-service:
+    consumes:
+      - behavioral-events
+      - discovery-matches
+      - cr-recompute
+    owner_email: platform-team@kinnectai.com
+    
+  discovery-service:
+    consumes:
+      - behavioral-events
+    owner_email: data-team@kinnectai.com
+    
+  notification-service:
+    consumes:
+      - vault-triggers
+      - discovery-matches
+      - photoplay-jobs
+    owner_email: engagement-team@kinnectai.com
+    
+  memorybox-service:
+    consumes:
+      - vault-triggers
+    owner_email: security-team@kinnectai.com
+    
+  analytics-dashboard:
+    consumes:
+      - behavioral-events
+    owner_email: data-team@kinnectai.com
+
+# Event Governance Rules
+governance:
+  pii_handling: true
+  encryption_required: false
+  audit_logging: true
+  retention_compliance: "GDPR"
+  access_control: "SERVICE_ACCOUNT"
+  monitoring_required: true
+  alerting_required: true

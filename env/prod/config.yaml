@@ -1,0 +1,112 @@
+# Production Environment Configuration
+# ====================================
+
+kubernetes:
+  cluster_name: kinnectai-prod-eks
+  namespace: kinnectai-prod
+  replicas: 3
+  
+postgres:
+  host: postgres-prod.kinnectai.internal
+  port: 5432
+  database: kinnectai_prod
+  ssl_mode: require
+  connection_pool_size: 50
+  read_replicas:
+    - postgres-prod-read1.kinnectai.internal
+    - postgres-prod-read2.kinnectai.internal
+    - postgres-prod-read3.kinnectai.internal
+  backup_enabled: true
+  backup_frequency: "daily"
+  
+neo4j:
+  uri: bolt+s://neo4j-prod.kinnectai.internal:7687
+  connection_pool_size: 50
+  backup_enabled: true
+  backup_frequency: "daily"
+  
+redis:
+  host: redis-prod.kinnectai.internal
+  port: 6379
+  mode: cluster
+  nodes: 12
+  db: 0
+  ttl_seconds: 14400
+  persistence: enabled
+  
+kafka:
+  brokers: kafka-prod-1:9092,kafka-prod-2:9092,kafka-prod-3:9092,kafka-prod-4:9092,kafka-prod-5:9092
+  topic_retention_days: 90
+  consumer_group_suffix: -prod
+  
+cassandra:
+  contact_points: cassandra-prod-1:9042,cassandra-prod-2:9042,cassandra-prod-3:9042,cassandra-prod-4:9042,cassandra-prod-5:9042
+  keyspace: kinnectai_prod
+  replication_factor: 5
+  backup_enabled: true
+  backup_frequency: "daily"
+  
+s3:
+  bucket: kinnectai-prod-assets
+  region: us-east-1
+  versioning: enabled
+  replication: cross-region
+  
+jwt:
+  issuer: kinnectai
+  expiration_hours: 2
+  key_rotation_days: 90
+  
+otel:
+  sampler: probability
+  sampling_probability: 0.01
+  endpoint: http://otel-collector-prod:4317
+  
+feature_flags:
+  url: https://feature-flags.kinnectai.com
+  
+logging:
+  level: WARN
+  format: json
+  
+cache:
+  enabled: true
+  ttl_seconds: 1200
+  
+services_enabled:
+  feed-service: true
+  graph-service: true
+  behavioral-service: true
+  identity-service: true
+  notification-service: true
+  payment-service: true
+  media-service: true
+  rooms-service: true
+  memorybox-service: true
+  discovery-service: true
+  photoplay-service: true
+  kernel-service: true
+  dna-ingest-service: true
+
+monitoring:
+  datadog_enabled: true
+  sentry_enabled: true
+  pagerduty_enabled: true
+  
+security:
+  encryption_at_rest: enabled
+  encryption_in_transit: required
+  mfa_required: true
+  audit_logging: enabled
+  
+compliance:
+  gdpr_enforced: true
+  ccpa_enforced: true
+  hipaa_enforced: true
+  
+disaster_recovery:
+  rpo_minutes: 15
+  rto_minutes: 30
+  backup_regions:
+    - us-west-1
+    - eu-west-1

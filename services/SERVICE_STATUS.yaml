@@ -1,0 +1,298 @@
+# KinnectAI Service Maturity Registry
+# ===================================
+# Single source of truth for service ownership, tier, runtime, and SLO metadata
+# Used for: deployment intelligence, dependency graphing, incident routing, automation
+
+services:
+  # GO SERVICES
+  gateway:
+    tier: critical
+    owner: platform-team
+    runtime: go
+    status: alpha
+    databases:
+      - postgres
+    maturity: 20
+    slo_target: 99.9
+    pii_handling: false
+    public_api: true
+    on_call: platform-team
+    dependencies:
+      - identity-service
+      - feed-service
+      - graph-service
+      - media-service
+      - rooms-service
+      - notification-service
+      - payment-service
+    
+  feed-service:
+    tier: critical
+    owner: platform-team
+    runtime: go
+    status: alpha
+    databases:
+      - postgres
+      - neo4j
+      - redis
+      - cassandra
+    maturity: 20
+    slo_target: 99.5
+    pii_handling: true
+    public_api: true
+    on_call: platform-team
+    dependencies:
+      - graph-service
+      - behavioral-service
+      - kafka
+      - postgres
+      - redis
+      - neo4j
+    
+  kin-graph-service:
+    tier: critical
+    owner: data-team
+    runtime: go
+    status: alpha
+    databases:
+      - neo4j
+      - redis
+    maturity: 15
+    slo_target: 99.5
+    pii_handling: true
+    public_api: false
+    on_call: data-team
+    dependencies:
+      - neo4j
+      - redis
+      - kafka
+    
+  identity-service:
+    tier: critical
+    owner: platform-team
+    runtime: go
+    status: alpha
+    databases:
+      - postgres
+    maturity: 15
+    slo_target: 99.95
+    pii_handling: true
+    public_api: false
+    on_call: platform-team
+    dependencies:
+      - postgres
+      - kafka
+    
+  media-service:
+    tier: high
+    owner: platform-team
+    runtime: go
+    status: alpha
+    databases:
+      - postgres
+      - s3
+    maturity: 10
+    slo_target: 99.0
+    pii_handling: true
+    public_api: false
+    on_call: platform-team
+    dependencies:
+      - postgres
+      - s3
+      - kafka
+    
+  rooms-service:
+    tier: high
+    owner: engagement-team
+    runtime: go
+    status: alpha
+    databases:
+      - redis
+      - postgres
+    maturity: 10
+    slo_target: 99.0
+    pii_handling: false
+    public_api: false
+    on_call: engagement-team
+    dependencies:
+      - redis
+      - postgres
+      - kafka
+    
+  memorybox-service:
+    tier: critical
+    owner: security-team
+    runtime: go
+    status: alpha
+    databases:
+      - postgres
+      - kms
+    maturity: 10
+    slo_target: 99.95
+    pii_handling: true
+    public_api: false
+    on_call: security-team
+    dependencies:
+      - postgres
+      - kms
+      - kafka
+    
+  notification-service:
+    tier: medium
+    owner: engagement-team
+    runtime: go
+    status: alpha
+    databases: []
+    maturity: 5
+    slo_target: 95.0
+    pii_handling: false
+    public_api: false
+    on_call: engagement-team
+    dependencies:
+      - fcm
+      - kafka
+    
+  payment-service:
+    tier: critical
+    owner: monetization-team
+    runtime: go
+    status: alpha
+    databases:
+      - postgres
+    maturity: 10
+    slo_target: 99.95
+    pii_handling: true
+    public_api: false
+    on_call: monetization-team
+    dependencies:
+      - postgres
+      - stripe
+      - kafka
+
+  # PYTHON SERVICES
+  behavioral-service:
+    tier: high
+    owner: data-team
+    runtime: python
+    status: alpha
+    databases:
+      - postgres
+      - cassandra
+    maturity: 20
+    slo_target: 99.0
+    pii_handling: true
+    public_api: false
+    on_call: data-team
+    dependencies:
+      - kafka
+      - postgres
+      - cassandra
+    
+  photoplay-service:
+    tier: high
+    owner: engagement-team
+    runtime: python
+    status: alpha
+    databases:
+      - postgres
+      - s3
+    maturity: 10
+    slo_target: 98.0
+    pii_handling: false
+    public_api: false
+    on_call: engagement-team
+    dependencies:
+      - postgres
+      - s3
+      - kafka
+    
+  kernel-service:
+    tier: medium
+    owner: data-team
+    runtime: python
+    status: alpha
+    databases:
+      - postgres
+    maturity: 5
+    slo_target: 98.0
+    pii_handling: false
+    public_api: false
+    on_call: data-team
+    dependencies:
+      - postgres
+      - kafka
+    
+  dna-ingest-service:
+    tier: critical
+    owner: data-team
+    runtime: python
+    status: alpha
+    databases:
+      - postgres
+      - s3
+    maturity: 10
+    slo_target: 99.0
+    pii_handling: true
+    public_api: false
+    on_call: data-team
+    dependencies:
+      - postgres
+      - s3
+      - kafka
+    
+  discovery-service:
+    tier: high
+    owner: data-team
+    runtime: python
+    status: alpha
+    databases:
+      - neo4j
+    maturity: 10
+    slo_target: 99.0
+    pii_handling: false
+    public_api: false
+    on_call: data-team
+    dependencies:
+      - neo4j
+      - kafka
+
+# Tier Definitions
+tiers:
+  critical:
+    description: "Service failure blocks core platform operations"
+    deployment_frequency: daily
+    change_failure_rate: 0.05
+    mean_time_to_recovery: 30m
+    
+  high:
+    description: "Service failure impacts user experience or analytics"
+    deployment_frequency: daily
+    change_failure_rate: 0.10
+    mean_time_to_recovery: 60m
+    
+  medium:
+    description: "Service failure impacts non-critical features"
+    deployment_frequency: 3x/week
+    change_failure_rate: 0.15
+    mean_time_to_recovery: 2h
+    
+  low:
+    description: "Service failure has minimal user impact"
+    deployment_frequency: weekly
+    change_failure_rate: 0.25
+    mean_time_to_recovery: 4h
+
+# Maturity Scale (0-100)
+maturity_scale:
+  0: "Not started"
+  5: "Scaffold created"
+  10: "Domain layer complete"
+  20: "Application + infrastructure layers"
+  30: "Integration tests passing"
+  40: "Staging deployment ready"
+  50: "Production deployment ready"
+  60: "Live with basic monitoring"
+  70: "SLO targets met"
+  80: "Chaos testing passed"
+  90: "On-call rotation established"
+  100: "Production-grade stable"
