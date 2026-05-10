@@ -1,0 +1,40 @@
+// Kafka Events Schema
+// When user logs in successfully, these events are published
+
+{
+  "user.login.success": {
+    "type": "record",
+    "name": "UserLoginSuccess",
+    "namespace": "com.kinnectai.identity",
+    "fields": [
+      { "name": "event_id", "type": "string" },
+      { "name": "user_id", "type": "string" },
+      { "name": "email", "type": "string" },
+      { "name": "timestamp", "type": "long", "logicalType": "timestamp-millis" },
+      { "name": "ip_address", "type": "string" },
+      { "name": "device_info", "type": {
+        "type": "record",
+        "name": "DeviceInfo",
+        "fields": [
+          { "name": "user_agent", "type": "string" },
+          { "name": "device_id", "type": "string" }
+        ]
+      }},
+      { "name": "session_id", "type": "string" }
+    ]
+  }
+}
+
+// Example event published to Kafka topic: user-events
+{
+  "event_id": "evt_1715298000123",
+  "user_id": "user_abc123",
+  "email": "user@example.com",
+  "timestamp": 1715298000123,
+  "ip_address": "192.168.1.100",
+  "device_info": {
+    "user_agent": "KinnectAI-Mobile/1.0",
+    "device_id": "device_xyz789"
+  },
+  "session_id": "sess_def456"
+}
