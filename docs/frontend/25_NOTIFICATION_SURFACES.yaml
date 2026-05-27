@@ -1,0 +1,65 @@
+---
+# NOTIFICATION_SURFACES.yaml
+# Push notification channels, deep link matrix, timing rules
+notification_surfaces:
+  channels:
+    push:
+      platform: ["iOS (APNs)", "Android (FCM)", "Web (Web Push API)"]
+      opt_out: false
+      critical_reason: "Legal requirement: Memory Box triggers must deliver"
+      fallback: "in-app pulse"
+    
+    in_app_pulse:
+      timeout_ms: 4000
+      position: "top banner"
+      dismissible: true
+      fallback: "email notification"
+    
+    email:
+      template_dir: "/services/notification-service/templates"
+      retry_chain: "fail push → wait 1h → send email"
+      unsubscribe: "single-click per CAN-SPAM"
+      fallback: "SMS (if verified phone)"
+    
+    sms:
+      max_per_day: 3
+      opt_in: explicit
+      fallback: "none (terminal channel)"
+
+  trigger_types:
+    memory_box_trigger:
+      surface_priority: ["push", "in_app", "email", "sms"]
+      deep_link: "kinnect://memory/{memory_id}"
+      timing: "scheduled (time capsule) or immediate (milestone)"
+      cannot_disable: true
+    
+    kinnection_request:
+      surface_priority: ["push", "in_app", "email"]
+      deep_link: "kinnect://discovery/{candidate_id}"
+      timing: "immediate"
+      opt_out: "yes (global notifications toggle)"
+    
+    room_invitation:
+      surface_priority: ["push", "in_app", "email"]
+      deep_link: "kinnect://room/{room_id}"
+      timing: "immediate"
+      opt_out: "yes"
+    
+    family_insights:
+      surface_priority: ["push", "in_app", "email"]
+      deep_link: "kinnect://tree?highlight={kin_id}"
+      timing: "daily digest 8am local"
+      opt_out: "yes"
+
+  deep_link_matrix:
+    memory_trigger: "kinnect://memory/{memory_id}?from=push&action=view"
+    kinnection: "kinnect://discovery/{candidate_id}?action=connect"
+    room: "kinnect://room/{room_id}?from=push"
+    tree_insight: "kinnect://tree?from=push&highlight={kin_id}"
+    commerce: "kinnect://marketplace?from=push&item={product_id}"
+
+  timing_rules:
+    business_hours_only: false
+    quiet_hours: "22:00-08:00 (respects device quiet hours)"
+    batching: "batch non-critical notifications between 9am-5pm"
+    frequency_cap: "max 3 per day unless opted-in for higher"

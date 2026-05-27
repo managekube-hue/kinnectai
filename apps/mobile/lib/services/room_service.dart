@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 
 /// Room service for WebRTC video calls (PRD Section 08).
 /// JWT + Kin Score gate authentication. mediasoup SFU.
@@ -19,9 +18,9 @@ class RoomService {
     final response = await _dio.post<Map<String, dynamic>>('/rooms', data: {
       'name': name,
       'is_private': isPrivate,
-      if (kinScoreGate != null) 'kin_score_gate': kinScoreGate,
+      'kin_score_gate': ?kinScoreGate,
       if (scheduledAt != null) 'scheduled_at': scheduledAt.toIso8601String(),
-      if (invitedKinIds != null) 'invited_kin_ids': invitedKinIds,
+      'invited_kin_ids': ?invitedKinIds,
     });
     return response.data ?? {};
   }

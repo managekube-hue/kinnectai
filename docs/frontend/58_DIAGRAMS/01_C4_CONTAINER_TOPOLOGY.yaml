@@ -1,0 +1,47 @@
+graph TD
+    subgraph Client
+        M[Flutter Mobile/iOS/Android]
+        W[Next.js Web/PWA]
+    end
+    subgraph Edge
+        GW[API Gateway + WAF]
+        LB[Load Balancer]
+    end
+    subgraph Microservices
+        G[graph-service:8081]
+        F[feed-service:8082]
+        K[kernel-service:8083]
+        P[photoplay-service:8084]
+        D[dna-ingest-service:8085]
+        I[identity-service:8086]
+        B[behavioral-service:8087]
+        Me[media-service:8088]
+        R[rooms-service:8089]
+        MB[MemoryBox-service:8090]
+        Dis[discovery-service:8091]
+        N[notification-service:8092]
+        Pay[payment-service:8093]
+    end
+    subgraph Data
+        N4[Neo4j Aura]
+        PG[Aurora PostgreSQL 16 + pgvector]
+        RD[ElastiCache Redis]
+        CS[Keyspaces Cassandra]
+        S3[S3 + CloudFront]
+        MS[MSK Kafka]
+        HSM[CloudHSM/KMS]
+    end
+
+    M -->|HTTPS/TLS 1.3 + JWT| GW
+    W -->|HTTPS/TLS 1.3 + JWT| GW
+    GW --> LB
+    LB --> G & F & K & P & D & I & B & Me & R & MB & Dis & N & Pay
+    G --> N4 & RD & MS
+    F --> RD & K & MS
+    K --> PG & N4 & MS
+    MB --> HSM & S3 & PG & MS
+    R -->|WebRTC/SFU| Me
+    P --> S3 & MS & FFmpeg[GPU Workers]
+    Dis --> K & N4 & RD
+    N -->|FCM/APNS| M & W
+    Pay -->|RevenueCat/Stripe| PG

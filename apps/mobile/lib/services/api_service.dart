@@ -2,22 +2,28 @@
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  static const String baseUrl = 'http://localhost:8080';
+  static const String baseUrl = 'http://localhost:8000';
+    // Gateway URL: should match docker-compose or deployment setup
+    // For local development: gateway runs on :8000
+    // For production: use environment variable
   
+  static String? _sharedJwtToken;
   String? _jwtToken;
 
+  String? get accessToken => _jwtToken ?? _sharedJwtToken;
+
   void _loadToken() {
-    // For now, token is stored in memory only
+    _jwtToken ??= _sharedJwtToken;
   }
 
   Future<void> _saveToken(String token) async {
-    // For now, token is stored in memory only
     _jwtToken = token;
+    _sharedJwtToken = token;
   }
 
   Future<void> clearToken() async {
-    // For now, token is stored in memory only
     _jwtToken = null;
+    _sharedJwtToken = null;
   }
 
   Map<String, String> _getHeaders({bool requireAuth = true}) {
@@ -58,7 +64,7 @@ class ApiService {
 
   // Auth endpoints
   Future<Map<String, dynamic>> register(String email, String password, String name) async {
-    final response = await post('/api/v1/auth/register', {
+    final response = await post('/auth/signup', {
       'email': email,
       'password': password,
       'name': name,
@@ -66,7 +72,9 @@ class ApiService {
 
     if (response.statusCode == 201) {
       final data = jsonDecode(response.body);
-      if (data['token'] != null) {
+      if (data['access_token'] != null) {
+        await _saveToken(data['access_token']);
+      } else if (data['token'] != null) {
         await _saveToken(data['token']);
       }
       return data;
@@ -76,14 +84,16 @@ class ApiService {
   }
 
   Future<Map<String, dynamic>> login(String email, String password) async {
-    final response = await post('/api/v1/auth/login', {
+    final response = await post('/auth/login', {
       'email': email,
       'password': password,
     });
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      if (data['token'] != null) {
+      if (data['access_token'] != null) {
+        await _saveToken(data['access_token']);
+      } else if (data['token'] != null) {
         await _saveToken(data['token']);
       }
       return data;
@@ -94,7 +104,7 @@ class ApiService {
 
   // User endpoints
   Future<Map<String, dynamic>> getCurrentUser() async {
-    final response = await get('/api/v1/users/me');
+    final response = await get('/account');
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
@@ -103,7 +113,7 @@ class ApiService {
   }
 
   Future<Map<String, dynamic>> getUserById(String id) async {
-    final response = await get('/api/v1/users/$id');
+    final response = await get('/memory/$id');
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
@@ -112,7 +122,7 @@ class ApiService {
   }
 
   Future<Map<String, dynamic>> updateUser(Map<String, dynamic> updates) async {
-    final response = await patch('/api/v1/users/me', updates);
+    final response = await patch('/settings', updates);
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
@@ -122,7 +132,7 @@ class ApiService {
 
   // Graph endpoints
   Future<Map<String, dynamic>> getKinScore(String targetId) async {
-    final response = await get('/api/v1/graph/kin-score/$targetId');
+    final response = await get('/graph/traverse?target_id=$targetId');
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
@@ -131,7 +141,7 @@ class ApiService {
   }
 
   Future<Map<String, dynamic>> requestKinnection(String targetId) async {
-    final response = await post('/api/v1/graph/kinnections', {'targetId': targetId});
+    final response = await post('/graph/relationships', {'targetId': targetId});
     if (response.statusCode == 201) {
       return jsonDecode(response.body);
     } else {
@@ -140,7 +150,7 @@ class ApiService {
   }
 
   Future<Map<String, dynamic>> confirmKinnection(String kinnectionId) async {
-    final response = await patch('/api/v1/graph/kinnections/$kinnectionId/confirm', {});
+    final response = await patch('/graph/relationships/$kinnectionId', {});
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
@@ -150,7 +160,7 @@ class ApiService {
 
   // Feed endpoints
   Future<List<dynamic>> getLineFeed() async {
-    final response = await get('/api/v1/feed/line');
+    final response = await get('/feed');
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       return data['memories'] ?? [];
@@ -164,7 +174,7 @@ class ApiService {
     if (mediaUrl != null) {
       body['mediaUrl'] = mediaUrl;
     }
-    final response = await post('/api/v1/feed/memories', body);
+    final response = await post('/media/upload', body);
     if (response.statusCode == 201) {
       return jsonDecode(response.body);
     } else {
@@ -173,7 +183,7 @@ class ApiService {
   }
 
   Future<void> pulseMemory(String memoryId) async {
-    final response = await post('/api/v1/feed/memories/$memoryId/pulse', {});
+    final response = await post('/pulses', {'memory_id': memoryId});
     if (response.statusCode != 200) {
       throw Exception('Failed to pulse memory: ${response.body}');
     }

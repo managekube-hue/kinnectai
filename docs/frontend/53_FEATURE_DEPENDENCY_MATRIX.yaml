@@ -1,0 +1,17 @@
+feature_dependency_matrix:
+  memorybox:
+    requires: ["memorybox-service", "KMS/CloudHSM", "S3", "drift", "step_up_auth"]
+    blocks: "Steward flow, death verification, GDPR export"
+  photoplay:
+    requires: ["photoplay-service", "elevenlabs/d-id", "c2pa-rs", "sadtalker", "S3"]
+    blocks: "Flickers, voice overlay, credit consumption"
+  discovery:
+    requires: ["discovery-service", "redis_zset", "kernel-cache", "behavioral-clamp"]
+    blocks: "Lost Branches, Name Map, weekly pool refresh"
+  rooms:
+    requires: ["rooms-service", "mediasoup", "coturn", "kafka_signaling"]
+    blocks: "Gatherings, HLS broadcast, recording consent flow"
+  feed:
+    requires: ["feed-service", "kernel-service", "redis_feed_cache", "kc_ranking"]
+    blocks: "The Line, Echoes, ContentTypeBoost, Ripple propagation"
+  governance: "Circular dependencies forbidden. Feature flags gate incomplete chains. SRS §1.2 enforced."

@@ -81,7 +81,7 @@ class _KinnectionsFeedScreenState extends State<KinnectionsFeedScreen> {
           children: [
             Icon(PhosphorIcons.usersThree(), size: 64, color: KinnectColors.textMuted),
             const SizedBox(height: 16),
-            Text('No confirmed Kinnections', style: KinnectTextStyles.headlineSmall),
+            const Text('No confirmed Kinnections', style: KinnectTextStyles.headlineSmall),
             const SizedBox(height: 8),
             Text(
               'Invite family members or explore Discovery to find biological connections.',

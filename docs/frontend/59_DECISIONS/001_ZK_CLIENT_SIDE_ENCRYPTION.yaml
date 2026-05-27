@@ -1,0 +1,18 @@
+# ADR-001: Zero-Knowledge Client-Side Encryption for Memory Box
+Status: Accepted | Date: 2026-05-10 | Deciders: Engineering, Legal/DPO
+
+## Context
+Memory Box stores posthumous, time-triggered, and milestone memories. Legal requirement (SRS §5.2, PRD §17.2) mandates that server must never hold plaintext content or unwrapped DEK. GDPR Art. 17, state probate law, and SOC 2 immutable audit requirements apply.
+
+## Decision
+Implement client-side AES-256-GCM encryption via Web Crypto API. Server only stores `encrypted_dek` (wrapped by KEK via KMS), `content_s3_key`, and trigger metadata. Trigger execution requires ephemeral KMS unwrap → `presigned` GET URL → client decrypts locally. DEK zeroed post-use.
+
+## Consequences
+- ✅ Legal compliance: Server cannot access content without explicit trigger/KMS unwrap
+- ✅ Auditability: Every wrap/unwrap logged to CloudTrail + DynamoDB HMAC ledger
+- ✅ Performance: Adds ~150ms to seal flow (DEK gen + wrap + upload). Acceptable per SLO
+- ❌ Complexity: Client-side crypto increases mobile/Web app bundle. Requires step-up auth gate
+- ⚠️ Risk: DEK loss = permanent content loss. Mitigation: Shamir 3/5 recovery + S3 versioning
+
+## References
+SRS §5.2, §5.3, Appendix E/F | PRD §17.2, §31 | GDPR Art. 6/17/20

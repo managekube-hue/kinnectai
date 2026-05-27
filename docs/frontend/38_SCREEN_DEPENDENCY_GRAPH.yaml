@@ -1,0 +1,19 @@
+screen_dependencies:
+  line_feed:
+    requires: ["feed_cache", "kernel_status", "discovery_pool", "consent_flags_snapshot"]
+    blocks_if_missing: "Shows offline/chronological fallback. No discovery cards."
+  vault_composer:
+    requires: ["step_up_auth", "kms_endpoint", "drift_drafts", "steward_agreement_status"]
+    blocks_if_missing: "Draft auto-save. Seal disabled until step-up + consent bit 9 set."
+  discovery_screen:
+    requires: ["redis_weekly_pool", "penalty_cache", "kc_explain_endpoint"]
+    blocks_if_missing: "Empty state + 'Check back Sunday'. No API retries."
+  tree_graph:
+    requires: ["neo4j_aura", "consent_bit_2", "gedcom_conflict_store"]
+    blocks_if_missing: "Partial graph banner. CTA: Verify with DNA."
+  room_screen:
+    requires: ["coturn_creds", "mediasoup_sfu", "rsvp_state", "ice_config"]
+    blocks_if_missing: "Reconnecting spinner → audio-only fallback → retry."
+  settings_privacy:
+    requires: ["consent_flags_db", "revocation_queue", "audit_trail_endpoint"]
+    blocks_if_missing: "Read-only view. Toggle disabled. Error banner."

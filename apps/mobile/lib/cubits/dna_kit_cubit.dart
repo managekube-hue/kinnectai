@@ -101,11 +101,13 @@ class DnaKitCubit extends Cubit<DnaKitState> {
         final rawStatus = data['status']?.toString().toLowerCase() ?? '';
 
         if (rawStatus == 'complete') {
+          final ethnicity = (data['ethnicity'] as Map<String, dynamic>? ??
+                  const <String, dynamic>{})
+              .map((key, value) => MapEntry(key, (value as num).toDouble()));
           emit(DnaKitResultsReady(
             kitId: kitId,
             haplogroup: (data['haplogroup'] ?? '').toString(),
-            ethnicitySummary: (data['ethnicity'] as Map<String, dynamic>?)
-                {},
+            ethnicitySummary: ethnicity,
           ));
         } else {
           emit(DnaKitTracking(

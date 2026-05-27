@@ -1,0 +1,86 @@
+---
+# SORT_FILTER_RULES.yaml
+# Sorting strategies, filter UI patterns, faceted search
+sort_filter_rules:
+  the_line:
+    sort_options:
+      - label: "Newest First"
+        value: "created_at desc"
+        default: true
+      - label: "Oldest First"
+        value: "created_at asc"
+      - label: "Most Pulsed"
+        value: "pulse_count desc"
+      - label: "Most Viewed"
+        value: "view_count desc"
+    filter_options:
+      - field: "creator"
+        type: "faceted_list"
+      - field: "memory_type"
+        type: "checkbox_group"
+      - field: "time_range"
+        type: "date_picker"
+    ui_pattern: "sort dropdown + filter icon (sheet on tap)"
+
+  tree:
+    sort_options:
+      - label: "Closest Relations First"
+        value: "kinship_distance asc"
+        default: true
+      - label: "Alphabetical"
+        value: "name asc"
+      - label: "Oldest to Youngest"
+        value: "birth_date asc"
+    filter_options:
+      - field: "generation"
+        type: "generation_selector" # ancestors, parents, siblings, children, descendants
+      - field: "verified_status"
+        type: "checkbox" # show unverified relations
+    ui_pattern: "side panel on desktop, bottom sheet on mobile"
+
+  discovery:
+    sort_options:
+      - label: "Best Match"
+        value: "kc_score desc"
+        default: true
+      - label: "Newest First"
+        value: "discovered_at desc"
+    filter_options: []
+    ui_pattern: "no sort/filter UI (algorithmic ranking only)"
+
+  vault:
+    sort_options:
+      - label: "Recently Sealed"
+        value: "sealed_at desc"
+        default: true
+      - label: "Trigger Date"
+        value: "trigger_at asc"
+      - label: "Alphabetical"
+        value: "title asc"
+    filter_options:
+      - field: "trigger_type"
+        type: "checkbox_group"
+      - field: "steward_count"
+        type: "range_slider"
+    ui_pattern: "filter button + sort dropdown"
+
+  search_results:
+    sort_options:
+      - label: "Relevance"
+        value: "relevance desc"
+        default: true
+      - label: "Newest First"
+        value: "created_at desc"
+      - label: "Most Popular"
+        value: "engagement_score desc"
+    filter_options:
+      - field: "type"
+        type: "checkbox_group" # Memory, Kin, Room, etc.
+      - field: "date_range"
+        type: "date_picker"
+    ui_pattern: "sidebar filters on desktop, top sheet on mobile"
+
+  persistence:
+    remember_sort: true (per screen)
+    remember_filters: true (per screen, 24h TTL)
+    share_filters: "URL params for deep linking (e.g., ?sort=created_at&filter=type:Memory)"

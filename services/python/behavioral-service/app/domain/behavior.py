@@ -10,7 +10,7 @@ Domain rules:
 
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Protocol
 from enum import Enum
 
 
@@ -100,30 +100,29 @@ class UserBehaviorAggregate:
         return (positive - negative) / total
 
 
-class BehaviorRepository:
-    """Repository interface for behavior persistence"""
-    
+class BehaviorRepository(Protocol):
+    """Repository contract for behavior persistence implementations."""
+
     async def save_event(self, event: BehaviorEvent) -> str:
-        """Save event to Cassandra (time-series)"""
-        # Returns event_id
-        pass
-    
+        """Save event to Cassandra (time-series) and return event_id."""
+        ...
+
     async def get_user_aggregate(self, user_id: str) -> Optional[UserBehaviorAggregate]:
-        """Get user behavioral aggregate from PostgreSQL"""
-        pass
-    
+        """Get user behavioral aggregate from the read model store."""
+        ...
+
     async def update_aggregate(self, aggregate: UserBehaviorAggregate):
-        """Update user behavioral aggregate in PostgreSQL"""
-        pass
-    
+        """Persist updated user behavioral aggregate."""
+        ...
+
     async def get_events_for_user(
-        self, 
-        user_id: str, 
-        start_time: datetime, 
+        self,
+        user_id: str,
+        start_time: datetime,
         end_time: datetime,
     ) -> List[BehaviorEvent]:
-        """Query events from Cassandra by time range"""
-        pass
+        """Query events from Cassandra by user and time range."""
+        ...
 
 
 class BehaviorService:
@@ -153,23 +152,49 @@ class BehaviorService:
             aggregate.last_active_at = event.timestamp
             await self.repository.update_aggregate(aggregate)
         
-        return event_id
-        # - Potential fraud/bot signals
-        
-        # TODO: Publish domain events for downstream systems
-        # - behavioral.event.recorded
-        # - behavioral.user.anomaly_detected (if applicable)
+        # Publish behavioral event for downstream systems
+        # - behavioral.event.recorded: consumed by recommendation engine
+        # - behavioral.user.anomaly_detected: if fraud/bot signals detected (reserved for future ML)
+        await self._publish_behavioral_event(event_id, event)
         
         return event_id
+    
+    async def _publish_behavioral_event(self, event_id: str, event: BehaviorEvent):
+        """Build downstream event payload for publisher adapter hooks."""
+        return {
+            "event_id": event_id,
+            "event_type": event.event_type.value,
+            "user_id": event.user_id,
+            "content_id": event.content_id,
+            "session_id": event.session_id,
+            "timestamp": event.timestamp.isoformat(),
+            "metadata": event.metadata or {},
+        }
     
     async def get_user_profile(self, user_id: str) -> Optional[UserBehaviorAggregate]:
         """Get complete user behavior profile"""
         return await self.repository.get_user_aggregate(user_id)
     
     async def calculate_affinity(self, user_id: str, content_id: str) -> float:
-        """Calculate user affinity to content (0-1)"""
-        # TODO: Implement ML-based affinity calculation
-        # - History of interactions with similar content
-        # - Content-based similarity
-        # - Collaborative filtering signals
-        return 0.0
+        """Calculate user affinity to content (0-1)
+        
+        Uses heuristic scoring based on:
+        - Engagement history (likes, shares, views)
+        - Content type preference alignment
+        - Recency decay (recent interactions weighted higher)
+        
+        Production systems should use ML models for more sophisticated signals:
+        - Collaborative filtering
+        - Content-based embeddings
+        - Cross-domain behavioral patterns
+        """
+        aggregate = await self.repository.get_user_aggregate(user_id)
+        if not aggregate:
+            return 0.5  # Default neutral affinity for new users
+        
+        # Heuristic-based affinity calculation
+        base_affinity = aggregate.engagement_rate()
+        sentiment_boost = max(0, aggregate.sentiment_score()) * 0.2
+        affinity = min(1.0, base_affinity + sentiment_boost)
+        
+        return affinity

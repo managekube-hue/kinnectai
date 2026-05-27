@@ -105,7 +105,7 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
               decoration: InputDecoration(
                 hintText: 'Search help articles',
                 hintStyle: const TextStyle(color: KinnectColors.textSecondary),
-                prefixIcon: const Icon(PhosphorIcons.magnifyingGlass(), color: KinnectColors.textSecondary),
+                prefixIcon: Icon(PhosphorIcons.magnifyingGlass(), color: KinnectColors.textSecondary),
                 filled: true,
                 fillColor: KinnectColors.background,
                 border: OutlineInputBorder(
@@ -145,7 +145,7 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
         children: topic.articles.map((article) => ListTile(
           title: Text(article.title, style: const TextStyle(color: KinnectColors.textPrimary, fontSize: 14)),
           subtitle: Text(article.subtitle, style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
-          trailing: const Icon(PhosphorIcons.caretRight(), color: KinnectColors.textMuted, size: 20),
+          trailing: Icon(PhosphorIcons.caretRight(), color: KinnectColors.textMuted, size: 20),
           onTap: () => _showArticle(article),
         )).toList(),
       ),
@@ -182,7 +182,7 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
               Expanded(
                 child: OutlinedButton.icon(
                   onPressed: () => _contactSupport('email'),
-                  icon: const Icon(PhosphorIcons.envelope()),
+                  icon: Icon(PhosphorIcons.envelope()),
                   label: const Text('Email'),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: KinnectColors.accent,
@@ -194,7 +194,7 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
               Expanded(
                 child: ElevatedButton.icon(
                   onPressed: () => _contactSupport('chat'),
-                  icon: const Icon(PhosphorIcons.chatCircle()),
+                  icon: Icon(PhosphorIcons.chatCircle()),
                   label: const Text('Live Chat'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: KinnectColors.accent,
@@ -267,11 +267,11 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
                   ),
                   const Spacer(),
                   IconButton(
-                    icon: const Icon(PhosphorIcons.thumbsUp(), color: KinnectColors.success),
+                    icon: Icon(PhosphorIcons.thumbsUp(), color: KinnectColors.success),
                     onPressed: () {},
                   ),
                   IconButton(
-                    icon: const Icon(PhosphorIcons.thumbsDown(), color: KinnectColors.error),
+                    icon: Icon(PhosphorIcons.thumbsDown(), color: KinnectColors.error),
                     onPressed: () {},
                   ),
                 ],

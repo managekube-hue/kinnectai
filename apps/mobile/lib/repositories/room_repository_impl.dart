@@ -13,7 +13,7 @@ class RoomRepositoryImpl implements RoomRepository {
     final response = await _dio.post<Map<String, dynamic>>('$basePath/rooms', data: {
       'name': name,
       'is_private': isPrivate,
-      if (kinScoreGate != null) 'kin_score_gate': kinScoreGate,
+      'kin_score_gate': ?kinScoreGate,
     });
     return response.data ?? {};
   }

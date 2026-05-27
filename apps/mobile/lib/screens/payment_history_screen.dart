@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../theme/colors.dart';
@@ -14,12 +14,12 @@ class PaymentHistoryScreen extends StatefulWidget {
 
 class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
   static final _transactions = [
-    _TxData(title: '10 Photplay Credits', amount: '\$8.99', date: 'May 5, 2026', status: 'completed', icon: PhosphorIcons.flower),
-    _TxData(title: 'Vault+ Monthly', amount: '\$4.99', date: 'May 1, 2026', status: 'completed', icon: PhosphorIcons.lock),
-    _TxData(title: '5 Photplay Credits', amount: '\$4.49', date: 'Apr 22, 2026', status: 'completed', icon: PhosphorIcons.flower),
-    _TxData(title: 'Kinnect Kit Order', amount: '\$0.00', date: 'Apr 15, 2026', status: 'completed', icon: PhosphorIcons.dna),
-    _TxData(title: 'Vault+ Monthly', amount: '\$4.99', date: 'Apr 1, 2026', status: 'completed', icon: PhosphorIcons.lock),
-    _TxData(title: '1 Photplay Credit', amount: '\$0.99', date: 'Mar 28, 2026', status: 'refunded', icon: PhosphorIcons.flower),
+    const _TxData(title: '10 Photplay Credits', amount: '\$8.99', date: 'May 5, 2026', status: 'completed', icon: PhosphorIcons.flower),
+    const _TxData(title: 'Vault+ Monthly', amount: '\$4.99', date: 'May 1, 2026', status: 'completed', icon: PhosphorIcons.lock),
+    const _TxData(title: '5 Photplay Credits', amount: '\$4.49', date: 'Apr 22, 2026', status: 'completed', icon: PhosphorIcons.flower),
+    const _TxData(title: 'Kinnect Kit Order', amount: '\$0.00', date: 'Apr 15, 2026', status: 'completed', icon: PhosphorIcons.dna),
+    const _TxData(title: 'Vault+ Monthly', amount: '\$4.99', date: 'Apr 1, 2026', status: 'completed', icon: PhosphorIcons.lock),
+    const _TxData(title: '1 Photplay Credit', amount: '\$0.99', date: 'Mar 28, 2026', status: 'refunded', icon: PhosphorIcons.flower),
   ];
 
   @override
@@ -28,7 +28,7 @@ class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
       backgroundColor: KinnectColors.background,
       appBar: AppBar(
         backgroundColor: KinnectColors.surface,
-        title: Text('Payment History', style: KinnectTextStyles.headlineSmall),
+        title: const Text('Payment History', style: KinnectTextStyles.headlineSmall),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: KinnectColors.textPrimary),
           onPressed: () => Navigator.pop(context),
@@ -47,14 +47,14 @@ class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
                 children: [
                   Icon(PhosphorIcons.receipt(), size: 64, color: KinnectColors.textMuted),
                   const SizedBox(height: 16),
-                  Text('No transactions yet', style: KinnectTextStyles.headlineSmall),
+                  const Text('No transactions yet', style: KinnectTextStyles.headlineSmall),
                 ],
               ),
             )
           : ListView.separated(
               padding: const EdgeInsets.all(16),
               itemCount: _transactions.length,
-              separatorBuilder: (_, __) => Divider(color: KinnectColors.dividerSubtle, height: 1),
+              separatorBuilder: (_, _) => const Divider(color: KinnectColors.dividerSubtle, height: 1),
               itemBuilder: (context, i) => _TransactionTile(tx: _transactions[i]),
             ),
     );
@@ -97,7 +97,7 @@ class _TransactionTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(tx.title, style: const TextStyle(color: KinnectColors.textPrimary, fontWeight: FontWeight.w600, fontSize: 14)),
-                Text(tx.date, style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
+                Text(tx.date, style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
               ],
             ),
           ),
@@ -114,7 +114,7 @@ class _TransactionTile extends StatelessWidget {
                 ),
               ),
               if (isRefunded)
-                Text('Refunded', style: TextStyle(color: KinnectColors.error, fontSize: 11)),
+                const Text('Refunded', style: TextStyle(color: KinnectColors.error, fontSize: 11)),
             ],
           ),
         ],

@@ -18,7 +18,7 @@ class ContentPreferencesScreen extends StatelessWidget {
       backgroundColor: KinnectColors.background,
       appBar: AppBar(
         backgroundColor: KinnectColors.surface,
-        title: Text('Content Preferences', style: KinnectTextStyles.headlineSmall),
+        title: const Text('Content Preferences', style: KinnectTextStyles.headlineSmall),
         leading: IconButton(icon: const Icon(Icons.arrow_back, color: KinnectColors.textPrimary), onPressed: () => Navigator.pop(context)),
       ),
       body: BlocBuilder<SettingsCubit, SettingsState>(
@@ -40,7 +40,7 @@ class ContentPreferencesScreen extends StatelessWidget {
                 title: const Text('Restricted Mode', style: TextStyle(color: KinnectColors.textPrimary)),
                 subtitle: const Text('Limits mature or sensitive content', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
                 value: s.restrictedMode,
-                activeColor: KinnectColors.accent,
+                activeThumbColor: KinnectColors.accent,
                 onChanged: (v) => cubit.updateContentPreferences(restrictedMode: v),
               ),
               SwitchListTile(
@@ -48,7 +48,7 @@ class ContentPreferencesScreen extends StatelessWidget {
                 title: const Text('STEM feed', style: TextStyle(color: KinnectColors.textPrimary)),
                 subtitle: const Text('Education-focused content stream', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
                 value: s.stemFeed,
-                activeColor: KinnectColors.accent,
+                activeThumbColor: KinnectColors.accent,
                 onChanged: (v) => cubit.updateContentPreferences(stemFeed: v),
               ),
               ListTile(

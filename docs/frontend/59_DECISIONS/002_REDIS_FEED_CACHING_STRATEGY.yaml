@@ -1,0 +1,17 @@
+# ADR-002: Redis ZADD Feed Caching with Kernel Fallback
+Status: Accepted | Date: 2026-05-10 | Deciders: Feed Engineering, ML Kernel
+
+## Context
+The Line requires p99 <100ms feed load. KC kernel computation (GNN + 5-layer weighting) takes ~180ms p99. Redis cache must absorb traffic while maintaining CR ordering, ContentTypeBoost, and anti-feedback constraints.
+
+## Decision
+Pre-compute `feed:{user_id}` Redis ZADD (score=KC, member=memory_id) via `feed-service`. TTL=300s. Fallback modes: `kc_cached` (default), `chronological` (kernel degraded), `empty` (kernel unavailable >30m). Cache invalidation on DNA ingest, new Kinnection, or consent revocation.
+
+## Consequences
+- ✅ Latency: p99 drops to ~45ms (Redis read + network)
+- ✅ Determinism: Kernel downtime does not break feed; fallback is explicit & auditable
+- ❌ Staleness: 300s TTL means KC scores may lag. Mitigation: WebSocket push on critical events
+- ⚠️ Cache stampede: Mitigated via Redis NX + jitter + `stale_while_revalidate`
+
+## References
+SRS §2.3, §4.1, §11.1 | PRD §01.1, §43

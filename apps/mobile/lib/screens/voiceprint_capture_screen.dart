@@ -165,7 +165,7 @@ class _VoiceprintCaptureContentState extends State<_VoiceprintCaptureContent> {
         backgroundColor: KinnectColors.background,
         appBar: AppBar(
           backgroundColor: KinnectColors.surface,
-          title: Text('Voiceprint Capture', style: KinnectTextStyles.headlineSmall),
+          title: const Text('Voiceprint Capture', style: KinnectTextStyles.headlineSmall),
           centerTitle: true,
         ),
         body: SafeArea(

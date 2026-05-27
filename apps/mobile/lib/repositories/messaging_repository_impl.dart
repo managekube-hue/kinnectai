@@ -18,7 +18,7 @@ class MessagingRepositoryImpl implements MessagingRepository {
   Future<List<Map<String, dynamic>>> fetchMessages(String threadId, {String? cursor}) async {
     final response = await _dio.get<Map<String, dynamic>>(
       '$basePath/messages/threads/$threadId',
-      queryParameters: {if (cursor != null) 'after': cursor},
+      queryParameters: {'after': ?cursor},
     );
     return ((response.data?['items'] as List?) ?? []).whereType<Map<String, dynamic>>().toList();
   }

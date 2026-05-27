@@ -1,7 +1,6 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../router/app_nav.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import '../theme/colors.dart';
 import '../models/memory.dart';
 import '../feed_service.dart';
@@ -156,7 +155,7 @@ class _RepostStitchScreenState extends State<RepostStitchScreen> with SingleTick
                 ),
                 child: memory.thumbnailUrl != null
                     ? Image.network(memory.thumbnailUrl!, fit: BoxFit.cover)
-                    : const Icon(PhosphorIcons.videoCamera(), color: KinnectColors.textMuted, size: 32),
+                    : Icon(PhosphorIcons.videoCamera(), color: KinnectColors.textMuted, size: 32),
               ),
               const SizedBox(width: 16),
               Expanded(

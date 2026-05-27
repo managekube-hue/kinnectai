@@ -68,12 +68,16 @@ def compute_kc(
             user_a_id,
         )
         result = _kernel.calculate_kin_score_no_genomic(user_a_id, user_b_id)
-        raw_score = result.get("final_score", 0.0)
+        raw_score = result.get("final_score")
+        if raw_score is None:
+            raw_score = float(result.get("kin_score", 0.0)) / 100.0
         final_score = _clamp(raw_score * _GENOMIC_PAUSED_PENALTY, 0.0, 1.0)
         return final_score, True
     else:
         result = _kernel.calculate_kin_score(user_a_id, user_b_id)
-        raw_score = result.get("final_score", 0.0)
+        raw_score = result.get("final_score")
+        if raw_score is None:
+            raw_score = float(result.get("kin_score", 0.0)) / 100.0
         return _clamp(raw_score, 0.0, 1.0), False
 
 
@@ -142,4 +146,4 @@ try:
 
 except ImportError:
     # Running in test environments where the full algorithm is not present.
-    pass
+    logger.debug("kin_score_algorithm import unavailable in this environment")

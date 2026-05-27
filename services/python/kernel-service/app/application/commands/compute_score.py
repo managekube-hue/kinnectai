@@ -1,7 +1,10 @@
 """Compute KinScore command handler."""
+import os
+
 from app.domain.kinscore.entities import KinScore, ScoreStatus
 from app.infrastructure.postgres.repository import KinScoreRepository
 from app.infrastructure.kafka.producer import EventProducer
+from app.kin_score_algorithm import KCKernel
 
 
 class ComputeKinScoreCommand:
@@ -13,6 +16,8 @@ class ComputeKinScoreCommand:
 
 class ComputeKinScoreHandler:
     """Handles kinship score computation."""
+
+    _kernel: KCKernel | None = None
 
     def __init__(self, repo: KinScoreRepository, producer: EventProducer):
         self.repo = repo
@@ -38,8 +43,7 @@ class ComputeKinScoreHandler:
             # Persist pending
             self.repo.create(score)
 
-            # TODO: Call actual kinship algorithm
-            # This would integrate with kin_score_algorithm.py
+            # Execute Kinnection Coefficient algorithm with current user inputs.
             computed_score, confidence, features = self._compute(cmd.data)
 
             # Update entity
@@ -59,5 +63,47 @@ class ComputeKinScoreHandler:
 
     def _compute(self, data: dict) -> tuple:
         """Call kinship algorithm."""
-        # TODO: integrate with actual algorithm
-        return 85.5, 0.92, {"shared_ancestors": 3}
+        if ComputeKinScoreHandler._kernel is None:
+            pg_dsn = os.getenv(
+                "POSTGRES_DSN",
+                "postgresql://kinnect:kinnect_dev_password@localhost:5432/kinnectai",
+            )
+            neo4j_uri = os.getenv("NEO4J_URI", "bolt://localhost:7687")
+            neo4j_user = os.getenv("NEO4J_USER", "neo4j")
+            neo4j_pass = os.getenv("NEO4J_PASSWORD", "kinnect_neo4j_password")
+            cassandra_hosts = os.getenv("CASSANDRA_HOSTS", "localhost").split(",")
+            cassandra_keyspace = os.getenv("CASSANDRA_KEYSPACE", "kinnectai_events")
+            ComputeKinScoreHandler._kernel = KCKernel(
+                pg_dsn,
+                neo4j_uri,
+                neo4j_user,
+                neo4j_pass,
+                cassandra_hosts,
+                cassandra_keyspace,
+            )
+
+        user_a = str(data.get("user_id") or data.get("user_a_id") or "")
+        user_b = str(data.get("match_id") or data.get("user_b_id") or "")
+        if not user_a or not user_b:
+            raise ValueError("user_id and match_id are required for kin score computation")
+
+        result = ComputeKinScoreHandler._kernel.calculate_kin_score(user_a, user_b)
+
+        score = float(result.get("kin_score", 0.0))
+        confidence = float(result.get("confidence", 0.0))
+
+        consent_flags = int(data.get("consent_flags", 0xFFFF))
+        fallback_applied = (consent_flags & 0x02) == 0
+        if fallback_applied:
+            score = max(0.0, min(100.0, score * 0.60))
+            confidence = max(0.0, min(1.0, confidence * 0.60))
+
+        features = {
+            "action": result.get("action", "filter_out"),
+            "relationship_guess": result.get("relationship_guess", "Unknown"),
+            "cache_ttl": result.get("cache_ttl", 3600),
+            "layers_used": result.get("layers_used", {}),
+            "fallback_applied": fallback_applied,
+        }
+
+        return score, confidence, features

@@ -31,9 +31,9 @@ class _BiometricConsentDialogState extends State<BiometricConsentDialog> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: Row(
         children: [
-          const Icon(PhosphorIcons.fingerprint(), color: KinnectColors.accent, size: 28),
+          Icon(PhosphorIcons.fingerprint(), color: KinnectColors.accent, size: 28),
           const SizedBox(width: 12),
-          Text('Biometric Consent', style: KinnectTextStyles.headlineSmall),
+          const Text('Biometric Consent', style: KinnectTextStyles.headlineSmall),
         ],
       ),
       content: SingleChildScrollView(
@@ -74,7 +74,7 @@ class _BiometricConsentDialogState extends State<BiometricConsentDialog> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(PhosphorIcons.checkCircle(), size: 16, color: KinnectColors.success),
+                  Icon(PhosphorIcons.checkCircle(), size: 16, color: KinnectColors.success),
                   const SizedBox(width: 8),
                   Expanded(child: Text(right, style: KinnectTextStyles.bodySmall)),
                 ],

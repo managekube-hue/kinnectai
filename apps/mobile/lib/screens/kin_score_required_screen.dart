@@ -40,7 +40,7 @@ class KinScoreRequiredScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 24),
-                Text(
+                const Text(
                   'Kin Score Required',
                   style: KinnectTextStyles.headlineMedium,
                 ),

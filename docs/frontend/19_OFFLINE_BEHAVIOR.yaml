@@ -1,0 +1,41 @@
+---
+# OFFLINE_BEHAVIOR.yaml
+# Client-side queue, conflict resolution, sync strategies
+offline_behavior:
+  sync_queue:
+    max_queue_depth: 500 items
+    storage_backend: Drift + Hive (dual-write for reliability)
+    sync_priority: ["auth", "vault_seal", "kinnections", "other"]
+    batch_size: 10 per sync cycle
+    retry_backoff: "1s, 5s, 15s, 1m, 5m, 30m, 24h"
+
+  conflict_resolution:
+    memory_created_offline:
+      - conflict_type: "local_newer"
+        strategy: "local wins, notify user of server version"
+        undo: "5min undo window"
+      - conflict_type: "server_newer"
+        strategy: "show merge UI, user selects canonical version"
+        undo: "permanent after 24h"
+    
+    settings_changed_offline:
+      - conflict_type: "both_sides_modified"
+        strategy: "server wins, warn user"
+        undo: "immediately revert to local if user chooses"
+
+  cached_reads:
+    the_line: "Drift line_cache (most recent 50)"
+    tree_hierarchy: "Drift tree_cache (24h TTL)"
+    discovery_weekly: "Hive discovery_weekly (never expires until next update)"
+    vault_metadata: "Hive vault_metadata (never expires)"
+    profile: "Hive profile_cache (7d TTL)"
+
+  queue_ui:
+    pending_item_badge: "Shows count next to tab icon (red dot if > 3 pending)"
+    queue_banner: "Appears when offline, lists item count + ETA to sync"
+    sync_complete_toast: "Shows after each successful sync batch"
+
+  fallback_ordering:
+    feed_display: "Drift cache → Chronological → Show empty state"
+    graph_display: "Drift cache → Hive tree_cache → Show empty state"
+    vault_display: "Hive metadata → Show list stubs (title only)"

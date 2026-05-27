@@ -87,7 +87,7 @@ class CommerceCubit extends Cubit<CommerceState> {
     emit(CommercePurchasing());
     try {
       final result = await Purchases.purchasePackage(package);
-      emit(CommercePurchaseComplete(result));
+      emit(CommercePurchaseComplete(result.customerInfo));
     } catch (e) {
       emit(CommerceError('Purchase failed: $e'));
     }

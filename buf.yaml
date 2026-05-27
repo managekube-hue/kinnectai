@@ -1,0 +1,17 @@
+version: v2
+modules:
+  - path: packages/shared-contracts/protobuf
+lint:
+  use:
+    - DEFAULT
+    - FILE_LOWER_SNAKE_CASE
+  except:
+    - FIELD_NOT_REQUIRED
+    - PACKAGE_NO_IMPORT_CYCLE
+breaking:
+  use:
+    - FILE
+    - PACKAGE
+    - WIRE_JSON
+    - FIELD_SAME_TYPE
+    - ENUM_VALUE_NO_DELETE

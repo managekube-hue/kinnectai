@@ -1,0 +1,11 @@
+web_capabilities:
+  auth: "WebAuthn/Passkey, WebOTP, TOTP authenticator"
+  crypto: "Web Crypto API (SubtleCrypto), IndexedDB (drafts/cache)"
+  media: "MediaRecorder API, WebRTC, HLS.js, WebAssembly (C2PA verify)"
+  realtime: "WebSocket, Server-Sent Events, Intersection Observer"
+  pwa: "Service Worker, Cache API, Push API, Manifest"
+  storage: "IndexedDB (drift), localStorage (session fallback), Cache Storage"
+  limits:
+    service_worker_timeout: "60s"
+    indexeddb_quota: "OS-managed (~60% disk)"
+    media_playback: "autoplay muted policy, background audio via Media Session API"

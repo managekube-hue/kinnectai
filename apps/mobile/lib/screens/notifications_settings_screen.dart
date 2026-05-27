@@ -146,18 +146,18 @@ class _NotificationsSettingsScreenState extends State<NotificationsSettingsScree
         color: KinnectColors.surface,
         borderRadius: BorderRadius.circular(8),
       ),
-      child: const Column(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
               Icon(PhosphorIcons.info(), color: KinnectColors.accent, size: 20),
-              SizedBox(width: 8),
-              Text('Push vs In-App', style: TextStyle(color: KinnectColors.textPrimary, fontWeight: FontWeight.bold)),
+              const SizedBox(width: 8),
+              const Text('Push vs In-App', style: TextStyle(color: KinnectColors.textPrimary, fontWeight: FontWeight.bold)),
             ],
           ),
-          SizedBox(height: 8),
-          Text(
+          const SizedBox(height: 8),
+          const Text(
             'Push: Device notifications\nIn-App: Pulse tab inbox\n\nDisabling Push won\'t affect In-App history.',
             style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12, height: 1.5),
           ),
@@ -230,7 +230,7 @@ class _NotificationsSettingsScreenState extends State<NotificationsSettingsScree
                       const SizedBox(width: 8),
                       Switch(
                         value: _notifications[key]!['push']!,
-                        activeColor: KinnectColors.accent,
+                        activeThumbColor: KinnectColors.accent,
                         onChanged: required
                             ? null
                             : (value) {
@@ -248,7 +248,7 @@ class _NotificationsSettingsScreenState extends State<NotificationsSettingsScree
                       const SizedBox(width: 8),
                       Switch(
                         value: _notifications[key]!['inApp']!,
-                        activeColor: KinnectColors.accent,
+                        activeThumbColor: KinnectColors.accent,
                         onChanged: (value) {
                                 setState(() => _notifications[key]!['inApp'] = value);
                                 // In-app toggles are local UI only per PRD

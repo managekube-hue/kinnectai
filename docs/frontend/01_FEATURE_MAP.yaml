@@ -1,0 +1,28 @@
+# KinnectAI Frontend Feature Map
+# Maps PRD sections → Client surfaces → SRS service boundaries → Implementation status
+# Lexicon enforced: No social-network terminology. All UI uses KinnectAI-native terms.
+
+## Core Navigation
+- The Line (Home) | PRD §01 | SRS feed-service (8082) | ✅ Live
+- Discovery | PRD §07 | SRS discovery-service (8091) | ✅ Live
+- Tree / Branch Map | PRD §05-06 | SRS kin-graph-service (8081) | ✅ Live
+- Create Studio | PRD §02 | SRS photoplay-service (8084) / media-service (8088) | ✅ Live
+- Rooms / Gatherings | PRD §08 | SRS rooms-service (8089) | ✅ Live
+- Memory Box / Vault | PRD §03, §17 | SRS memorybox-service (8090) | ✅ Live
+- Pulse / Notifications | PRD §09 | SRS notification-service (8092) | ✅ Live
+- Root Profile | PRD §10 | SRS identity-service (8086) | ✅ Live
+- Commerce / Marketplace | PRD §16, §22 | SRS payment-service (8093) | ✅ Live
+- Settings & Privacy | PRD §12 | SRS auth/gateway/consent-engine | ✅ Live
+
+## AI & Synthetic Media
+- Photoplay Studio | PRD §02.2 | photoplay-service + C2PA | ✅ Live
+- Flickers Documentary | PRD §25 | photoplay-service + GPT-4o | ✅ Live
+- Family Crest SVG | PRD §02.2, §49 | photoplay-service + go-sanitize | ✅ Live
+- Restore Tool | PRD §02.5 | media-service (ESRGAN+DeOldify) | ✅ Live
+
+## Compliance & Trust
+- Consent Bitmask UI | PRD §12.8, §39 | SRS §5.1, §12.3 | ✅ Live
+- Steward Agreement Flow | PRD §31 | SRS §5.3, §17.3 | ✅ Live
+- Room Recording Consent | PRD §34 | SRS §9.1, §20.2 | ✅ Live
+- Voiceprint Challenge | PRD §35 | SRS §7.2 SYN-002 | ✅ Live
+- Moderation Appeals | PRD §33 | SRS §7.1 TS-001 | ✅ Live

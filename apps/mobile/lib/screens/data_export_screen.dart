@@ -28,7 +28,7 @@ class _DataExportContent extends StatelessWidget {
       backgroundColor: KinnectColors.background,
       appBar: AppBar(
         backgroundColor: KinnectColors.surface,
-        title: Text('Download Your Data', style: KinnectTextStyles.headlineSmall),
+        title: const Text('Download Your Data', style: KinnectTextStyles.headlineSmall),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: KinnectColors.textPrimary),
           onPressed: () => Navigator.pop(context),
@@ -41,7 +41,7 @@ class _DataExportContent extends StatelessWidget {
             children: [
               Icon(PhosphorIcons.downloadSimple(), size: 64, color: KinnectColors.primary),
               const SizedBox(height: 16),
-              Text(
+              const Text(
                 'Export Your KinnectAI Data',
                 textAlign: TextAlign.center,
                 style: KinnectTextStyles.headlineMedium,
@@ -81,7 +81,7 @@ class _DataExportContent extends StatelessWidget {
                       const SizedBox(height: 8),
                       Text('Export in progress', style: KinnectTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.w600)),
                       const SizedBox(height: 4),
-                      Text(
+                      const Text(
                         'We\'ll send an email when your data is ready to download.',
                         textAlign: TextAlign.center,
                         style: TextStyle(color: KinnectColors.textSecondary, fontSize: 13),
@@ -133,7 +133,7 @@ class _DataExportContent extends StatelessWidget {
                     color: KinnectColors.error.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Text(state.message, style: TextStyle(color: KinnectColors.error)),
+                  child: Text(state.message, style: const TextStyle(color: KinnectColors.error)),
                 ),
 
               if (state is ExportIdle) ...[
@@ -151,7 +151,7 @@ class _DataExportContent extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 12),
-                Text(
+                const Text(
                   'Export typically takes 24-48 hours. Decryption key sent to your verified email separately.',
                   textAlign: TextAlign.center,
                   style: TextStyle(color: KinnectColors.textMuted, fontSize: 12),

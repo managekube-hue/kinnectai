@@ -1,8 +1,6 @@
-﻿import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-import '../cubits/settings_cubit.dart';
 import '../router/app_nav.dart';
 import '../theme/colors.dart';
 import '../theme/typography.dart';
@@ -28,7 +26,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       backgroundColor: KinnectColors.background,
       appBar: AppBar(
         backgroundColor: KinnectColors.surface,
-        title: Text('Settings and privacy', style: KinnectTextStyles.headlineSmall),
+        title: const Text('Settings and privacy', style: KinnectTextStyles.headlineSmall),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: KinnectColors.textPrimary),
           onPressed: () => Navigator.pop(context),
@@ -165,7 +163,7 @@ class _SubItem extends StatelessWidget {
     return ListTile(
       contentPadding: const EdgeInsets.only(left: 32, right: 16),
       title: Text(label, style: const TextStyle(color: KinnectColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
-      subtitle: Text(subtitle, style: TextStyle(color: KinnectColors.textSecondary, fontSize: 11)),
+      subtitle: Text(subtitle, style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 11)),
       trailing: Icon(PhosphorIcons.caretRight(), size: 16, color: KinnectColors.textMuted),
       onTap: onTap,
     );

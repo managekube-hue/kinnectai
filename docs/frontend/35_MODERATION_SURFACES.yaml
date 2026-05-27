@@ -1,0 +1,18 @@
+moderation_surfaces:
+  thresholds:
+    text_toxicity: "≥0.8 → auto-hide + P0 queue. 0.5-0.79 → P1 review."
+    image_nsfw: "≥0.7 → auto-reject + log to moderation.queue."
+    csam_photoDNA: "Any match → immediate removal + NCMEC report. Account suspended."
+    spam_pattern: "≥3 rapid posts → rate limit + P2 queue."
+  creator_ui:
+    hidden_banner: "Your Memory was hidden pending review. You'll hear back within 2 hours."
+    appeal_flow: "Tap to appeal → free text (max 500 chars) → submit → status: under review"
+    outcome: "Push: Approved/Upheld. Detailed reason in Pulse tab."
+  trust_safety_sl:
+    p0: "30 min response, 2h resolution"
+    p1: "2h response, 24h resolution"
+    p2: "24h response, 72h resolution"
+  compliance:
+    ncme_reporting: "automated on CSAM match >95%"
+    audit_trail: "immutable DynamoDB HMAC ledger"
+    dpo_review: "required for P0 escalations & death verification holds"

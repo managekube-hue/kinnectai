@@ -1,0 +1,53 @@
+---
+# PAGINATION_RULES.yaml
+# Infinite scroll vs pagination, cursor-based navigation, edge cases
+pagination_rules:
+  the_line_feed:
+    strategy: "cursor-based pagination"
+    page_size: 20
+    initial_load: 5 (quick display)
+    load_more_trigger: "when user scrolls to 80% of feed"
+    load_more_type: "soft refresh (no page jump)"
+    max_total_items: 500 (prevent memory bloat)
+    edge_case_handling: "edited memory bumps to top (debounced 2s)"
+
+  vault_list:
+    strategy: "cursor-based pagination"
+    page_size: 25
+    grouping: "by trigger type (Time Capsule, Milestone, Unspoken, Geofence)"
+    sort_order: "sealed date descending"
+    load_more_trigger: "manual 'Load More' button"
+    edge_case_handling: "newly sealed memory injected at top"
+
+  discovery_cards:
+    strategy: "no pagination (max 10 cards per week)"
+    refresh_mechanism: "user manually refreshes or waits until next Sunday"
+    edge_case_handling: "dismissed cards never reappear (30d window)"
+
+  search_results:
+    strategy: "cursor-based pagination"
+    page_size: 15
+    load_more_trigger: "automatic on scroll to 80%"
+    relevance_ranking: "recency > match score > popularity"
+    empty_result_threshold: "show 'no more results' after 3 pages"
+
+  room_history:
+    strategy: "time-based pagination"
+    page_size: 10
+    grouping: "by date (Today, Yesterday, This Week, etc.)"
+    load_more_trigger: "manual button at bottom"
+    edge_case_handling: "ongoing room stays at top"
+
+  transaction_history:
+    strategy: "date range picker + pagination"
+    default_range: "last 90 days"
+    page_size: 20
+    export_option: "CSV download for full history"
+    edge_case_handling: "pending transactions show at top with 'pending' badge"
+
+  edge_cases:
+    network_timeout_during_load: "show 'load failed' button; preserve existing list"
+    duplicate_items_on_refresh: "dedup by ID before render"
+    race_condition_new_item: "item appears in both current + next page (acceptable)"
+    user_scrolls_rapidly: "debounce load_more trigger (500ms)"
+    empty_feed_then_new_item: "animate in new item to empty state"

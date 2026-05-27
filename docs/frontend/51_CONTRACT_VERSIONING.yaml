@@ -1,0 +1,16 @@
+contract_versioning:
+  strategy: "OpenAPI 3.1 + Protobuf (Avro Kafka)"
+  breaking_changes: "major version bump. Deprecation cycle: 2 releases."
+  backward_compatible: "additive fields only. nullable defaults. client ignores unknown."
+  codegen:
+    go: "oapi-codegen -package api -generate types,chi-server openapi.yaml"
+    python: "datamodel-codegen --input openapi.yaml --output models.py"
+    dart: "openapi-generator generate -g dart -o apps/mobile/lib/api/"
+  validation:
+    ci_gate: "validate_openapi_contract.py blocks PR on schema mismatch"
+    mock_server: "Prism/WireMock for frontend e2e before backend merge"
+  kafka_schemas:
+    registry: "schema-registry.internal:8081"
+    compatibility: "BACKWARD_TRANSITIVE"
+    naming: "TopicName-value.avsc"
+  rollback: "Feature flag toggle + previous contract version active until canary stable."

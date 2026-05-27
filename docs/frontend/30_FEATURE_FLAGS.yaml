@@ -1,0 +1,65 @@
+---
+# FEATURE_FLAGS.yaml
+# Remote config for progressive rollouts, A/B tests, kill switches
+feature_flags:
+  flag_service: "Unleash (self-hosted) + local cache (Hive)"
+  sync_interval: "5min background refresh"
+  
+  flags:
+    - key: "enable_voiceprint_beta"
+      type: "boolean"
+      default: false
+      rollout_percentage: 10
+      target_audience: ["tier:beta_tester", "country:US"]
+      kill_switch: true
+      description: "Voiceprint challenge beta (SRS §7.2)"
+    
+    - key: "enable_tree_merge_v2"
+      type: "boolean"
+      default: false
+      rollout_percentage: 50
+      target_audience: ["cohort:experiment_group_A"]
+      kill_switch: true
+      description: "Redesigned tree merge conflict UI"
+    
+    - key: "discovery_algorithm_variant"
+      type: "string"
+      default: "kc_classic"
+      options: ["kc_classic", "kc_ml_v2", "kc_ml_v3"]
+      rollout_config:
+        kc_classic: 70
+        kc_ml_v2: 20
+        kc_ml_v3: 10
+      kill_switch: true
+      description: "Discovery ranking algorithm selection"
+    
+    - key: "max_room_participants"
+      type: "integer"
+      default: 20
+      min: 2
+      max: 100
+      kill_switch: false
+      description: "Maximum participants per gathering"
+    
+    - key: "disable_marketplace"
+      type: "boolean"
+      default: false
+      kill_switch: true
+      description: "Emergency kill switch for marketplace"
+    
+    - key: "vault_zk_enforcement"
+      type: "boolean"
+      default: true
+      kill_switch: false
+      description: "Require ZK encryption for all vault entries"
+
+  rollout_strategy:
+    gradual_rollout: true
+    percentage_increase: "10% per day if no critical errors"
+    error_threshold: "if error rate > 5%, halt rollout"
+    analytics_tracking: "track all feature usage + errors by flag"
+
+  client_behavior:
+    missing_flag_default: "assume feature disabled"
+    stale_cache_fallback: "use last synced value if network fails"
+    kill_switch_response: "disable UI immediately + log event"

@@ -1,0 +1,18 @@
+client_storage_policy:
+  drift:
+    purpose: "relational offline store"
+    tables: ["memories", "kinnections", "mutation_queue", "memory_box_drafts"]
+    sync: "bi-directional on reconnect. Server-wins for graph/feed. Local-wins for drafts."
+    encryption: "SQLCipher optional (enterprise). Default: plaintext with OS sandbox."
+  hive:
+    purpose: "key-value cache"
+    boxes: ["session", "feed_cache", "discovery_pool", "settings_toggles", "heartbeat_read"]
+    eviction: "TTL-based: 5m active, 1h inactive. LRU fallback."
+  flutter_cache_manager:
+    purpose: "asset preloading"
+    targets: ["photoplay_thumbs", "branch_map_tiles", "profile_avatars"]
+    limit: "100MB max, 7-day TTL. Manual clear in Settings."
+  compliance:
+    no_pii_in_cache: "consent flags, JWT, DEK never cached persistently."
+    clear_on_logout: "hive.clear() + drift.close() + workmanager.cancelAll()"
+    gdpr_art_17: "local_wipes_on_request. Server-side cascade handles remote."

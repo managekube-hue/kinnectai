@@ -1,0 +1,46 @@
+consent_surfaces:
+  bit_0x0001_layer1:
+    screen: "Onboarding Step 1 (Surname)"
+    copy: "Allow KinnectAI to enrich your profile with public identity records to improve Kin matching."
+    default: unchecked
+    impact: "Disables Whitepages/LexisNexis enrichment. Layer 1 confidence drops to 0."
+  bit_0x0002_layer2:
+    screen: "Onboarding Step 2 (DNA)"
+    copy: "Allow KinnectAI to process your DNA data to discover biological Kin connections."
+    default: unchecked
+    impact: "Blocks Sequencing.com OAuth. Removes Layer 2 from KC."
+  bit_0x0004_layer3:
+    screen: "Onboarding Step 4 (Invite Kin)"
+    copy: "Allow your family Tree to be shared with Branch members for collective mapping."
+    default: unchecked
+    impact: "Hides Tree from Discovery. Disables Branch Merge participation."
+  bit_0x0008_layer4:
+    screen: "iOS ATT prompt post-Step 4 / Android Settings"
+    copy: "Allow KinnectAI to use your in-app activity to personalise The Line and improve Kin discovery."
+    default: unchecked(iOS)
+    impact: "Ignores Pixel/SDK events. Reduces Discovery precision."
+  bit_0x0010_layer5:
+    screen: "Settings → Privacy Controls"
+    copy: "Allow life event detection to deliver Milestone Memories automatically."
+    default: unchecked
+    impact: "Milestone triggers require manual confirmation."
+  bit_0x0020_face:
+    screen: "Photoplay Studio first use"
+    copy: "Allow facial feature analysis for Photoplay. On-device only. No cloud storage of raw image."
+    default: unchecked
+    impact: "Blocks DeepFace cloud. Existing Photoplays unaffected."
+  bit_0x0040_voice:
+    screen: "Voiceprint capture first use"
+    copy: "Allow voice model creation for Photoplays and Flickers. Encrypted. Permission-only use."
+    default: unchecked
+    impact: "Triggers ElevenLabs DELETE on revocation. 30-day GDPR purge."
+  bit_0x0200_steward:
+    screen: "Memory Box Steward Designation"
+    copy: "Designate a Steward to confirm death and authorise delivery of sealed Memories."
+    default: unchecked
+    impact: "Vaults remain sealed until manual court order. Fallback chain active."
+  bit_0x1000_stitch:
+    screen: "Settings → Content Permissions"
+    copy: "Allow Memory clips in automated Sunday Stitches. Change anytime."
+    default: unchecked
+    impact: "Future Stitches exclude clip. Existing remain published."

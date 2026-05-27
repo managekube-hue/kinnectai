@@ -1,6 +1,5 @@
-﻿import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart';
 
-import 'deep_link_service.dart';
 
 /// Push notification routing service (Addendum 2.0 S10).
 ///

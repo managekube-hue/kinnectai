@@ -1,0 +1,43 @@
+---
+# SEARCH_INDEXES.yaml
+# Client-side search indices (Algolia + local Meilisearch mirror)
+search_indexes:
+  memory_search:
+    fields: ["title", "description", "creator_name", "created_date"]
+    filters: ["memory_type", "trigger_type", "is_sealed"]
+    facets: ["creator_name", "trigger_type", "year"]
+    ranking: "recency > relevance > frequency"
+    cloud_provider: "Algolia (real-time sync)"
+    local_mirror: "Meilisearch (offline fallback)"
+
+  kin_search:
+    fields: ["name", "relationship", "location"]
+    filters: ["relationship_type", "branch_id"]
+    facets: ["relationship_type", "branch_id"]
+    ranking: "relationship_closeness > name_relevance"
+    cloud_provider: "Neo4j full-text index"
+    local_mirror: "SQLite FTS5 (limited)"
+
+  room_search:
+    fields: ["title", "participants", "created_date"]
+    filters: ["room_type", "participant_count"]
+    facets: ["room_type"]
+    ranking: "recency > participant_count"
+    cloud_provider: "PostgreSQL GIN index"
+    local_mirror: "none (rooms are ephemeral)"
+
+  discovery_search:
+    fields: ["candidate_name", "relationship_reason", "shared_interests"]
+    filters: ["discovery_status", "candidate_type"]
+    facets: ["discovery_status", "confidence_range"]
+    ranking: "kc_score DESC > confidence DESC"
+    cloud_provider: "Elasticsearch (discovery-service backend)"
+    local_mirror: "none (weekly snapshot cached)"
+
+  marketplace_search:
+    fields: ["product_name", "category", "seller_name"]
+    filters: ["category", "price_range", "seller_verified"]
+    facets: ["category", "price_range"]
+    ranking: "rating > sales_velocity > recency"
+    cloud_provider: "Algolia"
+    local_mirror: "Meilisearch"

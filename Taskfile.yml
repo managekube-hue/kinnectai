@@ -1,0 +1,74 @@
+version: '3'
+
+vars:
+  # Static list for Windows/CI compatibility.
+  GO_SERVICES: >
+    feed-service gateway kin-graph-service identity-service
+    media-service rooms-service memorybox-service
+    notification-service payment-service
+
+tasks:
+  default:
+    desc: List available tasks
+    cmds: [task --list]
+
+  proto-generate:
+    desc: Generate gRPC/Protobuf stubs for all languages
+    cmds:
+      - powershell -NoProfile -Command "$bufBin = (Get-Command buf -ErrorAction SilentlyContinue).Source; if (-not $bufBin) { $bufBin = Join-Path $env:LOCALAPPDATA 'Microsoft\\WinGet\\Links\\buf.exe' }; if (-not (Test-Path $bufBin)) { Write-Error 'buf not found in PATH or WinGet links'; exit 1 }; $attempt=1; $max=5; while ($attempt -le $max) { & $bufBin generate packages/shared-contracts/protobuf; if ($LASTEXITCODE -eq 0) { break }; if ($attempt -eq $max) { Write-Error \"buf generate failed after $max attempts\"; exit $LASTEXITCODE }; $delay=[Math]::Min(60, [Math]::Pow(2, $attempt) * 3); Write-Host \"buf generate failed (attempt $attempt/$max). Retrying in $delay seconds...\"; Start-Sleep -Seconds $delay; $attempt++ }"
+
+  lint:
+    desc: Run all linters (strict)
+    cmds:
+      - powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/ci/task_lint_go_services.ps1
+      - powershell -NoProfile -Command "corepack pnpm run lint --filter=./apps/web --filter=./packages/ts"
+      - powershell -NoProfile -Command "flutter analyze --fatal-warnings --no-fatal-infos apps/mobile"
+      - powershell -NoProfile -Command "Push-Location services/python/kernel-service; try { ruff check . } finally { Pop-Location }"
+      - powershell -NoProfile -Command "terraform fmt -check -recursive infra/terraform"
+
+  test:
+    desc: Execute tests with coverage gates (strict)
+    cmds:
+      - powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/ci/task_test_go_services.ps1
+      - powershell -NoProfile -Command "Push-Location apps/mobile; try { flutter test --coverage } finally { Pop-Location }"
+      - powershell -NoProfile -Command "corepack pnpm run test --filter=./apps/web"
+      - task: verify-coverage
+
+  build:
+    desc: Compile all services and apps
+    deps: [proto-generate]
+    cmds:
+      - for: { var: GO_SERVICES }
+        task: build-go
+        vars: { SVC: "{{.ITEM}}" }
+      - powershell -NoProfile -Command "corepack pnpm run build --filter=./apps/web"
+      - powershell -NoProfile -Command "flutter build apk --release --target-platform android-arm64"
+
+  build-go:
+    desc: Build single Go service
+    vars:
+      SVC: ""
+    cmds:
+      - powershell -NoProfile -Command "Push-Location services/go/{{.SVC}}; try { go build -o ../../../bin/{{.SVC}}.exe ./cmd/api } finally { Pop-Location }"
+
+  dev-up:
+    desc: Start local dev stack via Docker Compose
+    cmds: [docker compose up -d postgres neo4j redis kafka schema-registry]
+
+  dev-down:
+    desc: Tear down local dev stack
+    cmds: [docker compose down]
+
+  verify-coverage:
+    desc: Enforce CI coverage thresholds (Go >= 80%)
+    silent: true
+    cmds:
+      - powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/ci/task_verify_coverage.ps1
+
+  ci:
+    desc: Full CI pipeline (Lint -> Test -> Build)
+    cmds:
+      - task: lint
+      - task: proto-generate
+      - task: test
+      - task: build

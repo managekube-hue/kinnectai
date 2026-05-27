@@ -16,15 +16,15 @@ class OfflineVideosScreen extends StatelessWidget {
           IconButton(icon: Icon(PhosphorIcons.trash(), color: KinnectColors.textPrimary), onPressed: () {}),
         ],
       ),
-      body: const Center(
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(PhosphorIcons.downloadSimple(), size: 64, color: KinnectColors.textMuted),
-            SizedBox(height: 16),
-            Text('No downloaded Memories', style: TextStyle(color: KinnectColors.textPrimary, fontSize: 18)),
-            SizedBox(height: 8),
-            Text('Download Memories for offline viewing', style: TextStyle(color: KinnectColors.textSecondary)),
+            const SizedBox(height: 16),
+            const Text('No downloaded Memories', style: TextStyle(color: KinnectColors.textPrimary, fontSize: 18)),
+            const SizedBox(height: 8),
+            const Text('Download Memories for offline viewing', style: TextStyle(color: KinnectColors.textSecondary)),
           ],
         ),
       ),

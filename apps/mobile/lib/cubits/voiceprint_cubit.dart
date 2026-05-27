@@ -1,4 +1,4 @@
-﻿import 'dart:convert';
+import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -58,6 +58,7 @@ class VoiceprintCubit extends Cubit<VoiceprintState> {
         super(VoiceprintInitial());
 
   final http.Client _client;
+  final ApiService _apiService = ApiService();
 
   static const _baseUrl = '${ApiService.baseUrl}/api/v1/voiceprints';
 
@@ -67,7 +68,10 @@ class VoiceprintCubit extends Cubit<VoiceprintState> {
     try {
       final request = http.MultipartRequest('POST', Uri.parse(_baseUrl));
       request.files.add(await http.MultipartFile.fromPath('audio', audioPath));
-      // Token should come from auth; placeholder for now.
+      final token = _apiService.accessToken;
+      if (token != null && token.isNotEmpty) {
+        request.headers['Authorization'] = 'Bearer $token';
+      }
 
       final streamed = await _client.send(request);
       final response = await http.Response.fromStream(streamed);
@@ -94,12 +98,16 @@ class VoiceprintCubit extends Cubit<VoiceprintState> {
     try {
       final response = await _client.delete(
         Uri.parse('$_baseUrl/$voiceprintId'),
+        headers: {
+          if ((_apiService.accessToken ?? '').isNotEmpty)
+            'Authorization': 'Bearer ${_apiService.accessToken}',
+        },
       );
 
       if (response.statusCode == 200) {
         emit(VoiceprintDeleted());
       } else {
-        emit(VoiceprintError('Failed to delete voiceprint'));
+        emit(const VoiceprintError('Failed to delete voiceprint'));
       }
     } catch (e) {
       emit(VoiceprintError('Error deleting voiceprint: $e'));

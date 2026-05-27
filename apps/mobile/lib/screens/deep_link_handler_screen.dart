@@ -110,9 +110,9 @@ class _DeepLinkHandlerState extends State<DeepLinkHandler> {
   @override
   Widget build(BuildContext context) {
     if (!_notFound) {
-      return Scaffold(
+      return const Scaffold(
         backgroundColor: KinnectColors.background,
-        body: const Center(
+        body: Center(
           child: CircularProgressIndicator(
             valueColor: AlwaysStoppedAnimation(KinnectColors.accent),
           ),
@@ -135,7 +135,7 @@ class _DeepLinkHandlerState extends State<DeepLinkHandler> {
                   size: 64,
                 ),
                 const SizedBox(height: 24),
-                Text(
+                const Text(
                   'Link not found',
                   style: KinnectTextStyles.headlineMedium,
                 ),

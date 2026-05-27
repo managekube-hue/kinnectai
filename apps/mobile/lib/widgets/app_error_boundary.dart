@@ -70,7 +70,7 @@ class AppErrorBoundary extends StatelessWidget {
       MaterialBanner(
         backgroundColor: color.withOpacity(0.15),
         leading: Icon(icon, color: color),
-        content: Text(message, style: TextStyle(color: KinnectColors.textPrimary)),
+        content: Text(message, style: const TextStyle(color: KinnectColors.textPrimary)),
         actions: [
           TextButton(
             onPressed: () {
@@ -84,7 +84,7 @@ class AppErrorBoundary extends StatelessWidget {
               ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
               // Trigger retry via ErrorCubit or navigator
             },
-            child: Text('Retry', style: TextStyle(color: KinnectColors.primary)),
+            child: const Text('Retry', style: TextStyle(color: KinnectColors.primary)),
           ),
         ],
       ),
@@ -112,7 +112,7 @@ class OfflineBanner extends StatelessWidget {
           Expanded(
             child: Text(
               message ?? 'Offline: Showing cached data. Swipe to refresh when connected.',
-              style: TextStyle(color: KinnectColors.warning, fontSize: 13),
+              style: const TextStyle(color: KinnectColors.warning, fontSize: 13),
             ),
           ),
         ],
@@ -138,12 +138,12 @@ class FullScreenError extends StatelessWidget {
           children: [
             Icon(PhosphorIcons.cloud(), size: 64, color: KinnectColors.textMuted),
             const SizedBox(height: 16),
-            Text('Something went wrong', style: KinnectTextStyles.headlineSmall),
+            const Text('Something went wrong', style: KinnectTextStyles.headlineSmall),
             const SizedBox(height: 8),
             Text(
               message,
               textAlign: TextAlign.center,
-              style: TextStyle(color: KinnectColors.textSecondary, fontSize: 14),
+              style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 14),
             ),
             if (onRetry != null) ...[
               const SizedBox(height: 24),

@@ -6,6 +6,7 @@ import '../models/memory.dart';
 import '../feed_service.dart';
 import '../router/app_nav.dart';
 import '../theme/colors.dart';
+import '../widgets/line_video_player.dart';
 
 /// The Line - Vertical video feed screen (PRD Section 01)
 class LineScreen extends StatelessWidget {
@@ -30,6 +31,7 @@ class _LineScreenContent extends StatefulWidget {
 
 class _LineScreenContentState extends State<_LineScreenContent> {
   final PageController _pageController = PageController();
+  int _selectedTab = 0; // 0: Echoes, 1: Kinnections, 2: Discover
 
   @override
   void dispose() {
@@ -56,7 +58,7 @@ class _LineScreenContentState extends State<_LineScreenContent> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(PhosphorIcons.usersThree(),
+                  Icon(PhosphorIcons.usersThree(),
                       size: 64, color: KinnectColors.textMuted),
                   const SizedBox(height: 16),
                   const Text(
@@ -81,7 +83,7 @@ class _LineScreenContentState extends State<_LineScreenContent> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(PhosphorIcons.warningCircle(),
+                  Icon(PhosphorIcons.warningCircle(),
                       size: 64, color: KinnectColors.error),
                   const SizedBox(height: 16),
                   Text(
@@ -123,6 +125,12 @@ class _LineScreenContentState extends State<_LineScreenContent> {
           return const SizedBox.shrink();
         },
       ),
+          Positioned(
+            top: MediaQuery.of(context).padding.top + 48,
+            left: 16,
+            right: 16,
+            child: _buildTopTabs(context),
+          ),
           // Floating top bar with marketplace storefront icon (PRD Section 00)
           Positioned(
             top: MediaQuery.of(context).padding.top + 8,
@@ -152,6 +160,38 @@ class _LineScreenContentState extends State<_LineScreenContent> {
     );
   }
 
+  Widget _buildTopTabs(BuildContext context) {
+    const tabs = ['Echoes', 'Kinnections', 'Discover'];
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(tabs.length, (index) {
+        final selected = _selectedTab == index;
+        return GestureDetector(
+          onTap: () {
+            setState(() => _selectedTab = index);
+            context.read<LineBloc>().add(LineTabChanged(tabs[index].toLowerCase()));
+          },
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 6),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: selected ? KinnectColors.accent.withOpacity(0.25) : Colors.black.withOpacity(0.35),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Text(
+              tabs[index],
+              style: TextStyle(
+                color: selected ? KinnectColors.accent : Colors.white,
+                fontWeight: FontWeight.w600,
+                fontSize: 12,
+              ),
+            ),
+          ),
+        );
+      }),
+    );
+  }
+
   Widget _topBarIcon(IconData icon, String tooltip, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
@@ -167,23 +207,23 @@ class _LineScreenContentState extends State<_LineScreenContent> {
   }
 
   Widget _buildMemoryCard(BuildContext context, Memory memory) {
-    return Stack(
-      children: [
-        // Video placeholder (will be replaced with actual video player)
-        Container(
-          color: Colors.black,
-          child: memory.thumbnailUrl != null
-              ? Image.network(
-                  memory.thumbnailUrl!,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                  height: double.infinity,
-                )
-              : const Center(
-                  child: Icon(PhosphorIcons.play(),
-                      size: 80, color: Colors.white),
-                ),
-        ),
+    return GestureDetector(
+      onDoubleTap: () => context.read<LineBloc>().add(LinePulseTriggered(memory.id)),
+      onLongPress: () => AppNav.push(context, '/repost'),
+      onHorizontalDragEnd: (details) {
+        // Swipe left opens graph path for the current creator.
+        if ((details.primaryVelocity ?? 0) < -200) {
+          AppNav.push(context, '/discovery/${memory.creatorId}');
+        }
+      },
+      child: Stack(
+        children: [
+          LineVideoPlayer(
+            videoUrl: memory.videoUrl,
+            onDoubleTapRight: () =>
+                context.read<LineBloc>().add(LinePulseTriggered(memory.id)),
+            onDoubleTapLeft: () => AppNav.push(context, '/rewind/${memory.id}'),
+          ),
 
         // Right rail buttons
         Positioned(
@@ -192,7 +232,7 @@ class _LineScreenContentState extends State<_LineScreenContent> {
           child: Column(
             children: [
               _buildActionButton(
-                icon: memory.isPulsed ? PhosphorIcons.heartFill() : PhosphorIcons.heart(),
+                icon: memory.isPulsed ? Icons.favorite : PhosphorIcons.heart(),
                 label: memory.formattedPulseCount,
                 color: memory.isPulsed ? KinnectColors.error : Colors.white,
                 onTap: () => context.read<LineBloc>().add(LinePulseTriggered(memory.id)),
@@ -201,14 +241,34 @@ class _LineScreenContentState extends State<_LineScreenContent> {
               _buildActionButton(
                 icon: PhosphorIcons.chatCircleText(),
                 label: '${memory.commentCount}',
-                onTap: () {},
+                onTap: () => AppNav.push(context, '/memory/${memory.id}/comments'),
+              ),
+              const SizedBox(height: 16),
+              _buildActionButton(
+                icon: PhosphorIcons.cameraRotate(),
+                label: 'Rewind',
+                onTap: () => AppNav.push(context, '/rewind/${memory.id}'),
+              ),
+              const SizedBox(height: 16),
+              _buildActionButton(
+                icon: PhosphorIcons.bookmarkSimple(),
+                label: 'Strands',
+                onTap: () => AppNav.push(context, '/strands'),
               ),
               const SizedBox(height: 16),
               _buildActionButton(
                 icon: PhosphorIcons.shareNetwork(),
                 label: 'Share',
-                onTap: () {},
+                onTap: () => AppNav.push(context, '/repost'),
               ),
+              if (memory.branchId != null) ...[
+                const SizedBox(height: 16),
+                _buildActionButton(
+                  icon: PhosphorIcons.gitBranch(),
+                  label: 'Branch',
+                  onTap: () => AppNav.push(context, '/branch/${memory.branchId}'),
+                ),
+              ],
             ],
           ),
         ),
@@ -235,23 +295,41 @@ class _LineScreenContentState extends State<_LineScreenContent> {
               children: [
                 Row(
                   children: [
-                    Text(
-                      memory.creatorDisplayName,
-                      style: const TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
+                    GestureDetector(
+                      onTap: () => AppNav.push(context, '/root/${memory.creatorId}'),
+                      child: Text(
+                        memory.creatorDisplayName,
+                        style: const TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
                     ),
                     const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: KinnectColors.accent.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(12),
+                    GestureDetector(
+                      onTap: () => AppNav.push(context, '/kin-score-detail?target=${memory.creatorId}'),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: KinnectColors.accent.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          memory.kinScorePercentage,
+                          style: const TextStyle(
+                              color: KinnectColors.accent, fontSize: 12),
+                        ),
                       ),
-                      child: Text(
-                        memory.kinScorePercentage,
-                        style: const TextStyle(
-                            color: KinnectColors.accent, fontSize: 12),
+                    ),
+                    const SizedBox(width: 8),
+                    GestureDetector(
+                      onTap: () => AppNav.push(context, '/discovery/${memory.creatorId}'),
+                      child: const Text(
+                        'Explore Connection',
+                        style: TextStyle(
+                          color: KinnectColors.accent,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ],
@@ -269,7 +347,8 @@ class _LineScreenContentState extends State<_LineScreenContent> {
             ),
           ),
         ),
-      ],
+        ],
+      ),
     );
   }
 

@@ -1,0 +1,35 @@
+# Discovery Swipe → Kinnection Flow
+# PRD §07, §18.3, SRS §22.2, §44
+
+## 1. Trigger
+User swipes left on `DiscoveryCardScreen` or taps `Dismiss` CTA.
+
+## 2. Execution Path
+1. **Client**: `DiscoveryCubit` emits `SwipeLeft(candidate_id)`
+2. **Local State**: Apply `×0.30` penalty to local cache. Show 5s undo snackbar.
+3. **Network**: `POST /v1/discovery/dismiss { candidate_id, penalty: 0.30 }`
+   - Headers: `Authorization: Bearer <JWT>`, `X-Request-ID: <uuid>`
+   - Rate Limit: 50 req/min/user
+4. **Server**: `discovery-service` applies penalty to Redis ZSET `discovery:weekly:{user_id}`. Publishes to `behavioral.events` Kafka topic.
+5. **Client Response**:
+   - `204`: Card removed from pool. Suppression TTL = 30d.
+   - `429`: Respect `Retry-After`. Queue locally.
+   - `offline`: Queue in drift → retry on reconnect.
+
+## 3. Alternate Path: `Explore Connection`
+1. Tap `Explore Connection` → `navigate("/discovery/:cid")`
+2. `PathViewCubit` fetches `GET /v1/kinnections/path?user_a={viewer}&user_b={candidate}`
+3. Neo4j returns path segments + confidence per edge.
+4. Client renders: Solid (DNA), Dashed Grey (Identity), Dashed Red (Pending).
+5. Path confidence = `Π(edge_confidence²)`. If `<0.05`, show `"Connection path uncertain"`.
+
+## 4. Error & Fallback States
+- `NEO4J_PARTIAL`: Show known nodes + CTA `"Verify with DNA"`
+- `CACHE_STALE`: Show cached path + `"Recalculating…" badge`
+- `NETWORK_ERROR`: Queue request + `"Offline — path cached"` banner
+- `KINNECT_SUCCESS`: `POST /v1/kinnections { target_user_id, relationship_type }` → `pending` → server push → `confirmed`
+
+## 5. Compliance Gates
+- `consent_flags & 0x04` required for graph traversal (SRS Appendix J Bit 2)
+- Anti-feedback clamp: ≤5% behavioral weight increase per 30d window (SRS §4.2)
+- Undo window: 5s strictly enforced client-side (PRD §01.3)

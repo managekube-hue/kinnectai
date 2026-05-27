@@ -1,0 +1,18 @@
+mobile_native_capabilities:
+  ios:
+    auth: "LocalAuthentication, AuthenticationServices (Passkey)"
+    crypto: "CryptoKit (AES-256-GCM, HMAC), Keychain"
+    location: "CLLocationManager, CLCircularRegion (max 20), significant-change"
+    media: "AVFoundation, WebRTC-PeerConnection, MediaRecorder"
+    biometric: "Face ID / Touch ID, ATT (AppTrackingTransparency)"
+    background: "UIBackgroundModes (audio, location, processing, fetch)"
+  android:
+    auth: "BiometricPrompt, Keystore, Play Integrity"
+    crypto: "Jetpack Security, Android Keystore"
+    location: "GeofencingClient, FusedLocationProvider"
+    media: "ExoPlayer/Media3, WebRTC, CameraX"
+    biometric: "BiometricManager, ATT equivalent (Privacy sandbox)"
+    background: "WorkManager, ForegroundService, AlarmManager"
+  flutter_bridge:
+    platform_channels: "MethodChannel for ZK encrypt, KMS wrap, TURN refresh"
+    plugins: ["flutter_secure_storage", "local_auth", "geolocator", "video_player", "webview_flutter"]

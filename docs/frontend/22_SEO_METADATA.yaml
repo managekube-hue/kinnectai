@@ -1,0 +1,55 @@
+---
+# SEO_METADATA.yaml
+# Open Graph, Twitter Card, structured data for social sharing and web indexing
+seo_metadata:
+  global:
+    title_template: "{page} | KinnectAI"
+    description: "Preserve, connect, and celebrate your family history with KinnectAI."
+    og_image: "https://cdn.kinnectai.app/og-default.png"
+    og_image_width: 1200
+    og_image_height: 630
+    twitter_card: "summary_large_image"
+    twitter_handle: "@KinnectAI"
+
+  memory_detail:
+    og_type: "article"
+    og_title: "{memory_title}"
+    og_description: "{memory_summary}"
+    og_image: "{memory_hero_image || default}"
+    article_published_time: "{created_at}"
+    article_author: "{creator_name}"
+    robots: "index, follow (public memories only)"
+
+  profile_page:
+    og_type: "profile"
+    og_title: "{kin_name}'s Family Tree"
+    og_description: "Connect with {kin_name} on KinnectAI"
+    og_image: "{profile_picture_url}"
+    profile_first_name: "{first_name}"
+    profile_last_name: "{last_name}"
+    robots: "index, follow (public profiles only)"
+
+  tree_page:
+    og_type: "article"
+    og_title: "{root_name}'s Family Tree"
+    og_description: "Discover your family connections on KinnectAI"
+    og_image: "{tree_visual_export}"
+    robots: "noindex, nofollow (private tree data)"
+
+  marketplace_product:
+    og_type: "product"
+    og_title: "{product_name} - KinnectAI Marketplace"
+    og_description: "{product_description}"
+    og_image: "{product_image}"
+    product_price_currency: "USD"
+    product_price_amount: "{price}"
+    product_availability: "in stock"
+    robots: "index, follow"
+
+  structured_data:
+    - schema_type: "Organization"
+      properties: ["name", "url", "logo", "contact_point", "sameAs"]
+    - schema_type: "Person"
+      properties: ["name", "image", "description", "url"]
+    - schema_type: "BreadcrumbList"
+      properties: ["itemListElement"] # for tree navigation

@@ -9,10 +9,7 @@ import '../services/kernel_service.dart';
 class KinScoreDetailScreen extends StatefulWidget {
   final String targetUserId;
 
-  const KinScoreDetailScreen({
-    super.key,
-    required this.targetUserId,
-  });
+  const KinScoreDetailScreen({super.key, required this.targetUserId});
 
   @override
   State<KinScoreDetailScreen> createState() => _KinScoreDetailScreenState();
@@ -46,7 +43,7 @@ class _KinScoreDetailScreenState extends State<KinScoreDetailScreen> {
       backgroundColor: KinnectColors.background,
       appBar: AppBar(
         backgroundColor: KinnectColors.surface,
-        title: Text('Kin Score', style: KinnectTextStyles.headlineSmall),
+        title: const Text('Kin Score', style: KinnectTextStyles.headlineSmall),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: KinnectColors.textPrimary),
           onPressed: () => Navigator.pop(context),
@@ -59,50 +56,50 @@ class _KinScoreDetailScreenState extends State<KinScoreDetailScreen> {
               ),
             )
           : _breakdown == null
-              ? Center(
-                  child: Text(
-                    'Unable to load Kin Score',
-                    style: KinnectTextStyles.bodyMedium,
+          ? const Center(
+              child: Text(
+                'Unable to load Kin Score',
+                style: KinnectTextStyles.bodyMedium,
+              ),
+            )
+          : SingleChildScrollView(
+              padding: const EdgeInsets.all(KinnectSpacing.lg),
+              child: Column(
+                children: [
+                  _ScoreCircle(score: _breakdown!.score),
+                  const SizedBox(height: KinnectSpacing.xl),
+                  _InfoCard(
+                    title: 'Relationship',
+                    value: _breakdown!.relationship,
+                    icon: PhosphorIcons.usersThree(),
                   ),
-                )
-              : SingleChildScrollView(
-                  padding: const EdgeInsets.all(KinnectSpacing.lg),
-                  child: Column(
-                    children: [
-                      _ScoreCircle(score: _breakdown!.score),
-                      const SizedBox(height: KinnectSpacing.xl),
-                      _InfoCard(
-                        title: 'Relationship',
-                        value: _breakdown!.relationship,
-                        icon: PhosphorIcons.usersThree(),
-                      ),
-                      const SizedBox(height: KinnectSpacing.md),
-                      _InfoCard(
-                        title: 'Shared Branches',
-                        value: '${_breakdown!.sharedBranches}',
-                        icon: PhosphorIcons.treeStructure(),
-                      ),
-                      const SizedBox(height: KinnectSpacing.md),
-                      _InfoCard(
-                        title: 'Shared Ancestors',
-                        value: '${_breakdown!.sharedAncestors}',
-                        icon: PhosphorIcons.usersThree(),
-                      ),
-                      if (_breakdown!.haplogroup != null) ...[
-                        const SizedBox(height: KinnectSpacing.md),
-                        _InfoCard(
-                          title: 'Haplogroup',
-                          value: _breakdown!.haplogroup!,
-                          icon: PhosphorIcons.dna(),
-                        ),
-                      ],
-                      if (_breakdown!.connectionPath.isNotEmpty) ...[
-                        const SizedBox(height: KinnectSpacing.xl),
-                        _ConnectionPath(path: _breakdown!.connectionPath),
-                      ],
-                    ],
+                  const SizedBox(height: KinnectSpacing.md),
+                  _InfoCard(
+                    title: 'Shared Branches',
+                    value: '${_breakdown!.sharedBranches}',
+                    icon: PhosphorIcons.treeStructure(),
                   ),
-                ),
+                  const SizedBox(height: KinnectSpacing.md),
+                  _InfoCard(
+                    title: 'Shared Ancestors',
+                    value: '${_breakdown!.sharedAncestors}',
+                    icon: PhosphorIcons.usersThree(),
+                  ),
+                  if (_breakdown!.haplogroup != null) ...[
+                    const SizedBox(height: KinnectSpacing.md),
+                    _InfoCard(
+                      title: 'Haplogroup',
+                      value: _breakdown!.haplogroup!,
+                      icon: PhosphorIcons.dna(),
+                    ),
+                  ],
+                  if (_breakdown!.connectionPath.isNotEmpty) ...[
+                    const SizedBox(height: KinnectSpacing.xl),
+                    _ConnectionPath(path: _breakdown!.connectionPath),
+                  ],
+                ],
+              ),
+            ),
     );
   }
 }
@@ -125,10 +122,7 @@ class _ScoreCircle extends StatelessWidget {
             KinnectColors.success.withOpacity(0.1),
           ],
         ),
-        border: Border.all(
-          color: KinnectColors.success,
-          width: 4,
-        ),
+        border: Border.all(color: KinnectColors.success, width: 4),
       ),
       child: Center(
         child: Column(
@@ -195,10 +189,7 @@ class _InfoCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  value,
-                  style: KinnectTextStyles.headlineSmall,
-                ),
+                Text(value, style: KinnectTextStyles.headlineSmall),
               ],
             ),
           ),
@@ -218,10 +209,7 @@ class _ConnectionPath extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Connection Path',
-          style: KinnectTextStyles.headlineSmall,
-        ),
+        const Text('Connection Path', style: KinnectTextStyles.headlineSmall),
         const SizedBox(height: KinnectSpacing.md),
         ...List.generate(path.length, (index) {
           final isLast = index == path.length - 1;
@@ -231,7 +219,9 @@ class _ConnectionPath extends StatelessWidget {
                 padding: const EdgeInsets.all(KinnectSpacing.md),
                 decoration: BoxDecoration(
                   color: KinnectColors.surface,
-                  borderRadius: BorderRadius.circular(KinnectSpacing.radiusMedium),
+                  borderRadius: BorderRadius.circular(
+                    KinnectSpacing.radiusMedium,
+                  ),
                 ),
                 child: Row(
                   children: [
@@ -247,16 +237,13 @@ class _ConnectionPath extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: KinnectSpacing.sm),
-                    Text(
-                      path[index],
-                      style: KinnectTextStyles.bodyLarge,
-                    ),
+                    Text(path[index], style: KinnectTextStyles.bodyLarge),
                   ],
                 ),
               ),
               if (!isLast)
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
                   child: Icon(
                     PhosphorIcons.arrowDown(),
                     color: KinnectColors.accent,

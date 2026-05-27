@@ -1,0 +1,35 @@
+analytics_rules:
+  pii_handling: "hash user_id (HMAC-SHA256). Never log JWT, DEK, genomic data, or raw biometrics."
+  att_gate: "If consent_bit_7 == 0, ignore Pixel/SDK. Log INAPP only."
+  batching: "k6 + otel_collector + cloudwatch_logs. Flush every 30s or on app background."
+events:
+  - name: "pulse_sent"
+    payload: ["memory_id", "user_id_hash", "timestamp", "cr_to_creator"]
+    offline: "workmanager_queue"
+  - name: "discovery_dismiss"
+    payload: ["candidate_id", "penalty: 0.30", "primary_signal"]
+    offline: "local_suppression_cache"
+  - name: "vault_sealed"
+    payload: ["memory_id", "trigger_type", "audit_hash", "consent_flags_snapshot"]
+    offline: "none"
+  - name: "room_join"
+    payload: ["room_id", "peer_id", "kc_to_host", "ice_duration_ms"]
+    offline: "none"
+  - name: "consent_updated"
+    payload: ["old_flags", "new_flags", "changed_bits", "timestamp"]
+    offline: "server_authoritative_only"
+  - name: "photoplay_rendered"
+    payload: ["job_id", "quality_tier", "provider", "fallback_activated", "c2pa_signed"]
+    offline: "workmanager_queue"
+  - name: "steward_designated"
+    payload: ["request_id", "steward_id", "agreement_accepted", "timestamp"]
+    offline: "none"
+  - name: "att_prompt_shown"
+    payload: ["app_session_id", "post_onboarding_step_4"]
+    offline: "none"
+  - name: "step_up_attempted"
+    payload: ["reason", "method", "success", "failure_count"]
+    offline: "none"
+  - name: "heartbeat_injected"
+    payload: ["date", "new_kinnections", "new_photoplays", "markers"]
+    offline: "hive"

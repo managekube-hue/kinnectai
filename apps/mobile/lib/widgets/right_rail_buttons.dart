@@ -37,7 +37,7 @@ class RightRailButtons extends StatelessWidget {
         children: [
           // Pulse/Like
           _InteractionButton(
-            icon: memory.isPulsed ? PhosphorIcons.heartFill() : PhosphorIcons.heart(),
+            icon: memory.isPulsed ? Icons.favorite : PhosphorIcons.heart(),
             iconColor: memory.isPulsed ? KinnectColors.error : KinnectColors.textPrimary,
             label: memory.formattedPulseCount,
             onTap: onPulseTap,
@@ -65,7 +65,7 @@ class RightRailButtons extends StatelessWidget {
           
           // Save
           _InteractionButton(
-            icon: memory.isSaved ? PhosphorIcons.starFill() : PhosphorIcons.star(),
+            icon: memory.isSaved ? Icons.star : PhosphorIcons.star(),
             iconColor: memory.isSaved ? KinnectColors.accent : KinnectColors.textPrimary,
             label: 'Save',
             onTap: onSaveTap,

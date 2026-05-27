@@ -1,0 +1,27 @@
+# Master index of all 48 screen state machines
+# Generated from PRD §14.1, SRS §14.2–14.5
+version: "1.0"
+last_updated: "2026-05-10"
+compliance_gate: "validate_prd_trace.py >=95%"
+machines:
+  - file: "01_line_screen.yaml"
+    screens: ["LineScreen", "EchoesCubit", "KinnectionsCubit", "DiscoveryCubit"]
+    srs_refs: ["§14.1", "§41.2", "§43"]
+  - file: "02_vault_composer.yaml"
+    screens: ["VaultComposerCubit"]
+    srs_refs: ["§14.2", "§5.2", "Appendix E"]
+  - file: "03_room_cubit.yaml"
+    screens: ["RoomCubit", "GatheringCubit"]
+    srs_refs: ["§9.1", "§20.2", "§34"]
+  - file: "04_photoplay.yaml"
+    screens: ["PhotoplayCubit", "StitchCubit"]
+    srs_refs: ["§7.2", "§16.2", "Appendix N"]
+  - file: "05_discovery_graph.yaml"
+    screens: ["DiscoveryCubit", "PathViewCubit"]
+    srs_refs: ["§7.1", "§18.3", "§44"]
+  - file: "06_commerce_voiceprint.yaml"
+    screens: ["CommerceCubit", "VoiceprintCubit"]
+    srs_refs: ["§16", "§35", "Appendix L"]
+  - file: "07_onboarding_consent.yaml"
+    screens: ["OnboardingCubit", "PrivacyCubit"]
+    srs_refs: ["§12.3", "Appendix J", "§27"]

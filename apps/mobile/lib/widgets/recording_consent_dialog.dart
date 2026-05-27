@@ -35,7 +35,7 @@ class RecordingConsentDialog extends StatelessWidget {
         children: [
           Icon(PhosphorIcons.record(), color: KinnectColors.error, size: 28),
           const SizedBox(width: 12),
-          Text('Recording', style: KinnectTextStyles.headlineSmall),
+          const Text('Recording', style: KinnectTextStyles.headlineSmall),
         ],
       ),
       content: Column(
@@ -47,7 +47,7 @@ class RecordingConsentDialog extends StatelessWidget {
             style: const TextStyle(color: KinnectColors.textPrimary, fontSize: 15, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 12),
-          Text(
+          const Text(
             'This Room will be recorded and may be sealed to the Memory Box. '
             'Tap Agree to continue or Leave to exit the Room.',
             style: TextStyle(color: KinnectColors.textSecondary, fontSize: 14, height: 1.5),
@@ -64,7 +64,7 @@ class RecordingConsentDialog extends StatelessWidget {
               children: [
                 Icon(PhosphorIcons.info(), size: 18, color: KinnectColors.warning),
                 const SizedBox(width: 8),
-                Expanded(child: Text(
+                const Expanded(child: Text(
                   'Legal basis: GDPR Art. 6(1)(a) / CCPA explicit consent',
                   style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12),
                 )),

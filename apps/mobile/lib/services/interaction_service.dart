@@ -1,4 +1,4 @@
-﻿import 'package:dio/dio.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
 import '../models/memory.dart';
@@ -28,7 +28,7 @@ class InteractionService {
       await _dio.post<void>('/comments', data: {
         'memory_id': memoryId,
         'text': text,
-        if (replyToId != null) 'reply_to_id': replyToId,
+        'reply_to_id': ?replyToId,
       });
     } catch (e) {
       debugPrint('Comment error: $e');
@@ -48,7 +48,11 @@ class InteractionService {
           .whereType<Map<String, dynamic>>()
           .map((j) => Comment(
                 id: (j['id'] ?? '').toString(),
+                memoryId: memoryId,
+                authorId: (j['author_id'] ?? '').toString(),
                 authorUsername: (j['author_username'] ?? '').toString(),
+                authorDisplayName: (j['author_display_name'] ?? '').toString(),
+                kinScore: (j['kin_score'] as num?)?.toDouble() ?? 0,
                 text: (j['text'] ?? '').toString(),
                 createdAt: DateTime.tryParse((j['created_at'] ?? '').toString()) ?? DateTime.now(),
               ))
@@ -65,7 +69,7 @@ class InteractionService {
       final endpoint = currentState ? '/strands/remove' : '/strands/add';
       await _dio.post<void>(endpoint, data: {
         'memory_id': memoryId,
-        if (strandId != null) 'strand_id': strandId,
+        'strand_id': ?strandId,
       });
       return !currentState;
     } catch (e) {
@@ -79,8 +83,8 @@ class InteractionService {
     try {
       await _dio.post<void>('/share', data: {
         'memory_id': memoryId,
-        if (branchId != null) 'branch_id': branchId,
-        if (kinIds != null) 'kin_ids': kinIds,
+        'branch_id': ?branchId,
+        'kin_ids': ?kinIds,
       });
     } catch (e) {
       debugPrint('Share error: $e');
@@ -93,7 +97,7 @@ class InteractionService {
     try {
       await _dio.post<void>('/repost', data: {
         'memory_id': memoryId,
-        if (caption != null) 'caption': caption,
+        'caption': ?caption,
       });
     } catch (e) {
       debugPrint('Repost error: $e');

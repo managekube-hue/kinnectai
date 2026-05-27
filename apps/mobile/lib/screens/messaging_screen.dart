@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-import '../router/app_nav.dart';
 import '../theme/colors.dart';
 import '../theme/typography.dart';
 
@@ -20,9 +19,9 @@ class _MessagingScreenState extends State<MessagingScreen> {
   final _controller = TextEditingController();
   final _scrollController = ScrollController();
   final _messages = <_Msg>[
-    _Msg(text: 'Hey! I saw your Memory about Grandma\'s recipe.', isMe: false, time: '2:15 PM'),
-    _Msg(text: 'Yes! She used to make it every Sunday.', isMe: true, time: '2:16 PM'),
-    _Msg(text: 'I have a photo from 1987 if you want to see it.', isMe: false, time: '2:17 PM'),
+    const _Msg(text: 'Hey! I saw your Memory about Grandma\'s recipe.', isMe: false, time: '2:15 PM'),
+    const _Msg(text: 'Yes! She used to make it every Sunday.', isMe: true, time: '2:16 PM'),
+    const _Msg(text: 'I have a photo from 1987 if you want to see it.', isMe: false, time: '2:17 PM'),
   ];
 
   void _send() {
@@ -71,7 +70,7 @@ class _MessagingScreenState extends State<MessagingScreen> {
               Row(children: [
                 Icon(PhosphorIcons.lock(), size: 10, color: KinnectColors.success),
                 const SizedBox(width: 4),
-                Text('End-to-end encrypted', style: TextStyle(color: KinnectColors.success, fontSize: 10)),
+                const Text('End-to-end encrypted', style: TextStyle(color: KinnectColors.success, fontSize: 10)),
               ]),
             ]),
           ],
@@ -98,7 +97,7 @@ class _MessagingScreenState extends State<MessagingScreen> {
                     controller: _controller,
                     style: const TextStyle(color: KinnectColors.textPrimary),
                     decoration: InputDecoration(
-                      hintText: 'Type a message...', hintStyle: TextStyle(color: KinnectColors.textMuted),
+                      hintText: 'Type a message...', hintStyle: const TextStyle(color: KinnectColors.textMuted),
                       filled: true, fillColor: KinnectColors.surfaceElevated,
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: BorderSide.none),
                       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),

@@ -1,7 +1,5 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../router/app_nav.dart';
-import 'login_screen.dart';
-import 'register_screen.dart';
 
 class LandingScreen extends StatefulWidget {
   const LandingScreen({super.key});
@@ -62,10 +60,10 @@ class _LandingScreenState extends State<LandingScreen> {
                 const SizedBox(height: 48),
                 _buildFamilyTreeGraphic(),
                 const SizedBox(height: 24),
-                Row(
+                const Row(
                   children: [
-                    const Icon(Icons.family_restroom, size: 32, color: Colors.deepPurple),
-                    const SizedBox(width: 12),
+                    Icon(Icons.family_restroom, size: 32, color: Colors.deepPurple),
+                    SizedBox(width: 12),
                     Text(
                       'KinnectJai',
                       style: TextStyle(
@@ -130,11 +128,11 @@ class _LandingScreenState extends State<LandingScreen> {
                 const SizedBox(height: 24),
                 _buildFamilyTreeGraphic(),
                 const SizedBox(height: 16),
-                Row(
+                const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.family_restroom, size: 24, color: Colors.deepPurple),
-                    const SizedBox(width: 8),
+                    Icon(Icons.family_restroom, size: 24, color: Colors.deepPurple),
+                    SizedBox(width: 8),
                     Text(
                       'KinnectJai',
                       style: TextStyle(
@@ -407,7 +405,6 @@ class FamilyTreePainter extends CustomPainter {
     
     // Draw branches
     for (int i = 0; i < 6; i++) {
-      final angle = (i * 60) * 3.14159 / 180;
       final endX = center.dx + 60 * (i % 2 == 0 ? 1 : -1) * (i < 3 ? 1 : 0.5);
       final endY = center.dy + 60 * (i < 3 ? 0.5 : 1);
       canvas.drawLine(center, Offset(endX, endY), paint);

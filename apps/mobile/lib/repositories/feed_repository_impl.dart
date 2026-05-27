@@ -30,9 +30,6 @@ class FeedRepositoryImpl implements FeedRepository {
         (response.data?['data'] as Map<String, dynamic>?) ??
         response.data ??
         <String, dynamic>{};
-    final meta =
-        (response.data?['meta'] as Map<String, dynamic>?) ??
-        const <String, dynamic>{};
 
     return PaginatedResponse<MemoryDTO>(
       items: ((data['items'] as List?) ?? const <dynamic>[])
@@ -63,9 +60,6 @@ class FeedRepositoryImpl implements FeedRepository {
         (response.data?['data'] as Map<String, dynamic>?) ??
         response.data ??
         <String, dynamic>{};
-    final meta =
-        (response.data?['meta'] as Map<String, dynamic>?) ??
-        const <String, dynamic>{};
 
     return PaginatedResponse<DiscoveryCandidateDTO>(
       items: ((data['items'] as List?) ?? const <dynamic>[])

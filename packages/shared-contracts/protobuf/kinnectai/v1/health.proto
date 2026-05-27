@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package kinnectai.v1;
+
+option go_package = "github.com/kinnectai/kinnectai/gen/go/kinnectai/v1;kinnectaiv1";
+
+message HealthCheckRequest {}
+
+message HealthCheckResponse {
+  string status = 1;
+  string service = 2;
+  string version = 3;
+}
+
+service HealthService {
+  rpc Check(HealthCheckRequest) returns (HealthCheckResponse);
+}

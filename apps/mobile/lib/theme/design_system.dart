@@ -68,36 +68,36 @@ class DesignRadii {
 /// Design system shadows
 class DesignShadows {
   static List<BoxShadow> sm = [
-    BoxShadow(
+    const BoxShadow(
       color: DesignColors.shadowSm,
-      offset: const Offset(0, 2),
+      offset: Offset(0, 2),
       blurRadius: 4,
       spreadRadius: 0,
     ),
   ];
   
   static List<BoxShadow> md = [
-    BoxShadow(
+    const BoxShadow(
       color: DesignColors.shadowMd,
-      offset: const Offset(0, 4),
+      offset: Offset(0, 4),
       blurRadius: 8,
       spreadRadius: 0,
     ),
   ];
   
   static List<BoxShadow> lg = [
-    BoxShadow(
+    const BoxShadow(
       color: DesignColors.shadowLg,
-      offset: const Offset(0, 8),
+      offset: Offset(0, 8),
       blurRadius: 16,
       spreadRadius: 0,
     ),
   ];
   
   static List<BoxShadow> xl = [
-    BoxShadow(
+    const BoxShadow(
       color: DesignColors.shadowXl,
-      offset: const Offset(0, 12),
+      offset: Offset(0, 12),
       blurRadius: 24,
       spreadRadius: 0,
     ),
@@ -184,7 +184,7 @@ class DesignTextStyles {
 /// Helper to create ThemeData from design system
 ThemeData createDesignTheme({bool isDark = true}) {
   final colors = isDark
-      ? ColorScheme.dark(
+      ? const ColorScheme.dark(
           primary: DesignColors.darkPrimary,
           onPrimary: DesignColors.darkOnPrimary,
           secondary: DesignColors.darkSecondary,
@@ -194,7 +194,7 @@ ThemeData createDesignTheme({bool isDark = true}) {
           surface: DesignColors.darkSurface,
           onSurface: DesignColors.darkOnSurface,
         )
-      : ColorScheme.light(
+      : const ColorScheme.light(
           primary: DesignColors.lightPrimary,
           onPrimary: DesignColors.lightOnPrimary,
           secondary: DesignColors.lightSecondary,
@@ -210,7 +210,7 @@ ThemeData createDesignTheme({bool isDark = true}) {
     colorScheme: colors,
     scaffoldBackgroundColor: isDark ? DesignColors.darkBackground : DesignColors.lightBackground,
     fontFamily: DesignTextStyles.secondaryFont,
-    textTheme: TextTheme(
+    textTheme: const TextTheme(
       displayLarge: DesignTextStyles.headlineLarge,
       displayMedium: DesignTextStyles.headlineMedium,
       titleLarge: DesignTextStyles.titleLarge,

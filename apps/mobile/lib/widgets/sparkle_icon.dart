@@ -86,7 +86,7 @@ class SparklePainter extends CustomPainter {
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3);
     
     final path = Path();
-    final points = 4; // 4-pointed star
+    const points = 4; // 4-pointed star
     final outerRadius = size;
     final innerRadius = size * 0.4;
     

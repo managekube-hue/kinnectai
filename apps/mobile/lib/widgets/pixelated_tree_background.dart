@@ -57,7 +57,7 @@ class PixelatedTreePainter extends CustomPainter {
     
     // Draw gradient background
     final gradientRect = Rect.fromLTWH(0, 0, size.width, size.height);
-    final gradient = LinearGradient(
+    const gradient = LinearGradient(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
       colors: [
@@ -79,7 +79,7 @@ class PixelatedTreePainter extends CustomPainter {
       ..style = PaintingStyle.fill;
     
     final random = math.Random(42); // Fixed seed for consistency
-    final cellSize = 4.0;
+    const cellSize = 4.0;
     final cols = (size.width / cellSize).ceil();
     final rows = (size.height / cellSize).ceil();
     

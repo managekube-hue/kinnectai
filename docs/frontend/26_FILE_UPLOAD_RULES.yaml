@@ -1,0 +1,61 @@
+---
+# FILE_UPLOAD_RULES.yaml
+# Asset upload validation, compression, storage, and cleanup
+file_upload_rules:
+  image_upload:
+    accepted_formats: ["jpeg", "png", "webp", "heic"]
+    max_file_size: "50MB (raw), 10MB (compressed)"
+    max_dimensions: "8192×8192px"
+    compression_target: "2MB over 4G"
+    storage: "S3 presigned PUT → CloudFront CDN"
+    retention: "delete 30d after memory unsealed (unless repurposed)"
+    virus_scan: "ClamAV on server after upload"
+    c2pa: "verify if present, badge if verified"
+
+  video_upload:
+    accepted_formats: ["mp4", "mov", "webm"]
+    max_file_size: "500MB"
+    max_duration: "10 minutes (enforced client-side)"
+    transcoding: "ffmpeg to H264+AAC for web compatibility"
+    storage: "S3 + signed URL delivery"
+    retention: "never delete (part of memory box vault)"
+    virus_scan: "ClamAV + ffprobe malformed detection"
+
+  audio_upload:
+    accepted_formats: ["m4a", "wav", "aac"]
+    max_file_size: "100MB"
+    max_duration: "60 minutes"
+    transcoding: "AAC @ 128kbps for storage"
+    storage: "S3 encrypted"
+    retention: "never delete"
+    virus_scan: "ClamAV"
+
+  document_upload:
+    accepted_formats: ["pdf", "docx", "xlsx"]
+    max_file_size: "25MB"
+    storage: "S3 (virus scan before access)"
+    retention: "30d after memory closed"
+    security: "no preview rendering (download-only)"
+
+  contact_list_import:
+    accepted_formats: ["vcf", "csv"]
+    max_file_size: "5MB"
+    max_contacts: "10,000"
+    parsing: "libphonenumber for phone validation"
+    storage: "temp hive, delete after sync"
+    deduplication: "fuzzy match on name + phone"
+
+  dna_file_import:
+    accepted_formats: ["vcf", "gzip", "zip"]
+    max_file_size: "200MB"
+    storage: "encrypted S3 + HIPAA audit trail"
+    retention: "user-deletable (per HIPAA)"
+    processing: "async dna-ingest-service"
+    conflict_resolution: "manual merge UI"
+
+  client_validation:
+    file_type_check: "magic number inspection (not just extension)"
+    file_size_check: "before upload attempt"
+    dimension_check: "image/video metadata before upload"
+    scan_overlay: "show progress + cancel button during upload"
+    network_retry: "3x backoff if interrupted"

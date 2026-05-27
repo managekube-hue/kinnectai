@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -114,7 +113,7 @@ class _State extends State<MarketplaceCreateListingScreen> {
       backgroundColor: KinnectColors.background,
       appBar: AppBar(
         backgroundColor: KinnectColors.surface,
-        title: Text('Create Listing', style: KinnectTextStyles.headlineSmall),
+        title: const Text('Create Listing', style: KinnectTextStyles.headlineSmall),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: KinnectColors.textPrimary),
           onPressed: () => Navigator.pop(context),
@@ -145,7 +144,7 @@ class _State extends State<MarketplaceCreateListingScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Image upload area
-                Text('Product Images', style: KinnectTextStyles.titleMedium),
+                const Text('Product Images', style: KinnectTextStyles.titleMedium),
                 const SizedBox(height: 8),
                 _ImageUploadArea(
                   imageUrls: _imageUrls,
@@ -161,7 +160,7 @@ class _State extends State<MarketplaceCreateListingScreen> {
                 const SizedBox(height: 24),
 
                 // Title
-                Text('Product Title', style: KinnectTextStyles.titleMedium),
+                const Text('Product Title', style: KinnectTextStyles.titleMedium),
                 const SizedBox(height: 8),
                 TextFormField(
                   controller: _titleCtrl,
@@ -172,7 +171,7 @@ class _State extends State<MarketplaceCreateListingScreen> {
                 const SizedBox(height: 20),
 
                 // Description
-                Text('Description', style: KinnectTextStyles.titleMedium),
+                const Text('Description', style: KinnectTextStyles.titleMedium),
                 const SizedBox(height: 8),
                 TextFormField(
                   controller: _descCtrl,
@@ -184,7 +183,7 @@ class _State extends State<MarketplaceCreateListingScreen> {
                 const SizedBox(height: 20),
 
                 // Category
-                Text('Category', style: KinnectTextStyles.titleMedium),
+                const Text('Category', style: KinnectTextStyles.titleMedium),
                 const SizedBox(height: 8),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 14),
@@ -209,7 +208,7 @@ class _State extends State<MarketplaceCreateListingScreen> {
                 const SizedBox(height: 20),
 
                 // Price
-                Text('Price (USD)', style: KinnectTextStyles.titleMedium),
+                const Text('Price (USD)', style: KinnectTextStyles.titleMedium),
                 const SizedBox(height: 8),
                 TextFormField(
                   controller: _priceCtrl,
@@ -229,7 +228,7 @@ class _State extends State<MarketplaceCreateListingScreen> {
                 const SizedBox(height: 20),
 
                 // Tags
-                Text('Tags (comma separated)', style: KinnectTextStyles.titleMedium),
+                const Text('Tags (comma separated)', style: KinnectTextStyles.titleMedium),
                 const SizedBox(height: 8),
                 TextFormField(
                   controller: _tagsCtrl,
@@ -237,7 +236,7 @@ class _State extends State<MarketplaceCreateListingScreen> {
                   decoration: _inputDecor('genealogy, family history, DNA'),
                 ),
                 const SizedBox(height: 12),
-                Text(
+                const Text(
                   'Tags help buyers find your product via search.',
                   style: TextStyle(color: KinnectColors.textMuted, fontSize: 12),
                 ),
@@ -255,7 +254,7 @@ class _State extends State<MarketplaceCreateListingScreen> {
                     children: [
                       Icon(PhosphorIcons.info(), size: 20, color: KinnectColors.accent),
                       const SizedBox(width: 12),
-                      Expanded(
+                      const Expanded(
                         child: Text(
                           'KinnectAI charges 8-15% commission on sales. Payouts are sent directly to your Stripe Connect account.',
                           style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12, height: 1.4),
@@ -284,7 +283,7 @@ class _State extends State<MarketplaceCreateListingScreen> {
                   ),
                 ),
                 const SizedBox(height: 12),
-                Center(
+                const Center(
                   child: Text(
                     'Your listing will be reviewed within 24 hours',
                     style: TextStyle(color: KinnectColors.textMuted, fontSize: 12),
@@ -301,7 +300,7 @@ class _State extends State<MarketplaceCreateListingScreen> {
   InputDecoration _inputDecor(String hint) {
     return InputDecoration(
       hintText: hint,
-      hintStyle: TextStyle(color: KinnectColors.textMuted),
+      hintStyle: const TextStyle(color: KinnectColors.textMuted),
       filled: true,
       fillColor: KinnectColors.surface,
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
@@ -358,7 +357,7 @@ class _ImageUploadArea extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: Image.network(e.value, fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => Center(
+                        errorBuilder: (_, _, _) => Center(
                             child: Icon(PhosphorIcons.image(), size: 32, color: KinnectColors.textMuted))),
                   ),
                 ),
@@ -400,7 +399,7 @@ class _ImageUploadArea extends StatelessWidget {
                 children: [
                   Icon(PhosphorIcons.camera(), size: 28, color: KinnectColors.textMuted),
                   const SizedBox(height: 4),
-                  Text('Add Photo', style: TextStyle(color: KinnectColors.textMuted, fontSize: 11)),
+                  const Text('Add Photo', style: TextStyle(color: KinnectColors.textMuted, fontSize: 11)),
                 ],
               ),
             ),

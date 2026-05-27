@@ -31,6 +31,7 @@ abstract class MemoryDTO with _$MemoryDTO {
   factory MemoryDTO.fromJson(Map<String, dynamic> json) =>
       _$MemoryDTOFromJson(json);
 
+  Memory toDomain({
     required String creatorUsername,
     required String creatorDisplayName,
   }) {
@@ -59,7 +60,7 @@ MemoryType _memoryTypeFromValue(dynamic value) {
       return MemoryType.video;
     case 'image':
       return MemoryType.image;
-    case 'Photplay':
+    case 'photplay':
       return MemoryType.Photplay;
     case 'stitch':
       return MemoryType.stitch;

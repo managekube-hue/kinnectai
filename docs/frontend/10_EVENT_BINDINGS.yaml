@@ -1,0 +1,28 @@
+---
+# EVENT_BINDINGS.yaml
+# Kafka events, behavioral tracking, analytics events, memory triggers
+event_bindings:
+  memory_events:
+    - user.created: "new account activation"
+    - memory.created: "vault seal completion"
+    - memory.shared: "ripple count increment"
+    - memory.triggered: "trigger condition fired (capsule, milestone, unspoken, geofence)"
+    - memory.unsealed: "steward unsealing"
+  
+  room_events:
+    - room.created: "gathering initiated"
+    - room.joined: "participant connected"
+    - room.recording_started: "audio/video capture active"
+    - room.recording_stopped: "audit trail recorded"
+  
+  graph_events:
+    - kinnection.created: "relationship established"
+    - branch.merged: "tree merge completed"
+    - branch.conflict_resolved: "GEDCOM conflict confirmed"
+    - voiceprint.verified: "biometric challenge passed"
+  
+  behavioral_events:
+    - screen.view: "user navigates to screen"
+    - feature.engaged: "interaction with feature"
+    - error.occurred: "client-side exception"
+    - sync.conflict: "offline draft vs server divergence"

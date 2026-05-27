@@ -19,12 +19,12 @@ class RootProfileScreen extends StatelessWidget {
         title: const Text('Profile'),
         actions: isOwnProfile ? [
           IconButton(
-            icon: const Icon(PhosphorIcons.gear(), color: KinnectColors.textPrimary),
+            icon: Icon(PhosphorIcons.gear(), color: KinnectColors.textPrimary),
             onPressed: () => AppNav.push(context, '/settings'),
           ),
         ] : null,
       ),
-      body: const Center(
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -33,13 +33,13 @@ class RootProfileScreen extends StatelessWidget {
               backgroundColor: KinnectColors.surface,
               child: Icon(PhosphorIcons.user(), size: 64, color: KinnectColors.textMuted),
             ),
-            SizedBox(height: 24),
-            Text(
+            const SizedBox(height: 24),
+            const Text(
               'Complete your profile',
               style: TextStyle(color: KinnectColors.textPrimary, fontSize: 18),
             ),
-            SizedBox(height: 8),
-            Text(
+            const SizedBox(height: 8),
+            const Text(
               'Add DOB and surname',
               style: TextStyle(color: KinnectColors.textSecondary),
             ),

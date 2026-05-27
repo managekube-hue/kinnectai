@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../theme/colors.dart';
@@ -112,7 +112,7 @@ class _StepUpAuthDialogState extends State<_StepUpAuthDialog> {
         children: [
           Icon(PhosphorIcons.shieldCheck(), color: KinnectColors.accent, size: 28),
           const SizedBox(width: 12),
-          Text('Verify Identity', style: KinnectTextStyles.headlineSmall),
+          const Text('Verify Identity', style: KinnectTextStyles.headlineSmall),
         ],
       ),
       content: Column(
@@ -120,7 +120,7 @@ class _StepUpAuthDialogState extends State<_StepUpAuthDialog> {
         children: [
           Text(
             widget.reason,
-            style: TextStyle(color: KinnectColors.textSecondary, fontSize: 14, height: 1.5),
+            style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 14, height: 1.5),
           ),
           const SizedBox(height: 20),
 
@@ -142,7 +142,7 @@ class _StepUpAuthDialogState extends State<_StepUpAuthDialog> {
               ),
             ),
             const SizedBox(height: 12),
-            Text('or enter PIN', style: TextStyle(color: KinnectColors.textMuted, fontSize: 13)),
+            const Text('or enter PIN', style: TextStyle(color: KinnectColors.textMuted, fontSize: 13)),
             const SizedBox(height: 12),
           ],
 
@@ -156,7 +156,7 @@ class _StepUpAuthDialogState extends State<_StepUpAuthDialog> {
             textAlign: TextAlign.center,
             decoration: InputDecoration(
               hintText: '------',
-              hintStyle: TextStyle(color: KinnectColors.textMuted, letterSpacing: 8),
+              hintStyle: const TextStyle(color: KinnectColors.textMuted, letterSpacing: 8),
               counterText: '',
               filled: true,
               fillColor: KinnectColors.surfaceElevated,
@@ -166,7 +166,7 @@ class _StepUpAuthDialogState extends State<_StepUpAuthDialog> {
 
           if (_error != null) ...[
             const SizedBox(height: 8),
-            Text(_error!, style: TextStyle(color: KinnectColors.error, fontSize: 13)),
+            Text(_error!, style: const TextStyle(color: KinnectColors.error, fontSize: 13)),
           ],
         ],
       ),

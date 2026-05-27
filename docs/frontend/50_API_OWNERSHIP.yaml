@@ -1,0 +1,10 @@
+api_ownership:
+  GET /v1/feed: { service: "feed-service:8082", team: "Feed", cache: "redis_zadd", sl: "p99<100ms" }
+  POST /v1/kinnections: { service: "graph-service:8081", team: "Graph", auth: "graph:write", consent: "bit 2" }
+  GET /v1/discovery/weekly: { service: "discovery-service:8091", team: "Discovery", cache: "redis_zset", sl: "p99<50ms" }
+  POST /v1/memorybox: { service: "memorybox-service:8090", team: "Vault", auth: "vault:write+stepup", zk: true }
+  POST /v1/photoplay: { service: "photoplay-service:8084", team: "AI Media", consent: "bit 5", c2pa: true }
+  POST /v1/rooms: { service: "rooms-service:8089", team: "Rooms", auth: "rooms:write", protocol: "WebRTC/SFU" }
+  GET /v1/kc/explain/{pair_id}: { service: "kernel-service:8083", team: "ML Kernel", sl: "p99<200ms", gdpr_art_22: true }
+  POST /v1/webhooks/revenuecat: { service: "payment-service:8093", team: "Commerce", idempotent: "event.id", sl: "p99<30s" }
+  governance: "OpenAPI 3.1 bundle authoritative. Codegen via buf/openapi-generator. No manual stub edits. PRD §22.5 enforced."

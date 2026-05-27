@@ -1,13 +1,17 @@
 import 'package:dio/dio.dart';
 import 'package:kinnectai_app/models/revenue_cat_webhook.dart';
-import 'package:retrofit/retrofit.dart';
 
-part 'payment_service_api.g.dart';
+class PaymentServiceApi {
+  PaymentServiceApi(this._dio, {String? baseUrl})
+      : _baseUrl = baseUrl ?? 'https://api.kinnectai.app/v1';
 
-@RestApi(baseUrl: 'https://api.kinnectai.app/v1')
-abstract class PaymentServiceApi {
-  factory PaymentServiceApi(Dio dio, {String baseUrl}) = _PaymentServiceApi;
+  final Dio _dio;
+  final String _baseUrl;
 
-  @POST('/webhooks/revenuecat')
-  Future<void> handleRevenueCatWebhook(@Body() RevenueCatWebhook request);
+  Future<void> handleRevenueCatWebhook(RevenueCatWebhook request) async {
+    await _dio.post<void>(
+      '$_baseUrl/webhooks/revenuecat',
+      data: request.toJson(),
+    );
+  }
 }

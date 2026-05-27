@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
+import '../feed_service.dart';
+import '../models/memory.dart';
 import '../router/app_nav.dart';
 import '../router/app_router.dart';
 import '../theme/colors.dart';
-import '../theme/typography.dart';
 
 /// PRD Home Right Rail interactions + Memory view.
 /// Full-screen Memory detail with creator info, Kin Score, actions.
@@ -18,25 +19,75 @@ class MemoryDetailScreen extends StatefulWidget {
 }
 
 class _MemoryDetailScreenState extends State<MemoryDetailScreen> {
+  final FeedService _feedService = FeedService();
+
+  bool _isLoading = true;
+  Memory? _memory;
+  String? _loadError;
+
   bool _isPulsed = false;
-  int _pulseCount = 142;
-  int _commentCount = 23;
+  int _pulseCount = 0;
+  int _commentCount = 0;
   bool _captionExpanded = false;
 
-  // TODO: fetch from repository
-  final _creatorName = 'Elara Vance';
-  final _creatorUsername = 'elara_vance';
-  final _creatorId = 'user_42';
-  final _kinScore = 0.85;
-  final _caption = 'Sharing a moment with Kin. This was the day we found out about the '
-      'old family recipe that Grandma used to make every Sunday morning.';
-  final _createdAt = '3 hours ago';
+  @override
+  void initState() {
+    super.initState();
+    _loadMemory();
+  }
+
+  Future<void> _loadMemory() async {
+    setState(() {
+      _isLoading = true;
+      _loadError = null;
+    });
+
+    try {
+      final memory = await _feedService.getMemoryById(widget.memoryId);
+      if (!mounted) {
+        return;
+      }
+
+      if (memory == null) {
+        setState(() {
+          _loadError = 'Memory not found';
+          _isLoading = false;
+        });
+        return;
+      }
+
+      setState(() {
+        _memory = memory;
+        _isPulsed = memory.isPulsed;
+        _pulseCount = memory.pulseCount;
+        _commentCount = memory.commentCount;
+        _isLoading = false;
+      });
+    } catch (e) {
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        _loadError = e.toString();
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final scoreColor = _kinScore >= 0.8
+    final memory = _memory;
+    final creatorName = memory?.creatorDisplayName ?? 'Unknown';
+    final creatorId = memory?.creatorId ?? '';
+    final kinScore = memory?.kinScore ?? 0.0;
+    final caption = memory?.caption ?? '';
+    final createdAt = memory == null
+      ? ''
+      : _formatRelativeTime(memory.createdAt);
+
+    final scoreColor = kinScore >= 0.8
         ? KinnectColors.accent
-        : _kinScore >= 0.5
+      : kinScore >= 0.5
             ? KinnectColors.primary
             : KinnectColors.textSecondary;
 
@@ -47,6 +98,11 @@ class _MemoryDetailScreenState extends State<MemoryDetailScreen> {
           // Video area
           Positioned.fill(
             child: GestureDetector(
+                onTap: () {
+                  if (_loadError != null) {
+                    _loadMemory();
+                  }
+                },
               onDoubleTapDown: (details) {
                 final width = MediaQuery.of(context).size.width;
                 if (details.globalPosition.dx > width / 2) {
@@ -56,7 +112,17 @@ class _MemoryDetailScreenState extends State<MemoryDetailScreen> {
               },
               child: Container(
                 color: KinnectColors.surfaceElevated,
-                child: Center(child: Icon(PhosphorIcons.play(), size: 64, color: KinnectColors.textMuted)),
+                  child: Center(
+                    child: _isLoading
+                        ? const CircularProgressIndicator(color: KinnectColors.accent)
+                        : _loadError != null
+                            ? const Icon(Icons.refresh, size: 48, color: KinnectColors.textMuted)
+                            : Icon(
+                                PhosphorIcons.play(),
+                                size: 64,
+                                color: KinnectColors.textMuted,
+                              ),
+                  ),
               ),
             ),
           ),
@@ -93,7 +159,7 @@ class _MemoryDetailScreenState extends State<MemoryDetailScreen> {
             child: Column(
               children: [
                 _RailButton(
-                  icon: _isPulsed ? PhosphorIcons.heartFill() : PhosphorIcons.heart(),
+                  icon: _isPulsed ? Icons.favorite : PhosphorIcons.heart(),
                   label: '$_pulseCount',
                   color: _isPulsed ? KinnectColors.error : Colors.white,
                   onTap: _togglePulse,
@@ -139,7 +205,9 @@ class _MemoryDetailScreenState extends State<MemoryDetailScreen> {
                   children: [
                     // Creator
                     GestureDetector(
-                      onTap: () => AppNav.push(context, '/root/$_creatorId'),
+                      onTap: creatorId.isEmpty
+                          ? null
+                          : () => AppNav.push(context, '/root/$creatorId'),
                       child: Row(
                         children: [
                           Container(
@@ -149,7 +217,14 @@ class _MemoryDetailScreenState extends State<MemoryDetailScreen> {
                             child: Icon(PhosphorIcons.user(), size: 18, color: KinnectColors.textMuted),
                           ),
                           const SizedBox(width: 8),
-                          Text(_creatorName, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15)),
+                          Text(
+                            creatorName,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                            ),
+                          ),
                           const SizedBox(width: 8),
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
@@ -158,7 +233,7 @@ class _MemoryDetailScreenState extends State<MemoryDetailScreen> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Text(
-                              '${(_kinScore * 100).round()}%',
+                              '${(kinScore * 100).round()}%',
                               style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
                             ),
                           ),
@@ -171,19 +246,19 @@ class _MemoryDetailScreenState extends State<MemoryDetailScreen> {
                     GestureDetector(
                       onTap: () => setState(() => _captionExpanded = !_captionExpanded),
                       child: Text(
-                        _caption,
+                        caption,
                         style: const TextStyle(color: Colors.white, fontSize: 14),
                         maxLines: _captionExpanded ? 100 : 2,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    if (!_captionExpanded && _caption.length > 80)
+                    if (!_captionExpanded && caption.length > 80)
                       GestureDetector(
                         onTap: () => setState(() => _captionExpanded = true),
                         child: const Text('more', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 14)),
                       ),
                     const SizedBox(height: 4),
-                    Text(_createdAt, style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 12)),
+                    Text(createdAt, style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 12)),
                   ],
                 ),
               ),
@@ -192,6 +267,23 @@ class _MemoryDetailScreenState extends State<MemoryDetailScreen> {
         ],
       ),
     );
+  }
+
+  String _formatRelativeTime(DateTime createdAt) {
+    final diff = DateTime.now().difference(createdAt);
+    if (diff.inMinutes < 1) {
+      return 'just now';
+    }
+    if (diff.inHours < 1) {
+      return '${diff.inMinutes}m ago';
+    }
+    if (diff.inDays < 1) {
+      return '${diff.inHours}h ago';
+    }
+    if (diff.inDays < 7) {
+      return '${diff.inDays}d ago';
+    }
+    return '${(diff.inDays / 7).floor()}w ago';
   }
 
   void _togglePulse() {

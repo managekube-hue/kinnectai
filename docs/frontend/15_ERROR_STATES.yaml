@@ -1,0 +1,46 @@
+error_codes:
+  ERR_NET_001:
+    type: network
+    message: "No connection. Tap to retry."
+    retry: exponential_backoff(1s, 2s, 4s, 8s)
+    accessibility: "Network error: content unavailable. Tap to retry."
+  ERR_SRV_5XX:
+    type: server
+    message: "KinnectAI servers are updating. We'll be back shortly."
+    retry: background_health_check(30s)
+  ERR_AUTH_401:
+    type: auth
+    message: "Session expired. Signing in again…"
+    retry: silent_firebase_refresh
+  ERR_AUTH_403:
+    type: scope_consent
+    message: "Feature requires updated consent. Open Settings ? Privacy Controls."
+    retry: none
+  ERR_AUTH_SUB:
+    type: stepup_required
+    message: "Secure action requires authentication."
+    retry: trigger_stepup_modal
+  ERR_VAULT_SEAL:
+    type: vault_failure
+    message: "Memory sealing temporarily unavailable. Your draft is preserved."
+    retry: 3x max, draft preserved in drift
+  ERR_DNA_VCF:
+    type: dna_processing
+    message: "DNA file partially processed. Connection Scores may be reduced."
+    fallback: "Exclude Layer 2. Run KC on L1/L3/L4/L5."
+  ERR_PHOTO_001:
+    type: media_render
+    message: "Photoplay creation failed. Credit refunded."
+    fallback: "Auto-refund via entitlement sync."
+  ERR_ROOM_ICE:
+    type: webrtc
+    message: "Connection unstable. Switching to audio-only."
+    fallback: "Downgrade 1080p ? 720p ? 360p ? audio"
+  ERR_GRAPH_001:
+    type: graph_load
+    message: "Branch subgraph incomplete. Showing known connections."
+    fallback: "Identity layer fetch. CTA: Verify with DNA."
+  ERR_SYNC_001:
+    type: offline_queue
+    message: "Action queued. Will sync when online."
+    retry: FIFO, workmanager backoff(1s, 5s, 15s)

@@ -21,7 +21,7 @@ class MarketplaceCartScreen extends StatelessWidget {
       backgroundColor: KinnectColors.background,
       appBar: AppBar(
         backgroundColor: KinnectColors.surface,
-        title: Text('Your Cart', style: KinnectTextStyles.headlineSmall),
+        title: const Text('Your Cart', style: KinnectTextStyles.headlineSmall),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: KinnectColors.textPrimary),
           onPressed: () => Navigator.pop(context),
@@ -67,7 +67,7 @@ class MarketplaceCartScreen extends StatelessWidget {
                       child: ListView.separated(
                         padding: const EdgeInsets.all(16),
                         itemCount: state.items.length,
-                        separatorBuilder: (_, __) => const SizedBox(height: 10),
+                        separatorBuilder: (_, _) => const SizedBox(height: 10),
                         itemBuilder: (_, i) => _CartItemTile(item: state.items[i]),
                       ),
                     ),
@@ -153,7 +153,7 @@ class _CartItemTile extends StatelessWidget {
                   ? ClipRRect(
                       borderRadius: BorderRadius.circular(8),
                       child: Image.network(item.imageUrl!, fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) => _placeholder()),
+                          errorBuilder: (_, _, _) => _placeholder()),
                     )
                   : _placeholder(),
             ),
@@ -168,9 +168,9 @@ class _CartItemTile extends StatelessWidget {
                       maxLines: 2, overflow: TextOverflow.ellipsis),
                   const SizedBox(height: 2),
                   if (item.sellerName != null)
-                    Text(item.sellerName!, style: TextStyle(color: KinnectColors.textMuted, fontSize: 11)),
+                    Text(item.sellerName!, style: const TextStyle(color: KinnectColors.textMuted, fontSize: 11)),
                   const SizedBox(height: 8),
-                  Text(_unitPrice, style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
+                  Text(_unitPrice, style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
                 ],
               ),
             ),
@@ -263,9 +263,9 @@ class _CheckoutBar extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(child: Text('${item.title} x${item.quantity}',
-                      style: TextStyle(color: KinnectColors.textMuted, fontSize: 12), overflow: TextOverflow.ellipsis)),
+                      style: const TextStyle(color: KinnectColors.textMuted, fontSize: 12), overflow: TextOverflow.ellipsis)),
                   Text('\$${(item.priceCents * item.quantity / 100).toStringAsFixed(2)}',
-                      style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
+                      style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
                 ],
               ),
             )),
@@ -274,7 +274,7 @@ class _CheckoutBar extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('${state.itemCount} item${state.itemCount == 1 ? '' : 's'}',
-                    style: TextStyle(color: KinnectColors.textSecondary, fontSize: 14)),
+                    style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 14)),
                 Text(_total, style: const TextStyle(color: KinnectColors.textPrimary, fontWeight: FontWeight.bold, fontSize: 22)),
               ],
             ),
@@ -314,7 +314,7 @@ class _CheckoutBar extends StatelessWidget {
               children: [
                 Icon(PhosphorIcons.shieldCheck(), size: 14, color: KinnectColors.textMuted),
                 const SizedBox(width: 6),
-                Text('Powered by Stripe Connect', style: TextStyle(color: KinnectColors.textMuted, fontSize: 11)),
+                const Text('Powered by Stripe Connect', style: TextStyle(color: KinnectColors.textMuted, fontSize: 11)),
               ],
             ),
           ],
@@ -333,9 +333,9 @@ class _EmptyCart extends StatelessWidget {
         children: [
           Icon(PhosphorIcons.shoppingCart(), size: 64, color: KinnectColors.textMuted),
           const SizedBox(height: 16),
-          Text('Your cart is empty', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 16)),
+          const Text('Your cart is empty', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 16)),
           const SizedBox(height: 8),
-          Text('Browse the marketplace to find ancestral treasures',
+          const Text('Browse the marketplace to find ancestral treasures',
               style: TextStyle(color: KinnectColors.textMuted, fontSize: 13)),
           const SizedBox(height: 24),
           ElevatedButton(

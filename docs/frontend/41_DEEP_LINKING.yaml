@@ -1,0 +1,17 @@
+deep_linking:
+  scheme: "kinnect://"
+  web_base: "https://kinnectai.app"
+  routes:
+    "/line": { screen: "LineScreen", auth: true }
+    "/memory/{id}": { screen: "MemoryDetailScreen", auth: true }
+    "/vault/{id}": { screen: "VaultDetailScreen", auth: true, stepup: false }
+    "/discovery/{cid}": { screen: "DiscoveryCardScreen", auth: true }
+    "/room/{id}": { screen: "RoomsScreen", auth: true, kc_gate: true }
+    "/tree/gedcom/conflicts/{import_id}": { screen: "GEDCOMConflictReviewScreen", auth: true }
+    "/steward-confirm/{request_id}": { screen: "StewardConsentScreen", auth: true, stepup: true }
+    "/kit/{id}": { screen: "DnaKitRegisterScreen", auth: true }
+  guards:
+    auth_expired: "redirect to /auth/login"
+    consent_rejected: "redirect to /settings/privacy"
+    step_up_required: "modal prompt → continue → route"
+  web_parity: "React Router mirrors Flutter go_router. PWA installable fallback."

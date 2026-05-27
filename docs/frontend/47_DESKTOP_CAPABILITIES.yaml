@@ -1,0 +1,14 @@
+desktop_capabilities:
+  delivery: "PWA (web app manifest) + native install prompt"
+  auth: "WebAuthn/Passkey, TOTP, Email/SMS OTP"
+  crypto: "Web Crypto API, OS keychain integration (macOS/Windows)"
+  media: "Hardware-accelerated video decode (WebRTC/HLS), Web Audio API"
+  realtime: "WebSocket, WebRTC (screen share supported)"
+  limitations:
+    biometric: "Relies on OS login or external security keys"
+    location: "Geolocation API (permission-based, less precise)
+    background: "No native background tasks. Relies on open tab/worker"
+  ux_adaptation:
+    keyboard_navigation: "full Tab/Enter/Escape support"
+    screen_size: "grid layouts scale to 4K. Sidebar collapses to icons."
+    touch: "optional if hybrid device. Default mouse/keyboard."

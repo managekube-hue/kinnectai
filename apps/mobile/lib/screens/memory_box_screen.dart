@@ -96,7 +96,7 @@ class _MemoryBoxScreenState extends State<MemoryBoxScreen> {
           // Create Button
           Container(
             padding: const EdgeInsets.all(DesignSpacing.lg),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: DesignColors.darkSurface,
               border: Border(top: BorderSide(color: DesignColors.darkDivider)),
             ),
@@ -110,11 +110,11 @@ class _MemoryBoxScreenState extends State<MemoryBoxScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(DesignRadii.md)),
                 ),
-                child: Row(
+                child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.add_rounded, size: 20),
-                    const SizedBox(width: DesignSpacing.sm),
+                    Icon(Icons.add_rounded, size: 20),
+                    SizedBox(width: DesignSpacing.sm),
                     Text('Create Memory Box', style: DesignTextStyles.labelLarge),
                   ],
                 ),
@@ -127,46 +127,46 @@ class _MemoryBoxScreenState extends State<MemoryBoxScreen> {
   }
 
   Widget _buildSealedTab() {
-    return Column(
+    return const Column(
       children: [
         _MemoryBoxCard(
           title: 'To Maya, my firstborn',
           deliveryCondition: 'Posthumous: Unlocks 30 days after verified death',
-          iconBgColor: const Color(0xFFE8F5E9),
-          iconColor: const Color(0xFF66BB6A),
+          iconBgColor: Color(0xFFE8F5E9),
+          iconColor: Color(0xFF66BB6A),
           icon: Icons.favorite_rounded,
           status: 'Sealed',
           statusColor: DesignColors.darkSuccess,
           date: 'Created Dec 12, 2024',
         ),
-        const SizedBox(height: DesignSpacing.md),
+        SizedBox(height: DesignSpacing.md),
         _MemoryBoxCard(
           title: 'For Marcus on his 18th birthday',
           deliveryCondition: 'Time-Triggered: Feb 14, 2032 at 8:00 AM',
-          iconBgColor: const Color(0xFFFFF3E0),
-          iconColor: const Color(0xFFFFA726),
+          iconBgColor: Color(0xFFFFF3E0),
+          iconColor: Color(0xFFFFA726),
           icon: Icons.cake_rounded,
           status: 'Sealed',
           statusColor: DesignColors.darkSuccess,
           date: 'Created Nov 3, 2024',
         ),
-        const SizedBox(height: DesignSpacing.md),
+        SizedBox(height: DesignSpacing.md),
         _MemoryBoxCard(
           title: "Grandma's recipe collection",
           deliveryCondition: 'Multi-Stage: Unlocks for all Kin when I turn 80',
-          iconBgColor: const Color(0xFFFCE4EC),
-          iconColor: const Color(0xFFEC407A),
+          iconBgColor: Color(0xFFFCE4EC),
+          iconColor: Color(0xFFEC407A),
           icon: Icons.restaurant_menu_rounded,
           status: 'Sealed',
           statusColor: DesignColors.darkSuccess,
           date: 'Created Aug 22, 2024',
         ),
-        const SizedBox(height: DesignSpacing.md),
+        SizedBox(height: DesignSpacing.md),
         _MemoryBoxCard(
           title: 'Financial wisdom for my kids',
           deliveryCondition: 'Conditional: Unlocks when net worth > \$100k',
-          iconBgColor: const Color(0xFFE3F2FD),
-          iconColor: const Color(0xFF42A5F5),
+          iconBgColor: Color(0xFFE3F2FD),
+          iconColor: Color(0xFF42A5F5),
           icon: Icons.attach_money_rounded,
           status: 'Sealed',
           statusColor: DesignColors.darkSuccess,
@@ -190,7 +190,7 @@ class _MemoryBoxScreenState extends State<MemoryBoxScreen> {
                 color: DesignColors.darkSurface,
                 borderRadius: BorderRadius.circular(DesignRadii.lg),
               ),
-              child: Icon(
+              child: const Icon(
                 Icons.inventory_2_outlined,
                 size: 40,
                 color: DesignColors.darkHint,
@@ -342,7 +342,7 @@ class _MemoryBoxCard extends StatelessWidget {
             ),
             child: Row(
               children: [
-                Icon(Icons.schedule_rounded, size: 16, color: DesignColors.darkPrimary),
+                const Icon(Icons.schedule_rounded, size: 16, color: DesignColors.darkPrimary),
                 const SizedBox(width: DesignSpacing.sm),
                 Expanded(
                   child: Text(

@@ -1,17 +1,24 @@
 import 'package:dio/dio.dart';
 import 'package:kinnectai_app/models/discovery_dismiss_post_request.dart';
 import 'package:kinnectai_app/models/discovery_list.dart';
-import 'package:retrofit/retrofit.dart';
 
-part 'discovery_service_api.g.dart';
+class DiscoveryServiceApi {
+  DiscoveryServiceApi(this._dio, {String? baseUrl})
+      : _baseUrl = baseUrl ?? 'https://api.kinnectai.app/v1';
 
-@RestApi(baseUrl: 'https://api.kinnectai.app/v1')
-abstract class DiscoveryServiceApi {
-  factory DiscoveryServiceApi(Dio dio, {String baseUrl}) = _DiscoveryServiceApi;
+  final Dio _dio;
+  final String _baseUrl;
 
-  @GET('/discovery')
-  Future<DiscoveryList> getCandidates();
+  Future<DiscoveryList> getCandidates() async {
+    final response = await _dio.get<Map<String, dynamic>>('$_baseUrl/discovery');
+    final data = response.data ?? <String, dynamic>{};
+    return DiscoveryList.fromJson(data);
+  }
 
-  @POST('/discovery/dismiss')
-  Future<void> dismissCandidate(@Body() DiscoveryDismissPostRequest request);
+  Future<void> dismissCandidate(DiscoveryDismissPostRequest request) async {
+    await _dio.post<void>(
+      '$_baseUrl/discovery/dismiss',
+      data: request.toJson(),
+    );
+  }
 }

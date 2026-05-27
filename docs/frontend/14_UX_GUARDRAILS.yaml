@@ -1,0 +1,25 @@
+# UX Guardrails
+## 1. Consent & Legal Gates
+- No biometric, genomic, or off-platform tracking occurs before explicit consent bit is set.
+- Step-up auth required for: `vault_seal`, `dna_upload`, `biometric_capture`, `account_delete`, `payment_write >$10`, `steward_designation`.
+- Memory Box content is **never** previewable post-seal. Server logs `audit_hash` only.
+
+## 2. Discovery & Graph Boundaries
+- Weekly Discovery pool capped at 10 cards. Refreshes Sunday 06:00 local.
+- Dismiss applies `×0.30` penalty. 5s undo. 30-day suppression.
+- Graph Path View confidence = `?(edge_confidence²)`. Below 5% shows "Connection path uncertain".
+
+## 3. AI Media Boundaries
+- `Photoplay` facial preview runs on-device (TFLite). No raw image leaves client unless user taps Premium/Standard render.
+- C2PA manifest required on all AI outputs. Badge must be screen-reader accessible.
+- Fallback to `SadTalker` if D-ID fails. **Credit refunded** automatically.
+
+## 4. Room & Recording Rules
+- Recording requires majority opt-in. >50% decline = auto-abort, zero retention.
+- Post-session storage choice: 10-min timeout. Default = discard.
+- TURN credentials rotate hourly. Client handles `TURN_REFRESH` without media interruption.
+
+## 5. Anti-Social-Network Patterns
+- No vanity metrics, follower counts, or algorithmic manipulation surfaces.
+- `ContentTypeBoost` never overrides CR ordering. Adjusts rank within same CR decile only.
+- `Ripple` propagation capped at 1 per 24h. Cross-Branch only if `viewer.cr_to_creator >= 0.10`.

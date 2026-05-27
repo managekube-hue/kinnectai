@@ -25,15 +25,6 @@ class _AncestralMarketplaceScreenState extends State<AncestralMarketplaceScreen>
   final TextEditingController _searchCtrl = TextEditingController();
   bool _showSearch = false;
 
-  static const _sortOptions = {
-    'featured': 'Featured',
-    'newest': 'Newest',
-    'price_asc': 'Price: Low to High',
-    'price_desc': 'Price: High to Low',
-    'rating': 'Top Rated',
-    'bestselling': 'Best Selling',
-  };
-
   @override
   void initState() {
     super.initState();
@@ -70,7 +61,7 @@ class _AncestralMarketplaceScreenState extends State<AncestralMarketplaceScreen>
                   context.read<MarketplaceCubit>().search('');
                 }),
               )
-            : Text('Ancestral Marketplace', style: KinnectTextStyles.headlineSmall),
+            : const Text('Ancestral Marketplace', style: KinnectTextStyles.headlineSmall),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: KinnectColors.textPrimary),
           onPressed: () => Navigator.pop(context),
@@ -187,7 +178,7 @@ class _SearchField extends StatelessWidget {
       style: const TextStyle(color: KinnectColors.textPrimary),
       decoration: InputDecoration(
         hintText: 'Search products...',
-        hintStyle: TextStyle(color: KinnectColors.textMuted),
+        hintStyle: const TextStyle(color: KinnectColors.textMuted),
         border: InputBorder.none,
         suffixIcon: IconButton(
           icon: const Icon(Icons.close, color: KinnectColors.textSecondary),
@@ -225,7 +216,7 @@ class _SortBar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text('$resultCount products', style: TextStyle(color: KinnectColors.textMuted, fontSize: 12)),
+          Text('$resultCount products', style: const TextStyle(color: KinnectColors.textMuted, fontSize: 12)),
           PopupMenuButton<String>(
             initialValue: current,
             onSelected: onChanged,
@@ -235,11 +226,11 @@ class _SortBar extends StatelessWidget {
               children: [
                 Icon(PhosphorIcons.funnelSimple(), size: 16, color: KinnectColors.textSecondary),
                 const SizedBox(width: 4),
-                Text(_sortOptions[current] ?? 'Sort', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
+                Text(_sortOptions[current] ?? 'Sort', style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
               ],
             ),
             itemBuilder: (_) => _sortOptions.entries
-                .map((e) => PopupMenuItem(value: e.key, child: Text(e.value, style: TextStyle(color: KinnectColors.textPrimary))))
+                .map((e) => PopupMenuItem(value: e.key, child: Text(e.value, style: const TextStyle(color: KinnectColors.textPrimary))))
                 .toList(),
           ),
         ],
@@ -275,7 +266,7 @@ class _CategoryChips extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         itemCount: categories.length + 1,
-        separatorBuilder: (_, __) => const SizedBox(width: 8),
+        separatorBuilder: (_, _) => const SizedBox(width: 8),
         itemBuilder: (_, i) {
           if (i == 0) {
             return _chip(label: 'All', icon: PhosphorIcons.squaresFour, isSelected: selected == null, onTap: () => onSelected(null));
@@ -359,15 +350,15 @@ class _ProductCard extends StatelessWidget {
                 children: [
                   Container(
                     width: double.infinity,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: KinnectColors.surfaceElevated,
-                      borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                      borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
                     ),
                     child: _primaryImageUrl != null
                         ? ClipRRect(
                             borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
                             child: Image.network(_primaryImageUrl!, fit: BoxFit.cover,
-                                errorBuilder: (_, __, ___) => _imagePlaceholder()),
+                                errorBuilder: (_, _, _) => _imagePlaceholder()),
                           )
                         : _imagePlaceholder(),
                   ),
@@ -423,7 +414,7 @@ class _ProductCard extends StatelessWidget {
                       maxLines: 2, overflow: TextOverflow.ellipsis),
                   const SizedBox(height: 4),
                   Text(product.sellerName ?? 'Unknown',
-                      style: TextStyle(color: KinnectColors.textSecondary, fontSize: 11)),
+                      style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 11)),
                   const SizedBox(height: 6),
                   Row(
                     children: [
@@ -432,7 +423,7 @@ class _ProductCard extends StatelessWidget {
                           fontWeight: FontWeight.bold, fontSize: 14)),
                       if (_comparePrice != null) ...[
                         const SizedBox(width: 6),
-                        Text(_comparePrice!, style: TextStyle(
+                        Text(_comparePrice!, style: const TextStyle(
                             color: KinnectColors.textMuted, fontSize: 11,
                             decoration: TextDecoration.lineThrough)),
                       ],
@@ -444,11 +435,11 @@ class _ProductCard extends StatelessWidget {
                       Icon(PhosphorIcons.star(PhosphorIconsStyle.fill), size: 12, color: KinnectColors.warning),
                       const SizedBox(width: 3),
                       Text('${product.ratingAvg.toStringAsFixed(1)} (${product.ratingCount})',
-                          style: TextStyle(color: KinnectColors.textSecondary, fontSize: 11)),
+                          style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 11)),
                       const Spacer(),
                       if (product.salesCount > 0)
                         Text('${product.salesCount} sold',
-                            style: TextStyle(color: KinnectColors.textMuted, fontSize: 10)),
+                            style: const TextStyle(color: KinnectColors.textMuted, fontSize: 10)),
                     ],
                   ),
                 ],
@@ -479,7 +470,7 @@ class _ShimmerProductGrid extends StatelessWidget {
           crossAxisCount: 2, crossAxisSpacing: 10, mainAxisSpacing: 10, childAspectRatio: 0.62,
         ),
         itemCount: 6,
-        itemBuilder: (_, __) => _ShimmerProductCard(),
+        itemBuilder: (_, _) => _ShimmerProductCard(),
       ),
     );
   }
@@ -496,9 +487,9 @@ class _ShimmerProductCard extends StatelessWidget {
       child: Column(
         children: [
           Expanded(child: Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: KinnectColors.surfaceElevated,
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
             ),
           )),
           Padding(
@@ -540,7 +531,7 @@ class _ErrorView extends StatelessWidget {
           children: [
             Icon(PhosphorIcons.warning(), size: 48, color: KinnectColors.error),
             const SizedBox(height: 12),
-            Text(message, style: TextStyle(color: KinnectColors.textSecondary), textAlign: TextAlign.center),
+            Text(message, style: const TextStyle(color: KinnectColors.textSecondary), textAlign: TextAlign.center),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: onRetry,
@@ -563,9 +554,9 @@ class _EmptyState extends StatelessWidget {
         children: [
           Icon(PhosphorIcons.storefront(), size: 64, color: KinnectColors.textMuted),
           const SizedBox(height: 16),
-          Text('No products found', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 16)),
+          const Text('No products found', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 16)),
           const SizedBox(height: 8),
-          Text('Try adjusting your search or filters', style: TextStyle(color: KinnectColors.textMuted, fontSize: 13)),
+          const Text('Try adjusting your search or filters', style: TextStyle(color: KinnectColors.textMuted, fontSize: 13)),
         ],
       ),
     );

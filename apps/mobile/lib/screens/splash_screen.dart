@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../router/app_nav.dart';
 import '../theme/design_system.dart';
 
@@ -52,7 +52,7 @@ class _SplashScreenState extends State<SplashScreen>
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
-                    transform: GradientRotation(145 * 3.14159 / 180),
+                    transform: const GradientRotation(145 * 3.14159 / 180),
                     colors: [
                       const Color(0xFF1A1C18), // color0
                       const Color(0xFF2A2D26), // color1
@@ -88,7 +88,7 @@ class _SplashScreenState extends State<SplashScreen>
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // KinnectAI logo placeholder
+                    // KinnectAI logo mark
                     Container(
                       width: 120,
                       height: 120,
@@ -96,7 +96,7 @@ class _SplashScreenState extends State<SplashScreen>
                         color: DesignColors.darkPrimary.withOpacity(0.3),
                         borderRadius: BorderRadius.circular(DesignRadii.lg),
                       ),
-                      child: Icon(
+                      child: const Icon(
                         Icons.account_tree_outlined,
                         size: 64,
                         color: DesignColors.darkPrimary,
@@ -124,7 +124,7 @@ class _SplashScreenState extends State<SplashScreen>
                     const SizedBox(height: DesignSpacing.xl),
                     
                     // Loading indicator
-                    SizedBox(
+                    const SizedBox(
                       width: 40,
                       height: 40,
                       child: CircularProgressIndicator(

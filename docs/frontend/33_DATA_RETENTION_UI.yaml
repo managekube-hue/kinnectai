@@ -1,0 +1,20 @@
+data_retention_ui:
+  user_visible_controls:
+    watch_history: "clearable. 24-month auto-purge."
+    comment_history: "clearable. 24-month auto-purge."
+    search_history: "clearable. 12-month auto-purge."
+    recently_deleted: "30-day retention. Permanent delete after."
+    raw_genomic: "30-day deletion SLA. Step-up auth required."
+  retention_notices:
+    memory_box_drafts: "30-day S3 lifecycle policy. Auto-expire."
+    room_recordings: "10-min choice timeout → secure delete."
+    voiceprint: "30-day GDPR purge post-revocation."
+  export:
+    scope: "PG, Neo4j, Cassandra, S3 keys, audit ledger"
+    format: "ZIP + JSON + README"
+    delivery: "presigned URL (24h expiry) + separate key package (email)"
+    sl: "24h generation"
+  legal_basis_ui:
+    gdpr_art_17: "Right to Erasure button in Settings"
+    gdpr_art_20: "Download Your Data in Settings"
+    gdpr_art_22: "Explainability modal on KC badge tap"

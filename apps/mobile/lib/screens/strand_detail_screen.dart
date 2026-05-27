@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../theme/colors.dart';
@@ -58,7 +58,7 @@ class _StrandDetailScreenState extends State<StrandDetailScreen> {
                       children: [
                         Text(_strandName, style: KinnectTextStyles.headlineMedium),
                         const SizedBox(height: 4),
-                        Text('$_memoryCount memories', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 14)),
+                        Text('$_memoryCount memories', style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 14)),
                         const SizedBox(height: 12),
                         Row(
                           children: [

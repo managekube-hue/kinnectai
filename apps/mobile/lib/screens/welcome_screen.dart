@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../router/app_nav.dart';
 import 'package:flutter/services.dart';
 import '../theme/colors.dart';
@@ -57,7 +57,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         idToken: googleAuth.idToken,
       );
       
-      final userCredential = await _auth.signInWithCredential(credential);
+      await _auth.signInWithCredential(credential);
       
       _logAnalyticsEvent('auth_oauth_completed', {
         'provider': 'google',
@@ -99,7 +99,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         final AccessToken accessToken = result.accessToken!;
         final credential = FacebookAuthProvider.credential(accessToken.token);
         
-        final userCredential = await _auth.signInWithCredential(credential);
+        await _auth.signInWithCredential(credential);
         
         _logAnalyticsEvent('auth_oauth_completed', {
           'provider': 'facebook',
@@ -258,7 +258,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         const SizedBox(height: KinnectSpacing.sm),
         
         // Tagline
-        Text(
+        const Text(
           'The Algorithm Is Your Bloodline',
           style: KinnectTextStyles.subtitle,
           textAlign: TextAlign.center,
@@ -321,7 +321,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         ),
         GestureDetector(
           onTap: _handleSignIn,
-          child: Text(
+          child: const Text(
             'Sign In',
             style: KinnectTextStyles.link,
           ),
@@ -346,7 +346,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           children: [
             GestureDetector(
               onTap: _handleTermsOfService,
-              child: Text(
+              child: const Text(
                 'Terms of Service',
                 style: KinnectTextStyles.linkSmall,
               ),
@@ -359,7 +359,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             ),
             GestureDetector(
               onTap: _handlePrivacyPolicy,
-              child: Text(
+              child: const Text(
                 'Privacy Policy',
                 style: KinnectTextStyles.linkSmall,
               ),

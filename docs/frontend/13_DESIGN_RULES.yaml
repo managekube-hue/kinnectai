@@ -1,0 +1,25 @@
+# KinnectAI Design Rules
+## 1. Lexicon Enforcement (CI-Gated)
+- **Forbidden:** `feed`, `like`, `follow`, `friend`, `story`, `group`, `live`, `post`, `trending`, `for you`, `comment`, `subscribe`, `creator fund`
+- **Mandatory:** `The Line`, `Pulse`, `Kinnection`, `Root`, `Memory`, `Branch`, `Room`, `Gathering`, `Photoplay`, `Memory Box`, `Kin Score`, `Echoes`, `Discovery`, `Stitch`, `Rippling`, `Strand`
+- **CI Gate:** `scripts/ci/validate_prd_trace.py` + `lexicon-check.yml` blocks PRs on violation.
+
+## 2. Visual Hierarchy
+- **Primary:** Biological proximity (Kin Score %) dictates layout weight. Higher CR = larger video preview, stronger accent tokens.
+- **Secondary:** Content metadata (caption, audio source, C2PA badge) rendered at 60% opacity.
+- **Tertiary:** Actions (Pulse, Share, Branch) use PhosphorIcons 24×24, `regular` weight.
+
+## 3. Token Mapping
+- **Colors:** `kinnect_accent: #FF6B1A`, `kinnect_primary: #00C2D4`, `background: #0A0A0F`, `surface: #121218`, `error: #E54545`, `success: #2ECC71`
+- **Typography:** System font stack, `Inter` fallback, weights: 400 (body), 500 (labels), 600 (headings), 700 (badges)
+- **Spacing:** 4dp baseline grid. Touch targets ≥44×44dp.
+
+## 4. Accessibility Baseline
+- WCAG 2.2 AA enforced. Contrast ≥4.5:1 for text, ≥3:1 for UI components.
+- Screen reader labels must announce `Kin Score {score}%`, `AI-Generated`, `Encrypted`, `Steward Verified`.
+- No color-only state indicators. Use icon + shape + text.
+
+## 5. Motion & Feedback
+- Use `KinnectAIMotion` tokens exclusively (`durationStandard: 200ms`, `curve: standardEasing`).
+- Haptic feedback: `selection` on tab switch, `success` on seal/Kinnect confirm, `warning` on step-up fail.
+- Reduce motion: `adaptiveDuration` defaults to 0ms if `disableAnimations` is active.

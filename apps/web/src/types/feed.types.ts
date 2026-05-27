@@ -1,8 +1,16 @@
 // SRS §23.2 Category 17 — Frontend Types: Feed
 export interface FeedItem {
   itemId: string;
+  feedItemId?: string;
   itemType: 'memory_card' | 'discovery' | 'pulse' | 'bloom';
   payload: unknown;
+  authorId?: string;
+  authorDisplayName?: string;
+  contentSnippet?: string;
+  publishedAt?: string;
+  memoryId?: string;
+  branchId?: string;
+  kinScore?: number;
   rankScore: number;
   injectionReason?: FeedInjectionReason;
   experimentVariant?: FeedExperimentVariant;

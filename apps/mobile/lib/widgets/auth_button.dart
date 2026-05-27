@@ -215,7 +215,7 @@ class AuthButton extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(4),
       ),
-      child: Center(
+      child: const Center(
         child: Text(
           'G',
           style: TextStyle(
@@ -234,7 +234,7 @@ class AuthButton extends StatelessWidget {
       width: KinnectSpacing.iconMedium,
       height: KinnectSpacing.iconMedium,
       decoration: BoxDecoration(
-        gradient: LinearGradient(
+        gradient: const LinearGradient(
           colors: [KinnectColors.tiktokCyan, KinnectColors.tiktokPink],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,

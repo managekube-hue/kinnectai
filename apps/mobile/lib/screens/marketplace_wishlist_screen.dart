@@ -30,7 +30,7 @@ class _State extends State<MarketplaceWishlistScreen> {
       backgroundColor: KinnectColors.background,
       appBar: AppBar(
         backgroundColor: KinnectColors.surface,
-        title: Text('Wishlist', style: KinnectTextStyles.headlineSmall),
+        title: const Text('Wishlist', style: KinnectTextStyles.headlineSmall),
         leading: IconButton(icon: const Icon(Icons.arrow_back, color: KinnectColors.textPrimary), onPressed: () => Navigator.pop(context)),
       ),
       body: BlocBuilder<MarketplaceCubit, MarketplaceState>(
@@ -46,9 +46,9 @@ class _State extends State<MarketplaceWishlistScreen> {
                   children: [
                     Icon(PhosphorIcons.heart(), size: 64, color: KinnectColors.textMuted),
                     const SizedBox(height: 16),
-                    Text('Your wishlist is empty', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 16)),
+                    const Text('Your wishlist is empty', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 16)),
                     const SizedBox(height: 8),
-                    Text('Tap the heart icon on products to add them to your Wishlist',
+                    const Text('Tap the heart icon on products to add them to your Wishlist',
                         style: TextStyle(color: KinnectColors.textMuted, fontSize: 13)),
                   ],
                 ),
@@ -57,7 +57,7 @@ class _State extends State<MarketplaceWishlistScreen> {
             return ListView.separated(
               padding: const EdgeInsets.all(16),
               itemCount: state.products.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 10),
+              separatorBuilder: (_, _) => const SizedBox(height: 10),
               itemBuilder: (_, i) => _WishlistTile(product: state.products[i]),
             );
           }
@@ -99,7 +99,7 @@ class _WishlistTile extends StatelessWidget {
               decoration: BoxDecoration(color: KinnectColors.surfaceElevated, borderRadius: BorderRadius.circular(8)),
               child: _imageUrl != null
                   ? ClipRRect(borderRadius: BorderRadius.circular(8),
-                      child: Image.network(_imageUrl!, fit: BoxFit.cover, errorBuilder: (_, __, ___) => _ph()))
+                      child: Image.network(_imageUrl!, fit: BoxFit.cover, errorBuilder: (_, _, _) => _ph()))
                   : _ph(),
             ),
             const SizedBox(width: 14),
@@ -110,11 +110,11 @@ class _WishlistTile extends StatelessWidget {
                   Text(product.title, style: const TextStyle(color: KinnectColors.textPrimary, fontWeight: FontWeight.w600, fontSize: 14),
                       maxLines: 2, overflow: TextOverflow.ellipsis),
                   const SizedBox(height: 4),
-                  Text(product.sellerName ?? '', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
+                  Text(product.sellerName ?? '', style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
                   const SizedBox(height: 6),
                   Row(
                     children: [
-                      Text(_price, style: TextStyle(color: KinnectColors.accent, fontWeight: FontWeight.bold, fontSize: 15)),
+                      Text(_price, style: const TextStyle(color: KinnectColors.accent, fontWeight: FontWeight.bold, fontSize: 15)),
                       const Spacer(),
                       // Add to cart shortcut
                       GestureDetector(

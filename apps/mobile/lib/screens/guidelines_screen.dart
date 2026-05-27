@@ -79,7 +79,7 @@ class GuidelinesScreen extends StatelessWidget {
       backgroundColor: KinnectColors.background,
       appBar: AppBar(
         backgroundColor: KinnectColors.surface,
-        title: Text('Community Guidelines', style: KinnectTextStyles.headlineSmall),
+        title: const Text('Community Guidelines', style: KinnectTextStyles.headlineSmall),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: KinnectColors.textPrimary),
           onPressed: () => Navigator.pop(context),
@@ -96,9 +96,9 @@ class GuidelinesScreen extends StatelessWidget {
                 children: [
                   Icon(PhosphorIcons.bookOpenText(), size: 48, color: KinnectColors.primary),
                   const SizedBox(height: 12),
-                  Text('Community Standards', style: KinnectTextStyles.headlineMedium, textAlign: TextAlign.center),
+                  const Text('Community Standards', style: KinnectTextStyles.headlineMedium, textAlign: TextAlign.center),
                   const SizedBox(height: 8),
-                  Text(
+                  const Text(
                     'The algorithm is your bloodline. These guidelines protect the integrity of biological truth and the safety of every Kin.',
                     textAlign: TextAlign.center,
                     style: TextStyle(color: KinnectColors.textSecondary, height: 1.5),

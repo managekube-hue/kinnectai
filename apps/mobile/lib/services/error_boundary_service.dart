@@ -8,7 +8,7 @@ import 'package:flutter/foundation.dart';
 /// - ServerError(5xx): full-screen illustration
 /// - ClientError(4xx): toast + disable CTA
 /// - GraphError: partial render
-/// - MediaError: placeholder + background retry
+/// - MediaError: media fallback surface + background retry
 class ErrorBoundaryService {
   ErrorBoundaryService._();
 
@@ -20,7 +20,7 @@ class ErrorBoundaryService {
         case DioExceptionType.sendTimeout:
         case DioExceptionType.receiveTimeout:
         case DioExceptionType.connectionError:
-          return KinnectError(
+          return const KinnectError(
             type: ErrorType.network,
             message: 'No connection. Tap to retry.',
             retryAction: RetryAction.exponentialBackoff,

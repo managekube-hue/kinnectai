@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../router/app_nav.dart';
@@ -45,7 +45,7 @@ class _BranchMembersScreenState extends State<BranchMembersScreen> {
       backgroundColor: KinnectColors.background,
       appBar: AppBar(
         backgroundColor: KinnectColors.surface,
-        title: Text('Branch Members', style: KinnectTextStyles.headlineSmall),
+        title: const Text('Branch Members', style: KinnectTextStyles.headlineSmall),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: KinnectColors.textPrimary),
           onPressed: () => Navigator.pop(context),
@@ -63,7 +63,7 @@ class _BranchMembersScreenState extends State<BranchMembersScreen> {
               style: const TextStyle(color: KinnectColors.textPrimary),
               decoration: InputDecoration(
                 hintText: 'Search members...',
-                hintStyle: TextStyle(color: KinnectColors.textMuted),
+                hintStyle: const TextStyle(color: KinnectColors.textMuted),
                 prefixIcon: Icon(PhosphorIcons.magnifyingGlass(), color: KinnectColors.textMuted),
                 filled: true,
                 fillColor: KinnectColors.surfaceElevated,
@@ -83,10 +83,10 @@ class _BranchMembersScreenState extends State<BranchMembersScreen> {
               children: [
                 Text(
                   '${_filtered.length} members',
-                  style: TextStyle(color: KinnectColors.textSecondary, fontSize: 13),
+                  style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 13),
                 ),
                 const Spacer(),
-                Text('Sorted by Kin Score', style: TextStyle(color: KinnectColors.textMuted, fontSize: 12)),
+                const Text('Sorted by Kin Score', style: TextStyle(color: KinnectColors.textMuted, fontSize: 12)),
               ],
             ),
           ),
@@ -142,7 +142,7 @@ class _MemberTile extends StatelessWidget {
           Container(
             width: 44,
             height: 44,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               shape: BoxShape.circle,
               color: KinnectColors.surfaceElevated,
             ),
@@ -167,7 +167,7 @@ class _MemberTile extends StatelessWidget {
       title: Text(member.name, style: const TextStyle(color: KinnectColors.textPrimary, fontWeight: FontWeight.w600, fontSize: 15)),
       subtitle: Text(
         '${member.relationship} -- Last active ${member.lastActive}',
-        style: TextStyle(color: KinnectColors.textSecondary, fontSize: 13),
+        style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 13),
       ),
       trailing: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),

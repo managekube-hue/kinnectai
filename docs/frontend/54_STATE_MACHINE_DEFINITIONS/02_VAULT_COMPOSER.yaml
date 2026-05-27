@@ -1,0 +1,62 @@
+# Memory Box Composer State Machine (Highest-Risk Surface)
+# SRS §5.2, PRD §17.2, §31
+machine: VaultComposerCubit
+initial_state: initial
+states:
+  initial:
+    on:
+      select_trigger: draft
+      load_draft: draft_restored
+  draft:
+    on:
+      record_media: media_captured
+      upload_media: media_captured
+      select_recipient: draft
+      save_draft: draft_saved
+      seal_request: step_up_authenticating
+      exit: draft_saved
+  draft_saved:
+    on:
+      resume: draft
+  media_captured:
+    on:
+      select_trigger: draft
+      seal_request: step_up_authenticating
+      discard: initial
+  step_up_authenticating:
+    guards:
+      - auth_success: sealing
+      - auth_failure: auth_failed
+      - max_attempts_reached: lockout
+  auth_failed:
+    on:
+      retry: step_up_authenticating
+      cancel: draft
+  lockout:
+    timeout: 1800s → draft
+    on:
+      contact_support: draft
+  sealing:
+    on:
+      kms_success: sealed
+      kms_timeout: seal_failed_retry
+      upload_failure: seal_failed_retry
+  seal_failed_retry:
+    retries: 3 (1s, 5s, 15s)
+    on:
+      max_retries: draft_preserved
+      retry: sealing
+  draft_preserved:
+    on:
+      retry_later: initial
+  sealed:
+    terminal: true
+    side_effects:
+      - emit_sealed_event(memory_id)
+      - clear_draft(memory_id)
+      - log_audit(consent_flags_snapshot, stepup_timestamp, KMS_key_id)
+      - push_notification(recipient_id, "Memory sealed")
+transitions_validation:
+  - seal_request REQUIRES X-Stepup-Auth: biometric|totp (TTL 300s)
+  - sealed EMITS vault.triggers Kafka event
+  - draft_saved DEBOUNCED 3s OR on app background

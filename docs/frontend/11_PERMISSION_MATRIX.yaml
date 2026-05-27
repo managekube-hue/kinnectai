@@ -1,0 +1,34 @@
+---
+# iOS/Android permission mapping, consent gating, ATT compliance
+permissions:
+  - key: camera
+    ios: NSCameraUsageDescription
+    android: android.permission.CAMERA
+    consent_bit: [5]
+    fallback: "local_tflite_preview"
+  - key: microphone
+    ios: NSMicrophoneUsageDescription
+    android: android.permission.RECORD_AUDIO
+    consent_bit: [6]
+    fallback: "voiceprint_disabled"
+  - key: location
+    ios: NSLocationWhenInUseUsageDescription
+    android: android.permission.ACCESS_FINE_LOCATION
+    consent_bit: [3,7]
+    limit: "iOS 20 regions max (enforced UI modal)"
+  - key: contacts
+    ios: NSContactsUsageDescription
+    android: android.permission.READ_CONTACTS
+    consent_bit: [7]
+    fallback: "manual_invite_link"
+  - key: att_tracking
+    ios: ATTrackingManager
+    android: google_play_services_ads
+    consent_bit: [7]
+    copy: "Apple-approved factual disclosure only"
+    denial_impact: "behavioral-service ignores Pixel/SDK events"
+  - key: photo_library
+    ios: NSPhotoLibraryUsageDescription
+    android: android.permission.READ_EXTERNAL_STORAGE
+    consent_bit: [5]
+    fallback: "camera_capture_only"

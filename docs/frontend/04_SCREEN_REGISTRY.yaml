@@ -1,0 +1,292 @@
+---
+# Authoritative 48-screen registry → Cubit/BLoC → API dep → Consent bits → Offline strategy
+# Traceable to PRD §14.1, §15, §30
+screens:
+  - id: 1
+    name: "Welcome / Splash"
+    cubit: WelcomeCubit
+    api_dep: AuthService
+    consent_bits: []
+    offline: hive_session_cache
+  - id: 2
+    name: "Email Sign Up"
+    cubit: EmailAuthCubit
+    api_dep: AuthRepository
+    consent_bits: []
+    offline: none
+  - id: 3
+    name: "Phone Sign Up"
+    cubit: PhoneAuthCubit
+    api_dep: AuthRepository
+    consent_bits: []
+    offline: none
+  - id: 4
+    name: "Passkey Setup"
+    cubit: PasskeyCubit
+    api_dep: AuthRepository (WebAuthn)
+    consent_bits: []
+    offline: none
+  - id: 5
+    name: "Onboarding: Surname"
+    cubit: OnboardingCubit
+    api_dep: IdentityService (/v1/namemap)
+    consent_bits: [0]
+    offline: local_name_cache
+  - id: 6
+    name: "Onboarding: DNA"
+    cubit: DnaOnboardingCubit
+    api_dep: DnaRepository
+    consent_bits: [1]
+    offline: draft_vcf_temp
+  - id: 7
+    name: "Onboarding: Photo"
+    cubit: PhotoOnboardingCubit
+    api_dep: MediaRepository
+    consent_bits: [5]
+    offline: local_tflite
+  - id: 8
+    name: "Onboarding: Invite Kin"
+    cubit: InviteKinCubit
+    api_dep: ContactsService
+    consent_bits: [7]
+    offline: local_contact_cache
+  - id: 9
+    name: "Onboarding: The Line"
+    cubit: FeedActivationCubit
+    api_dep: FeedRepository
+    consent_bits: []
+    offline: drift_line_cache
+  - id: 10
+    name: "The Line (Home)"
+    cubit: LineCubit
+    api_dep: FeedRepository, PulseService
+    consent_bits: [3,4]
+    offline: drift_line_cache + hive_redis_mirror
+  - id: 11
+    name: "Echoes Tab"
+    cubit: EchoesCubit
+    api_dep: FeedRepository
+    consent_bits: [3]
+    offline: drift_line_cache
+  - id: 12
+    name: "Kinnections Tab"
+    cubit: KinnectionsCubit
+    api_dep: GraphRepository
+    consent_bits: [2]
+    offline: drift_graph_cache
+  - id: 13
+    name: "Discovery Tab"
+    cubit: DiscoveryCubit
+    api_dep: DiscoveryRepository
+    consent_bits: []
+    offline: hive_discovery_weekly
+  - id: 14
+    name: "Graph Path View"
+    cubit: PathViewCubit
+    api_dep: GraphRepository
+    consent_bits: [2]
+    offline: drift_path_cache
+  - id: 15
+    name: "Photoplay Studio"
+    cubit: PhotoplayCubit
+    api_dep: PhotoplayRepository
+    consent_bits: [5,6]
+    offline: draft_s3_temp + workmanager_queue
+  - id: 16
+    name: "Memory Box Composer"
+    cubit: VaultComposerCubit
+    api_dep: VaultRepository
+    consent_bits: [9]
+    offline: drift_vault_drafts
+  - id: 17
+    name: "Vault List"
+    cubit: VaultListCubit
+    api_dep: VaultRepository
+    consent_bits: [9]
+    offline: drift_vault_metadata
+  - id: 18
+    name: "Vault Detail"
+    cubit: VaultDetailCubit
+    api_dep: VaultRepository
+    consent_bits: [9]
+    offline: drift_vault_metadata
+  - id: 19
+    name: "Stitch Editor"
+    cubit: StitchCubit
+    api_dep: MediaRepository
+    consent_bits: [3,12]
+    offline: draft_clip_cache
+  - id: 20
+    name: "Restore Tool"
+    cubit: RestoreCubit
+    api_dep: MediaRepository
+    consent_bits: []
+    offline: draft_image_temp
+  - id: 21
+    name: "Flickers"
+    cubit: FlickersCubit
+    api_dep: PhotoplayRepository
+    consent_bits: [3,9]
+    offline: none
+  - id: 22
+    name: "Voiceprint Capture"
+    cubit: VoiceprintCubit
+    api_dep: VoiceRepository
+    consent_bits: [6]
+    offline: draft_audio_enc
+  - id: 23
+    name: "Family Crest"
+    cubit: CrestCubit
+    api_dep: MediaRepository
+    consent_bits: []
+    offline: hive_svg_cache
+  - id: 24
+    name: "Tree View"
+    cubit: TreeCubit
+    api_dep: GraphRepository
+    consent_bits: [2]
+    offline: drift_tree_cache
+  - id: 25
+    name: "Branch Map"
+    cubit: BranchMapCubit
+    api_dep: BranchRepository
+    consent_bits: [2]
+    offline: local_map_tiles
+  - id: 26
+    name: "Branch Members"
+    cubit: BranchMembersCubit
+    api_dep: BranchRepository
+    consent_bits: [2]
+    offline: drift_members_cache
+  - id: 27
+    name: "Branch Merge"
+    cubit: BranchMergeCubit
+    api_dep: BranchRepository
+    consent_bits: [2]
+    offline: draft_evidence_cache
+  - id: 28
+    name: "Name Map"
+    cubit: NameMapCubit
+    api_dep: IdentityService
+    consent_bits: [0]
+    offline: local_heatmap_cache
+  - id: 29
+    name: "Lost Branches"
+    cubit: LostBranchesCubit
+    api_dep: DiscoveryRepository
+    consent_bits: []
+    offline: hive_discovery_weekly
+  - id: 30
+    name: "Kinship Alert Map"
+    cubit: AlertMapCubit
+    api_dep: LocationService
+    consent_bits: [3,7]
+    offline: os_geofence_os
+  - id: 31
+    name: "Rooms List"
+    cubit: RoomsListCubit
+    api_dep: RoomsRepository
+    consent_bits: []
+    offline: hive_rooms_cache
+  - id: 32
+    name: "Inside Room"
+    cubit: RoomCubit
+    api_dep: RoomsRepository, WebRTC
+    consent_bits: []
+    offline: none
+  - id: 33
+    name: "Gatherings"
+    cubit: GatheringCubit
+    api_dep: RoomsRepository
+    consent_bits: []
+    offline: hive_rsvp_cache
+  - id: 34
+    name: "Pulse / Inbox"
+    cubit: InboxCubit
+    api_dep: NotificationRepository
+    consent_bits: [3]
+    offline: drift_pulse_cache
+  - id: 35
+    name: "Root Profile (Own)"
+    cubit: RootProfileCubit
+    api_dep: ProfileRepository
+    consent_bits: []
+    offline: hive_profile_cache
+  - id: 36
+    name: "Root Profile (Other)"
+    cubit: OtherRootCubit
+    api_dep: GraphRepository
+    consent_bits: [3]
+    offline: hive_profile_cache
+  - id: 37
+    name: "Profile Edit"
+    cubit: ProfileEditCubit
+    api_dep: ProfileRepository
+    consent_bits: []
+    offline: draft_profile_cache
+  - id: 38
+    name: "Settings Main"
+    cubit: SettingsCubit
+    api_dep: SettingsRepository
+    consent_bits: []
+    offline: hive_settings_cache
+  - id: 39
+    name: "Activity Center"
+    cubit: ActivityCubit
+    api_dep: SettingsRepository
+    consent_bits: [3]
+    offline: drift_activity_cache
+  - id: 40
+    name: "Content Prefs"
+    cubit: ContentPrefsCubit
+    api_dep: SettingsRepository
+    consent_bits: [3,4,8]
+    offline: none
+  - id: 41
+    name: "Time & Wellbeing"
+    cubit: WellbeingCubit
+    api_dep: SettingsRepository
+    consent_bits: []
+    offline: local_limits
+  - id: 42
+    name: "Family Pairing"
+    cubit: FamilyCubit
+    api_dep: FamilyRepository
+    consent_bits: [10]
+    offline: none
+  - id: 43
+    name: "Account Security"
+    cubit: SecurityCubit
+    api_dep: AuthRepository
+    consent_bits: []
+    offline: hive_devices_cache
+  - id: 44
+    name: "Notifications"
+    cubit: NotificationsCubit
+    api_dep: NotificationService
+    consent_bits: [3,7]
+    offline: hive_notif_toggles
+  - id: 45
+    name: "Privacy Controls"
+    cubit: PrivacyCubit
+    api_dep: SettingsRepository
+    consent_bits: [0..12]
+    offline: none
+  - id: 46
+    name: "Memory Box Settings"
+    cubit: VaultSettingsCubit
+    api_dep: VaultRepository
+    consent_bits: [9]
+    offline: none
+  - id: 47
+    name: "Marketplace"
+    cubit: MarketplaceCubit
+    api_dep: CommerceRepository
+    consent_bits: []
+    offline: hive_affiliate_cache
+  - id: 48
+    name: "Payment History"
+    cubit: PaymentsCubit
+    api_dep: CommerceRepository
+    consent_bits: []
+    offline: hive_tx_cache
