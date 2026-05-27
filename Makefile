@@ -1,10 +1,31 @@
-.PHONY: dev-stack dev-api test
+.PHONY: all lint test build proto-generate dev-up dev-down ci release
 
-dev-stack:
-	powershell -ExecutionPolicy Bypass -File .\scripts\dev\dev-stack.ps1
+# Delegate to Taskfile for cross-language orchestration
+all: lint test build
 
-dev-api:
-	powershell -ExecutionPolicy Bypass -File .\scripts\dev\dev-api.ps1
+lint:
+	@task lint
 
 test:
-	@echo "Run service- and app-specific tests from their directories"
+	@task test
+
+build:
+	@task build
+
+proto-generate:
+	@task proto-generate
+
+dev-up:
+	@task dev-up
+
+dev-down:
+	docker compose down
+
+ci: lint test build
+
+release:
+	@echo "🔒 Releasing version $(VERSION)"
+	@task build
+	@docker build -t kinnectai/gateway:$(VERSION) services/gateway
+	@docker push kinnectai/gateway:$(VERSION)
+	@kubectl set image deployment/gateway gateway=kinnectai/gateway:$(VERSION) -n prod

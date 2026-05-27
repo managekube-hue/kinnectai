@@ -4,5 +4,27 @@ tmp/
 bin/
 dist/
 
+# Build artifacts
+*.exe
+*.o
+*.so
+*.a
+
+# Go
+go.work.sum
+
 # Ignore local Visual Studio workspace snapshots
 .vs/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo

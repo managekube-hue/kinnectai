@@ -1,16 +1,21 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "tasks": {
+  "globalDependencies": ["mise.toml", "pnpm-workspace.yaml", "Taskfile.yml", "go.work"],
+  "pipeline": {
     "build": {
-      "dependsOn": ["^build"],
-      "outputs": ["dist/**", "build/**", ".next/**"]
+      "dependsOn": ["^build", "proto-generate"],
+      "outputs": ["dist/**", ".next/**", "build/**", "pubspec.lock"]
     },
     "test": {
-      "dependsOn": ["^test"],
-      "outputs": []
+      "dependsOn": ["build"],
+      "inputs": ["src/**/*.ts", "src/**/*.tsx", "test/**/*.dart", "internal/**/*_test.go"]
     },
     "lint": {
       "outputs": []
+    },
+    "proto-generate": {
+      "cache": true,
+      "inputs": ["packages/shared-contracts/protobuf/**/*.proto"]
     },
     "dev": {
       "cache": false,

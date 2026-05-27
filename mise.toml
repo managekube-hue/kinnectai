@@ -1,0 +1,22 @@
+[tools]
+go = "1.21.6"
+node = "20.11.0"
+python = "3.12.2"
+terraform = "1.7.1"
+kubectl = "1.29.1"
+flutter = "3.19.0"
+dart = "3.3.0"
+golangci-lint = "1.56.2"
+task = "3.33.1"
+"github:bufbuild/buf" = "1.69.0"
+"github:flyway/flyway" = "flyway-11.17.0"
+
+[env]
+GO111MODULE = "on"
+PIP_BREAK_SYSTEM_PACKAGES = "1"
+FLUTTER_STORAGE_BASE_URL = "https://storage.googleapis.com"
+NX_DAEMON = "false"
+
+[settings]
+experimental = true
+legacy_version_file = false

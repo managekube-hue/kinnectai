@@ -1,0 +1,48 @@
+run:
+  timeout: 5m
+  tests: true
+  concurrency: 4
+
+linters-settings:
+  govet:
+    check-shadowing: true
+  revive:
+    rules:
+      - name: exported
+        severity: warning
+      - name: error-strings
+        severity: warning
+      - name: indent-error-flow
+        severity: warning
+  gosec:
+    excludes:
+      - G104 # Audit file opens
+  errcheck:
+    check-type-assertions: true
+    check-blank: true
+
+linters:
+  enable:
+    - govet
+    - errcheck
+    - staticcheck
+    - gosec
+    - revive
+    - gofmt
+    - goimports
+    - unconvert
+    - misspell
+    - ineffassign
+    - prealloc
+    - bodyclose
+  disable-all: false
+
+issues:
+  exclude-use-default: false
+  max-issues-per-linter: 0
+  max-same-issues: 0
+  exclude-rules:
+    - path: _test\.go
+      linters: [errcheck, gosec]
+    - path: \.pb\.go$|_gen\.go$|\.avro\.go$
+      linters: [all]

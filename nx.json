@@ -1,0 +1,35 @@
+{
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "targetDefaults": {
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["production", "^production"],
+      "outputs": ["{projectRoot}/dist", "{projectRoot}/.next", "{projectRoot}/build"]
+    },
+    "test": {
+      "dependsOn": ["build"],
+      "inputs": ["default", "^production", "{workspaceRoot}/jest.config.ts", "{workspaceRoot}/test/**/*"]
+    },
+    "lint": {
+      "inputs": ["default", "{workspaceRoot}/.golangci.yml", "{workspaceRoot}/.prettierrc", "{workspaceRoot}/.eslintrc.json"]
+    },
+    "typecheck": {
+      "dependsOn": ["^build"]
+    }
+  },
+  "namedInputs": {
+    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "production": [
+      "default",
+      "!{projectRoot}/**/*.spec.ts",
+      "!{projectRoot}/**/*.test.ts",
+      "!{projectRoot}/**/*_test.go",
+      "!{projectRoot}/test/**/*",
+      "!{projectRoot}/tsconfig.spec.json"
+    ],
+    "sharedGlobals": ["{workspaceRoot}/mise.toml", "{workspaceRoot}/pnpm-workspace.yaml", "{workspaceRoot}/Makefile", "{workspaceRoot}/Taskfile.yml"]
+  },
+  "cacheDirectory": ".nx/cache",
+  "parallel": 4,
+  "useDaemonProcess": false
+}

@@ -1,4 +1,5 @@
 {
     "github.copilot.chat.agent.autoFix": true,
-    "dart.flutterSdkPath": "D:\\Kinnect Dev\\flutter_sdk\\flutter"
+    "dart.flutterSdkPath": "D:\\Kinnect Dev\\flutter_sdk\\flutter",
+    "explorer.sortOrder": "mixed"
 }

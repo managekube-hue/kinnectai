@@ -5,3 +5,6 @@ psycopg2-binary==2.9.9
 redis==5.0.1
 kafka-python==2.0.2
 python-dotenv==1.0.0
+cassandra-driver==3.29.1
+aiohttp==3.9.5
+confluent-kafka==2.4.0
