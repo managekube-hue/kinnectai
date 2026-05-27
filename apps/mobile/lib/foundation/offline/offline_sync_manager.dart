@@ -2,10 +2,18 @@
 import 'dart:convert';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import '../../services/connectivity_service.dart';
+import '../../services/network/dio_client.dart';
+
+typedef OfflineMutationDispatcher =
+    Future<bool> Function({
+      required String type,
+      required Map<String, dynamic> payload,
+    });
 
 /// Offline sync manager (Addendum 2.0 S5).
 ///
@@ -15,10 +23,15 @@ import '../../services/connectivity_service.dart';
 /// Conflict Resolution: Server-wins for graph/Kinnections.
 ///   Local-wins for Memory Box drafts & Photplay credits (optimistic, reconcile on sync).
 class OfflineSyncManager {
-  OfflineSyncManager({ConnectivityService? connectivity})
-      : _connectivity = connectivity ?? ConnectivityService();
+  OfflineSyncManager({
+    ConnectivityService? connectivity,
+    OfflineMutationDispatcher? dispatcher,
+  }) : _connectivity = connectivity ?? ConnectivityService(),
+       _dispatcher = dispatcher;
 
   final ConnectivityService _connectivity;
+  final Dio _dio = DioClient.instance();
+  OfflineMutationDispatcher? _dispatcher;
   StreamSubscription<List<ConnectivityResult>>? _subscription;
   bool _isOnline = true;
 
@@ -29,6 +42,11 @@ class OfflineSyncManager {
   static const _cachedSettingsBox = 'offline_cached_settings';
 
   bool get isOnline => _isOnline;
+
+  /// Register an app-level dispatcher for domain-specific mutation types.
+  void setDispatcher(OfflineMutationDispatcher dispatcher) {
+    _dispatcher = dispatcher;
+  }
 
   /// Initialize offline sync: open Hive boxes, start connectivity listener.
   Future<void> initialize() async {
@@ -71,6 +89,10 @@ class OfflineSyncManager {
     });
     await box.put(id, mutation);
     debugPrint('[OfflineSync] Enqueued mutation: $type ($id)');
+
+    if (_isOnline) {
+      await flushMutationQueue();
+    }
   }
 
   /// Flush all pending mutations. Called on reconnect.
@@ -90,7 +112,9 @@ class OfflineSyncManager {
         // Move to failed_mutations after 3 attempts
         await failedBox.put(key, raw);
         await box.delete(key);
-        debugPrint('[OfflineSync] Mutation $key moved to failed after 3 attempts');
+        debugPrint(
+          '[OfflineSync] Mutation $key moved to failed after 3 attempts',
+        );
         continue;
       }
 
@@ -111,7 +135,9 @@ class OfflineSyncManager {
       } catch (e) {
         mutation['attempts'] = attempts + 1;
         await box.put(key, jsonEncode(mutation));
-        debugPrint('[OfflineSync] Mutation $key failed (attempt ${attempts + 1}): $e');
+        debugPrint(
+          '[OfflineSync] Mutation $key failed (attempt ${attempts + 1}): $e',
+        );
 
         // Retry delays: 1s, 5s, 15s
         final delays = [1, 5, 15];
@@ -127,9 +153,45 @@ class OfflineSyncManager {
     required String type,
     required Map<String, dynamic> payload,
   }) async {
-    // For now, log and return false to retry
-    debugPrint('[OfflineSync] Dispatching: $type');
-    return false;
+    final dispatcher = _dispatcher;
+    if (dispatcher != null) {
+      return dispatcher(type: type, payload: payload);
+    }
+
+    final endpoint = payload['endpoint']?.toString();
+    if (endpoint == null || endpoint.isEmpty) {
+      throw ArgumentError(
+        'Offline mutation "$type" missing payload.endpoint and no dispatcher is registered.',
+      );
+    }
+
+    final method = (payload['method']?.toString() ?? 'POST').toUpperCase();
+    final data = payload['body'];
+    final queryParameters = _toStringDynamicMap(payload['query']);
+    final headers = _toStringDynamicMap(payload['headers']);
+
+    final response = await _dio.request<dynamic>(
+      endpoint,
+      data: data,
+      queryParameters: queryParameters,
+      options: Options(method: method, headers: headers),
+    );
+
+    final statusCode = response.statusCode ?? 0;
+    final delivered = statusCode >= 200 && statusCode < 300;
+    if (!delivered) {
+      throw StateError(
+        'Offline mutation "$type" failed with status $statusCode for $method $endpoint',
+      );
+    }
+
+    return true;
+  }
+
+  Map<String, dynamic>? _toStringDynamicMap(Object? value) {
+    if (value == null) return null;
+    if (value is! Map) return null;
+    return value.map((key, mapValue) => MapEntry(key.toString(), mapValue));
   }
 
   // ---------------------------------------------------------------------------
@@ -193,4 +255,3 @@ class OfflineSyncManager {
     _subscription?.cancel();
   }
 }
-
