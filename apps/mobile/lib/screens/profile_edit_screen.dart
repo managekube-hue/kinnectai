@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../theme/colors.dart';
@@ -18,8 +18,8 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
   late final TextEditingController _locationController;
   late final TextEditingController _surnameController;
   bool _isSaving = false;
-  bool _dnaVerified = true;
-  String _haplogroup = 'H1c3';
+  final bool _dnaVerified = true;
+  final String _haplogroup = 'H1c3';
 
   @override
   void initState() {
@@ -56,7 +56,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
       backgroundColor: KinnectColors.background,
       appBar: AppBar(
         backgroundColor: KinnectColors.surface,
-        title: Text('Edit Root', style: KinnectTextStyles.headlineSmall),
+        title: const Text('Edit Root', style: KinnectTextStyles.headlineSmall),
         leading: IconButton(
           icon: const Icon(Icons.close, color: KinnectColors.textPrimary),
           onPressed: () => Navigator.pop(context),
@@ -111,19 +111,19 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
           Center(
             child: TextButton(
               onPressed: () {},
-              child: Text('Change Photo', style: TextStyle(color: KinnectColors.primary)),
+              child: const Text('Change Photo', style: TextStyle(color: KinnectColors.primary)),
             ),
           ),
           const SizedBox(height: 20),
 
           // Display name
-          _FieldLabel('Display Name'),
+          const _FieldLabel('Display Name'),
           const SizedBox(height: 6),
           _StyledTextField(controller: _nameController, hint: 'Your display name'),
           const SizedBox(height: 20),
 
           // Surname
-          _FieldLabel('Surname'),
+          const _FieldLabel('Surname'),
           const SizedBox(height: 6),
           _StyledTextField(controller: _surnameController, hint: 'Family surname'),
           if (_dnaVerified)
@@ -133,7 +133,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                 children: [
                   Icon(PhosphorIcons.dna(), size: 14, color: KinnectColors.accent),
                   const SizedBox(width: 4),
-                  Text(
+                  const Text(
                     'DNA verified -- displayed in accent colour',
                     style: TextStyle(color: KinnectColors.accent, fontSize: 12),
                   ),
@@ -143,19 +143,19 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
           const SizedBox(height: 20),
 
           // Bio
-          _FieldLabel('Bio'),
+          const _FieldLabel('Bio'),
           const SizedBox(height: 6),
           _StyledTextField(controller: _bioController, hint: 'Tell your Kin about yourself', maxLines: 3),
           const SizedBox(height: 20),
 
           // Location
-          _FieldLabel('Location'),
+          const _FieldLabel('Location'),
           const SizedBox(height: 6),
           _StyledTextField(controller: _locationController, hint: 'City, State/Country'),
           const SizedBox(height: 20),
 
           // Haplogroup (read-only)
-          _FieldLabel('Haplogroup'),
+          const _FieldLabel('Haplogroup'),
           const SizedBox(height: 6),
           Container(
             padding: const EdgeInsets.all(14),
@@ -169,14 +169,14 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                 const SizedBox(width: 10),
                 Text(_haplogroup, style: const TextStyle(color: KinnectColors.textPrimary, fontSize: 15)),
                 const Spacer(),
-                Text('DNA Connected', style: TextStyle(color: KinnectColors.success, fontSize: 12)),
+                const Text('DNA Connected', style: TextStyle(color: KinnectColors.success, fontSize: 12)),
               ],
             ),
           ),
           const SizedBox(height: 20),
 
           // Voiceprint status
-          _FieldLabel('Voiceprint'),
+          const _FieldLabel('Voiceprint'),
           const SizedBox(height: 6),
           Container(
             padding: const EdgeInsets.all(14),
@@ -192,7 +192,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                 const Spacer(),
                 TextButton(
                   onPressed: () {},
-                  child: Text('Manage', style: TextStyle(color: KinnectColors.primary, fontSize: 13)),
+                  child: const Text('Manage', style: TextStyle(color: KinnectColors.primary, fontSize: 13)),
                 ),
               ],
             ),
@@ -228,7 +228,7 @@ class _StyledTextField extends StatelessWidget {
       style: const TextStyle(color: KinnectColors.textPrimary),
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: TextStyle(color: KinnectColors.textMuted),
+        hintStyle: const TextStyle(color: KinnectColors.textMuted),
         filled: true,
         fillColor: KinnectColors.surfaceElevated,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),

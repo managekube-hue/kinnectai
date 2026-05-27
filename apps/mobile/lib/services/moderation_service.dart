@@ -1,4 +1,4 @@
-﻿import 'package:dio/dio.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
 /// Content moderation service (Addendum 3.0 Section 9).
@@ -24,8 +24,8 @@ class ModerationService {
         data: {
           'content_id': contentId,
           'content_type': contentType,
-          if (textContent != null) 'text': textContent,
-          if (mediaUrl != null) 'media_url': mediaUrl,
+          'text': ?textContent,
+          'media_url': ?mediaUrl,
         },
       );
       final data = response.data ?? {};
@@ -50,7 +50,7 @@ class ModerationService {
     await _dio.post<void>('/moderation/report', data: {
       'content_id': contentId,
       'reason': reason,
-      if (details != null) 'details': details,
+      'details': ?details,
     });
   }
 

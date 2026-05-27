@@ -47,7 +47,6 @@ class SparkleRefreshIndicator extends StatefulWidget {
 class _SparkleRefreshIndicatorState extends State<SparkleRefreshIndicator>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  late Animation<double> _rotationAnimation;
 
   @override
   void initState() {
@@ -56,10 +55,6 @@ class _SparkleRefreshIndicatorState extends State<SparkleRefreshIndicator>
       duration: const Duration(seconds: 2),
       vsync: this,
     );
-    _rotationAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(_controller);
   }
 
   @override
@@ -154,7 +149,7 @@ class _FeedLoadingShimmerState extends State<FeedLoadingShimmer>
                   color: KinnectColors.accent.withOpacity(0.3),
                 ),
                 const SizedBox(height: 16),
-                Text(
+                const Text(
                   'Loading your feed...',
                   style: TextStyle(
                     color: KinnectColors.textSecondary,

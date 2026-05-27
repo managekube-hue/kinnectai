@@ -191,5 +191,21 @@ class LineBloc extends Bloc<LineEvent, LineState> {
     }).toList();
     
     emit(currentState.copyWith(memories: updatedMemories));
+
+    try {
+      await _feedService.pulseMemory(event.memoryId);
+    } catch (_) {
+      // Roll back optimistic pulse if backend call fails.
+      final reverted = updatedMemories.map((memory) {
+        if (memory.id == event.memoryId) {
+          return memory.copyWith(
+            isPulsed: !memory.isPulsed,
+            pulseCount: memory.isPulsed ? memory.pulseCount - 1 : memory.pulseCount + 1,
+          );
+        }
+        return memory;
+      }).toList();
+      emit(currentState.copyWith(memories: reverted));
+    }
   }
 }

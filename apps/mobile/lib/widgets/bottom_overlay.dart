@@ -130,7 +130,7 @@ class _BottomOverlayState extends State<BottomOverlay> {
                 onTap: widget.onVoiceprintTap,
                 child: Row(
                   children: [
-                    const Icon(
+                    Icon(
                       PhosphorIcons.waveform(),
                       size: 16,
                       color: KinnectColors.accent,

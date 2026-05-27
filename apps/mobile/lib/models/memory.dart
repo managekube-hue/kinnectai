@@ -71,6 +71,7 @@ class Memory extends Equatable {
       shareCount: json['share_count'] as int? ?? 0,
       branchId: json['branch_id'] as String?,
       branchName: json['branch_name'] as String?,
+      kinScore: (json['kin_score'] as num?)?.toDouble() ?? 0,
       createdAt: DateTime.parse(json['created_at'] as String),
       duration: Duration(seconds: json['duration_seconds'] as int),
       isPulsed: json['is_pulsed'] as bool? ?? false,
@@ -210,6 +211,7 @@ class KinScoreBreakdown extends Equatable {
 
   factory KinScoreBreakdown.fromJson(Map<String, dynamic> json) {
     return KinScoreBreakdown(
+      score: (json['score'] as num?)?.toDouble() ?? 0,
       relationship: json['relationship'] as String,
       sharedBranches: json['shared_branches'] as int? ?? 0,
       sharedAncestors: json['shared_ancestors'] as int? ?? 0,
@@ -268,6 +270,7 @@ class Comment extends Equatable {
       authorUsername: json['author_username'] as String,
       authorDisplayName: json['author_display_name'] as String,
       authorAvatarUrl: json['author_avatar_url'] as String?,
+      kinScore: (json['kin_score'] as num?)?.toDouble() ?? 0,
       text: json['text'] as String,
       createdAt: DateTime.parse(json['created_at'] as String),
       pulseCount: json['pulse_count'] as int? ?? 0,

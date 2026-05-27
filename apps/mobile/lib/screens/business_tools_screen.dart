@@ -15,7 +15,7 @@ class BusinessToolsScreen extends StatelessWidget {
       backgroundColor: KinnectColors.background,
       appBar: AppBar(
         backgroundColor: KinnectColors.surface,
-        title: Text('Business Tools', style: KinnectTextStyles.headlineSmall),
+        title: const Text('Business Tools', style: KinnectTextStyles.headlineSmall),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: KinnectColors.textPrimary),
           onPressed: () => Navigator.pop(context),

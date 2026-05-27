@@ -1,4 +1,4 @@
-﻿import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart';
 
 /// Immutable audit trail logger (Addendum 3.0 S4).
 ///
@@ -23,7 +23,7 @@ class AuditLogger {
       metadata: {
         'consent_type': consentType,
         'granted': granted,
-        if (details != null) 'details': details,
+        'details': ?details,
       },
     ));
   }

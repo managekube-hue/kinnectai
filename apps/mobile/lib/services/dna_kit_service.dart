@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 
 /// DNA Kit logistics service (Addendum 3.0 Section 5).
 /// Handles kit ordering, tracking, barcode registration, and results retrieval.

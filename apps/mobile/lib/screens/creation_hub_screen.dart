@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../router/app_nav.dart';
 import '../theme/design_system.dart';
@@ -228,7 +228,7 @@ class CreationHubScreen extends StatelessWidget {
                     const SizedBox(height: DesignSpacing.md),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(4),
-                      child: LinearProgressIndicator(
+                      child: const LinearProgressIndicator(
                         value: 0.24,
                         backgroundColor: DesignColors.darkDivider,
                         valueColor: AlwaysStoppedAnimation<Color>(DesignColors.darkPrimary),
@@ -369,7 +369,7 @@ class _IdentityCard extends StatelessWidget {
                 ],
               ),
             ),
-            const Icon(PhosphorIcons.caretRight()_rounded, color: DesignColors.darkSecondaryText),
+            Icon(PhosphorIcons.caretRight(), color: DesignColors.darkSecondaryText),
           ],
         ),
       ),

@@ -14,7 +14,7 @@ class SecuritySettingsScreen extends StatelessWidget {
       backgroundColor: KinnectColors.background,
       appBar: AppBar(
         backgroundColor: KinnectColors.surface,
-        title: Text('Security & Permissions', style: KinnectTextStyles.headlineSmall),
+        title: const Text('Security & Permissions', style: KinnectTextStyles.headlineSmall),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: KinnectColors.textPrimary),
           onPressed: () => Navigator.pop(context),
@@ -44,7 +44,7 @@ class SecuritySettingsScreen extends StatelessWidget {
             onTap: () {},
           ),
           ListTile(
-            leading: Icon(PhosphorIcons.puzzle(), color: KinnectColors.accent),
+            leading: const Icon(Icons.extension, color: KinnectColors.accent),
             title: const Text('App permissions', style: TextStyle(color: KinnectColors.textPrimary)),
             subtitle: const Text('Third-party OAuth apps', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
             trailing: Icon(PhosphorIcons.caretRight(), color: KinnectColors.textMuted),

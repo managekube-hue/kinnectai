@@ -3,7 +3,6 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../models/memory.dart';
 import '../feed_service.dart';
-import '../router/app_nav.dart';
 import '../theme/colors.dart';
 import '../theme/typography.dart';
 
@@ -89,7 +88,7 @@ class _EchoesFeedScreenState extends State<EchoesFeedScreen> {
                                         const SizedBox(height: 2),
                                         Text(
                                           '${_echoes.length} memories from your Kin on this date',
-                                          style: TextStyle(color: KinnectColors.textSecondary, fontSize: 13),
+                                          style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 13),
                                         ),
                                       ],
                                     ),
@@ -139,9 +138,9 @@ class _EchoCard extends StatelessWidget {
           Container(
             height: 180,
             width: double.infinity,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: KinnectColors.surfaceElevated,
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
             ),
             child: Stack(
               children: [
@@ -237,7 +236,7 @@ class _EmptyView extends StatelessWidget {
           const SizedBox(height: 16),
           Text('No historical matches found', style: KinnectTextStyles.bodyLarge.copyWith(color: KinnectColors.textSecondary)),
           const SizedBox(height: 8),
-          Text('Share more memories to unlock Echoes.', style: TextStyle(color: KinnectColors.textMuted, fontSize: 13)),
+          const Text('Share more memories to unlock Echoes.', style: TextStyle(color: KinnectColors.textMuted, fontSize: 13)),
         ],
       ),
     );

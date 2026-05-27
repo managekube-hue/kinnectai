@@ -2,7 +2,8 @@ targets:
   $default:
     builders:
       drift_dev|drift_dev:
-        enabled: false
+        generate_for:
+          - lib/foundation/offline/offline_database.dart
       json_serializable|json_serializable:
         generate_for:
           - lib/models/*.dart

@@ -62,7 +62,7 @@ class _CommentThreadScreenState extends State<CommentThreadScreen> {
       backgroundColor: KinnectColors.background,
       appBar: AppBar(
         backgroundColor: KinnectColors.surface,
-        title: Text('Comments', style: KinnectTextStyles.headlineSmall),
+        title: const Text('Comments', style: KinnectTextStyles.headlineSmall),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: KinnectColors.textPrimary),
           onPressed: () => Navigator.pop(context),
@@ -224,7 +224,7 @@ class _CommentInput extends StatelessWidget {
           ),
           const SizedBox(width: KinnectSpacing.sm),
           IconButton(
-            icon: const Icon(PhosphorIcons.paperPlaneTilt(), color: KinnectColors.accent),
+            icon: Icon(PhosphorIcons.paperPlaneTilt(), color: KinnectColors.accent),
             onPressed: onSend,
           ),
         ],

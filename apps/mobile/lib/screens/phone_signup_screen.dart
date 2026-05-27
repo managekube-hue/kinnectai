@@ -1,11 +1,11 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../router/app_nav.dart';
 import '../theme/colors.dart';
 import '../theme/typography.dart';
 import '../theme/spacing.dart';
 import '../widgets/auth_button.dart';
 
-/// Phone Sign-Up Screen (Placeholder)
+/// Phone Sign-Up Screen
 /// Screen 11.3 from PRD
 class PhoneSignUpScreen extends StatefulWidget {
   const PhoneSignUpScreen({super.key});
@@ -27,7 +27,7 @@ class _PhoneSignUpScreenState extends State<PhoneSignUpScreen> {
 
   void _handleContinue() {
     if (_formKey.currentState?.validate() ?? false) {
-      AppNav.go(context, '/home');
+      AppNav.go(context, '/line');
     }
   }
 
@@ -52,12 +52,12 @@ class _PhoneSignUpScreenState extends State<PhoneSignUpScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: KinnectSpacing.xl),
-                Text(
+                const Text(
                   'Sign up with Phone',
                   style: KinnectTextStyles.headline,
                 ),
                 const SizedBox(height: KinnectSpacing.sm),
-                Text(
+                const Text(
                   'We\'ll send you a verification code',
                   style: KinnectTextStyles.subtitle,
                 ),

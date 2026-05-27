@@ -64,7 +64,7 @@ class _StepUpRouteGuardState extends State<StepUpRouteGuard> {
                 children: [
                   const Icon(Icons.lock_outline, size: 56, color: KinnectColors.textSecondary),
                   const SizedBox(height: 16),
-                  Text(
+                  const Text(
                     'Authentication required',
                     style: KinnectTextStyles.headlineSmall,
                     textAlign: TextAlign.center,

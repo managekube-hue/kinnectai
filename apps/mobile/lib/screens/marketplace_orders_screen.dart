@@ -29,7 +29,7 @@ class _MarketplaceOrdersScreenState extends State<MarketplaceOrdersScreen> {
       backgroundColor: KinnectColors.background,
       appBar: AppBar(
         backgroundColor: KinnectColors.surface,
-        title: Text('My Orders', style: KinnectTextStyles.headlineSmall),
+        title: const Text('My Orders', style: KinnectTextStyles.headlineSmall),
         leading: IconButton(icon: const Icon(Icons.arrow_back, color: KinnectColors.textPrimary), onPressed: () => Navigator.pop(context)),
       ),
       body: BlocBuilder<MarketplaceCubit, MarketplaceState>(
@@ -38,7 +38,7 @@ class _MarketplaceOrdersScreenState extends State<MarketplaceOrdersScreen> {
             return const Center(child: CircularProgressIndicator(color: KinnectColors.accent));
           }
           if (state is MarketplaceError) {
-            return Center(child: Text(state.message, style: TextStyle(color: KinnectColors.textSecondary)));
+            return Center(child: Text(state.message, style: const TextStyle(color: KinnectColors.textSecondary)));
           }
           if (state is MarketplaceOrdersLoaded) {
             if (state.orders.isEmpty) {
@@ -48,7 +48,7 @@ class _MarketplaceOrdersScreenState extends State<MarketplaceOrdersScreen> {
                   children: [
                     Icon(PhosphorIcons.receipt(), size: 64, color: KinnectColors.textMuted),
                     const SizedBox(height: 16),
-                    Text('No orders yet', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 16)),
+                    const Text('No orders yet', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 16)),
                   ],
                 ),
               );
@@ -56,7 +56,7 @@ class _MarketplaceOrdersScreenState extends State<MarketplaceOrdersScreen> {
             return ListView.separated(
               padding: const EdgeInsets.all(16),
               itemCount: state.orders.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 12),
+              separatorBuilder: (_, _) => const SizedBox(height: 12),
               itemBuilder: (_, i) => _OrderCard(order: state.orders[i]),
             );
           }
@@ -131,10 +131,10 @@ class _OrderCard extends StatelessWidget {
               ...order.items.take(3).map((item) => Padding(
                 padding: const EdgeInsets.only(bottom: 4),
                 child: Text('${item.title} x${item.quantity}',
-                    style: TextStyle(color: KinnectColors.textSecondary, fontSize: 13), overflow: TextOverflow.ellipsis),
+                    style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 13), overflow: TextOverflow.ellipsis),
               )),
             if (order.items.length > 3)
-              Text('+${order.items.length - 3} more items', style: TextStyle(color: KinnectColors.textMuted, fontSize: 12)),
+              Text('+${order.items.length - 3} more items', style: const TextStyle(color: KinnectColors.textMuted, fontSize: 12)),
             const SizedBox(height: 8),
             const Divider(color: KinnectColors.dividerSubtle),
             const SizedBox(height: 8),
@@ -142,7 +142,7 @@ class _OrderCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 if (order.createdAt != null)
-                  Text(_formatDate(order.createdAt!), style: TextStyle(color: KinnectColors.textMuted, fontSize: 12)),
+                  Text(_formatDate(order.createdAt!), style: const TextStyle(color: KinnectColors.textMuted, fontSize: 12)),
                 Text('\$${(order.totalCents / 100).toStringAsFixed(2)}',
                     style: const TextStyle(color: KinnectColors.accent, fontWeight: FontWeight.bold, fontSize: 16)),
               ],
@@ -153,7 +153,7 @@ class _OrderCard extends StatelessWidget {
                 children: [
                   Icon(PhosphorIcons.mapPin(), size: 14, color: KinnectColors.textSecondary),
                   const SizedBox(width: 6),
-                  Text('Tracking: ${order.trackingNumber}', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
+                  Text('Tracking: ${order.trackingNumber}', style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
                 ],
               ),
             ],

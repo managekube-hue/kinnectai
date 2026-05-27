@@ -179,11 +179,11 @@ class _EnhancedLineVideoPlayerState extends State<EnhancedLineVideoPlayer> {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          // Video player or placeholder
+          // Video player with loading/error fallback states
           if (_hasError)
-            _buildErrorPlaceholder()
+            _buildErrorState()
           else if (!_isInitialized)
-            _buildLoadingPlaceholder()
+            _buildLoadingState()
           else
             _buildVideoPlayer(),
           
@@ -209,7 +209,7 @@ class _EnhancedLineVideoPlayerState extends State<EnhancedLineVideoPlayer> {
     );
   }
 
-  Widget _buildLoadingPlaceholder() {
+  Widget _buildLoadingState() {
     return Container(
       color: KinnectColors.background,
       child: const Center(
@@ -220,9 +220,9 @@ class _EnhancedLineVideoPlayerState extends State<EnhancedLineVideoPlayer> {
     );
   }
 
-  Widget _buildErrorPlaceholder() {
+  Widget _buildErrorState() {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
@@ -242,7 +242,7 @@ class _EnhancedLineVideoPlayerState extends State<EnhancedLineVideoPlayer> {
               color: KinnectColors.error.withOpacity(0.5),
             ),
             const SizedBox(height: 16),
-            Text(
+            const Text(
               'Failed to load video',
               style: TextStyle(
                 color: KinnectColors.textSecondary,
@@ -266,7 +266,7 @@ class _EnhancedLineVideoPlayerState extends State<EnhancedLineVideoPlayer> {
             child: Opacity(
               opacity: 1.0 - (value - 0.5),
               child: Icon(
-                PhosphorIcons.heartFill(),
+                Icons.favorite,
                 size: 100,
                 color: KinnectColors.error.withOpacity(0.8),
               ),
@@ -285,7 +285,7 @@ class _EnhancedLineVideoPlayerState extends State<EnhancedLineVideoPlayer> {
           color: Colors.black.withOpacity(0.5),
           shape: BoxShape.circle,
         ),
-        child: const Icon(
+        child: Icon(
           PhosphorIcons.play(),
           size: 60,
           color: Colors.white,

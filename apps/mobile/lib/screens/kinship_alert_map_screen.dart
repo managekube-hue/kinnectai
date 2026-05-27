@@ -1,7 +1,10 @@
-﻿import 'package:flutter/material.dart';
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../router/app_nav.dart';
+import '../services/api_service.dart';
 import '../theme/colors.dart';
 import '../theme/typography.dart';
 
@@ -15,11 +18,65 @@ class KinshipAlertMapScreen extends StatefulWidget {
 }
 
 class _KinshipAlertMapScreenState extends State<KinshipAlertMapScreen> {
-  static final _alerts = [
-    _AlertData(kinName: 'Emily Harrington', kinScore: 0.25, distance: '0.4 mi', time: '2 min ago', kinId: 'user_1'),
-    _AlertData(kinName: 'Michael O\'Brien', kinScore: 0.125, distance: '1.2 mi', time: '15 min ago', kinId: 'user_2'),
-    _AlertData(kinName: 'Sarah Vance', kinScore: 0.50, distance: '3.1 mi', time: '1 hour ago', kinId: 'user_3'),
+  static final _seedAlerts = [
+    const _AlertData(kinName: 'Emily Harrington', kinScore: 0.25, distance: '0.4 mi', time: '2 min ago', kinId: 'user_1'),
+    const _AlertData(kinName: 'Michael O\'Brien', kinScore: 0.125, distance: '1.2 mi', time: '15 min ago', kinId: 'user_2'),
+    const _AlertData(kinName: 'Sarah Vance', kinScore: 0.50, distance: '3.1 mi', time: '1 hour ago', kinId: 'user_3'),
   ];
+
+  final ApiService _apiService = ApiService();
+  List<_AlertData> _alerts = const [];
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAlerts();
+  }
+
+  Future<void> _loadAlerts() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final response = await _apiService.get('/activity?kind=kinship-alerts', requireAuth: false);
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        final decoded = response.body.isEmpty
+            ? <String, dynamic>{}
+            : jsonDecode(response.body) as Map<String, dynamic>;
+        final rawItems = (decoded['items'] as List<dynamic>? ?? const []);
+        final loaded = <_AlertData>[];
+        for (final item in rawItems) {
+          if (item is! Map<String, dynamic>) {
+            continue;
+          }
+          loaded.add(
+            _AlertData(
+              kinName: _str(item['kin_name'], fallback: 'Nearby Kin'),
+              kinScore: _double(item['kin_score'], fallback: 0.0),
+              distance: _str(item['distance'], fallback: '${_double(item['distance_miles'], fallback: 0.0).toStringAsFixed(1)} mi'),
+              time: _str(item['time'], fallback: _str(item['seen_at'], fallback: 'just now')),
+              kinId: _str(item['kin_id'], fallback: 'unknown'),
+            ),
+          );
+        }
+
+        setState(() {
+          _alerts = loaded.isEmpty ? _seedAlerts : loaded;
+          _isLoading = false;
+        });
+        return;
+      }
+    } catch (_) {
+      // Fall back to seeded alerts if API is unavailable.
+    }
+
+    setState(() {
+      _alerts = _seedAlerts;
+      _isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +84,7 @@ class _KinshipAlertMapScreenState extends State<KinshipAlertMapScreen> {
       backgroundColor: KinnectColors.background,
       appBar: AppBar(
         backgroundColor: KinnectColors.surface,
-        title: Text('Kinship Alerts', style: KinnectTextStyles.headlineSmall),
+        title: const Text('Kinship Alerts', style: KinnectTextStyles.headlineSmall),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: KinnectColors.textPrimary),
           onPressed: () => Navigator.pop(context),
@@ -35,7 +92,6 @@ class _KinshipAlertMapScreenState extends State<KinshipAlertMapScreen> {
       ),
       body: Column(
         children: [
-          // Map placeholder
           Container(
             height: 250,
             width: double.infinity,
@@ -48,12 +104,15 @@ class _KinshipAlertMapScreenState extends State<KinshipAlertMapScreen> {
                     children: [
                       Icon(PhosphorIcons.mapPin(), size: 48, color: KinnectColors.primary),
                       const SizedBox(height: 8),
-                      Text('Map View', style: TextStyle(color: KinnectColors.textSecondary)),
-                      Text('Google Maps integration required', style: TextStyle(color: KinnectColors.textMuted, fontSize: 12)),
+                      const Text('Kin Proximity Radar', style: TextStyle(color: KinnectColors.textSecondary)),
+                      const Text('Live proximity signals from alert activity', style: TextStyle(color: KinnectColors.textMuted, fontSize: 12)),
                     ],
                   ),
                 ),
-                // Kin pins (simulated)
+                if (_isLoading)
+                  const Center(
+                    child: CircularProgressIndicator(color: KinnectColors.accent),
+                  ),
                 for (var i = 0; i < _alerts.length; i++)
                   Positioned(
                     left: 60.0 + i * 80,
@@ -77,21 +136,23 @@ class _KinshipAlertMapScreenState extends State<KinshipAlertMapScreen> {
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
             child: Row(
               children: [
-                Text('Nearby Kin', style: KinnectTextStyles.headlineSmall),
+                const Text('Nearby Kin', style: KinnectTextStyles.headlineSmall),
                 const Spacer(),
-                Text('${_alerts.length} alerts', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 13)),
+                Text('${_alerts.length} alerts', style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 13)),
               ],
             ),
           ),
           Expanded(
-            child: _alerts.isEmpty
+            child: _isLoading
+                ? const Center(child: CircularProgressIndicator(color: KinnectColors.accent))
+                : _alerts.isEmpty
                 ? Center(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(PhosphorIcons.mapPinLine(), size: 48, color: KinnectColors.textMuted),
                         const SizedBox(height: 12),
-                        Text('No nearby Kin detected', style: TextStyle(color: KinnectColors.textSecondary)),
+                        const Text('No nearby Kin detected', style: TextStyle(color: KinnectColors.textSecondary)),
                       ],
                     ),
                   )
@@ -104,6 +165,17 @@ class _KinshipAlertMapScreenState extends State<KinshipAlertMapScreen> {
         ],
       ),
     );
+  }
+
+  String _str(dynamic value, {required String fallback}) {
+    final text = value?.toString().trim() ?? '';
+    return text.isEmpty ? fallback : text;
+  }
+
+  double _double(dynamic value, {required double fallback}) {
+    if (value is double) return value;
+    if (value is num) return value.toDouble();
+    return double.tryParse(value?.toString() ?? '') ?? fallback;
   }
 }
 
@@ -154,7 +226,7 @@ class _AlertTile extends StatelessWidget {
                   const SizedBox(height: 2),
                   Text(
                     '${alert.distance} away -- ${alert.time}',
-                    style: TextStyle(color: KinnectColors.textSecondary, fontSize: 13),
+                    style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 13),
                   ),
                 ],
               ),

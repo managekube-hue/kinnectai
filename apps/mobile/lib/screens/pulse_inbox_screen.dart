@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../router/app_nav.dart';
 import '../theme/colors.dart';
-import '../models/memory.dart';
-import '../feed_service.dart';
 
 class PulseInboxScreen extends StatefulWidget {
   const PulseInboxScreen({super.key});
@@ -14,7 +12,6 @@ class PulseInboxScreen extends StatefulWidget {
 
 class _PulseInboxScreenState extends State<PulseInboxScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  final FeedService _feedService = FeedService();
   List<PulseNotification> _notifications = [];
   bool _isLoading = true;
 
@@ -83,7 +80,7 @@ class _PulseInboxScreenState extends State<PulseInboxScreen> with SingleTickerPr
         title: const Text('Pulse Inbox'),
         actions: [
           IconButton(
-            icon: const Icon(PhosphorIcons.checks(), color: KinnectColors.textPrimary),
+            icon: Icon(PhosphorIcons.checks(), color: KinnectColors.textPrimary),
             onPressed: _markAllAsRead,
             tooltip: 'Mark all as read',
           ),
@@ -113,18 +110,18 @@ class _PulseInboxScreenState extends State<PulseInboxScreen> with SingleTickerPr
 
   Widget _buildNotificationList(List<PulseNotification> notifications) {
     if (notifications.isEmpty) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(PhosphorIcons.heart(), size: 64, color: KinnectColors.textMuted),
-            SizedBox(height: 16),
-            Text(
+            const SizedBox(height: 16),
+            const Text(
               'No new Pulses',
               style: TextStyle(color: KinnectColors.textPrimary, fontSize: 18),
             ),
-            SizedBox(height: 8),
-            Text(
+            const SizedBox(height: 8),
+            const Text(
               'Your Pulse activity will appear here',
               style: TextStyle(color: KinnectColors.textSecondary),
             ),
@@ -152,7 +149,7 @@ class _PulseInboxScreenState extends State<PulseInboxScreen> with SingleTickerPr
         color: KinnectColors.error,
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: 16),
-        child: const Icon(PhosphorIcons.trash(), color: KinnectColors.textPrimary),
+        child: Icon(PhosphorIcons.trash(), color: KinnectColors.textPrimary),
       ),
       child: InkWell(
         onTap: () => _handleNotificationTap(notification),
@@ -160,7 +157,7 @@ class _PulseInboxScreenState extends State<PulseInboxScreen> with SingleTickerPr
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: notification.isRead ? Colors.transparent : KinnectColors.surface.withOpacity(0.5),
-            border: Border(bottom: BorderSide(color: KinnectColors.dividerSubtle, width: 1)),
+            border: const Border(bottom: BorderSide(color: KinnectColors.dividerSubtle, width: 1)),
           ),
           child: Row(
             children: [

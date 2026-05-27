@@ -48,7 +48,7 @@ class LineConfig {
   // Debug
   static const bool showDebugOverlay = false;
   static const bool logPerformanceMetrics = true;
-  static const bool mockVideos = false; // Use placeholder videos in dev
+  static const bool mockVideos = false; // Use mock videos in dev
 }
 
 /// Environment-specific configuration

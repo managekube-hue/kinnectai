@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../theme/colors.dart';
 
 /// KinnectAI Accessibility Helpers (Addendum 2.0 S7).
 ///

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../theme/colors.dart';
 
 class FamilyPairingScreen extends StatefulWidget {
@@ -9,7 +9,6 @@ class FamilyPairingScreen extends StatefulWidget {
 }
 
 class _FamilyPairingScreenState extends State<FamilyPairingScreen> {
-  bool _isGuardian = false;
   final List<TeenAccount> _pairedAccounts = [];
 
   @override
@@ -214,10 +213,10 @@ class _FamilyPairingScreenState extends State<FamilyPairingScreen> {
       builder: (context) => AlertDialog(
         backgroundColor: KinnectColors.surface,
         title: const Text('Add Teen Account', style: TextStyle(color: KinnectColors.textPrimary)),
-        content: Column(
+        content: const Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const TextField(
+            TextField(
               style: TextStyle(color: KinnectColors.textPrimary),
               decoration: InputDecoration(
                 labelText: 'Teen\'s Name',
@@ -225,8 +224,8 @@ class _FamilyPairingScreenState extends State<FamilyPairingScreen> {
                 enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: KinnectColors.textMuted)),
               ),
             ),
-            const SizedBox(height: 16),
-            const TextField(
+            SizedBox(height: 16),
+            TextField(
               style: TextStyle(color: KinnectColors.textPrimary),
               decoration: InputDecoration(
                 labelText: 'Date of Birth',
@@ -318,6 +317,7 @@ class _FamilyPairingScreenState extends State<FamilyPairingScreen> {
               style: const TextStyle(color: KinnectColors.accent, fontSize: 32, fontWeight: FontWeight.bold),
             ),
             Slider(
+              value: account.dailyLimit.toDouble(),
               min: 30,
               max: 300,
               divisions: 27,

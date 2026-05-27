@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/scheduler.dart';
 
 /// Performance SLA enforcement (Addendum 2.0 S9).
 ///
@@ -149,16 +148,17 @@ class PerformanceSLA {
 }
 
 class SLAViolation {
-  const SLAViolation({
+  SLAViolation({
     required this.metric,
     required this.threshold,
     required this.actual,
     required this.message,
-  });
+    DateTime? timestamp,
+  }) : timestamp = timestamp ?? DateTime.now();
 
   final String metric;
   final int threshold;
   final int actual;
   final String message;
-  late final DateTime timestamp = DateTime.now();
+  final DateTime timestamp;
 }

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../router/app_nav.dart';
@@ -31,7 +31,7 @@ class _MemoryBoxSettingsScreenState extends State<MemoryBoxSettingsScreen> {
       backgroundColor: KinnectColors.background,
       appBar: AppBar(
         backgroundColor: KinnectColors.surface,
-        title: Text('Memory Box Settings', style: KinnectTextStyles.headlineSmall),
+        title: const Text('Memory Box Settings', style: KinnectTextStyles.headlineSmall),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: KinnectColors.textPrimary),
           onPressed: () => Navigator.pop(context),
@@ -67,7 +67,7 @@ class _MemoryBoxSettingsScreenState extends State<MemoryBoxSettingsScreen> {
                 const SizedBox(height: 8),
                 Text(
                   '${_storageUsedGB.toStringAsFixed(1)} GB / ${_storageLimitGB.toStringAsFixed(0)} GB used',
-                  style: TextStyle(color: KinnectColors.textSecondary, fontSize: 13),
+                  style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 13),
                 ),
                 if (!_isVaultPlus && storagePercent > 0.8) ...[
                   const SizedBox(height: 12),
@@ -105,7 +105,7 @@ class _MemoryBoxSettingsScreenState extends State<MemoryBoxSettingsScreen> {
 
           // Death trigger settings (PRD 12.9 item 4)
           _SettingsTile(
-            icon: PhosphorIcons.heartbreak(),
+            icon: Icons.heart_broken,
             title: 'Posthumous Delivery Settings',
             subtitle: 'SSDI match, obituary, Steward confirmation',
             onTap: () async {
@@ -170,14 +170,14 @@ class _MemoryBoxSettingsScreenState extends State<MemoryBoxSettingsScreen> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Death Verification Signals', style: KinnectTextStyles.headlineSmall),
+            const Text('Death Verification Signals', style: KinnectTextStyles.headlineSmall),
             const SizedBox(height: 16),
-            SwitchListTile(title: const Text('SSDI / DeathMaster match', style: TextStyle(color: KinnectColors.textPrimary)), value: true, activeColor: KinnectColors.accent, onChanged: (_) {}),
-            SwitchListTile(title: const Text('Obituary ingestion (LexisNexis)', style: TextStyle(color: KinnectColors.textPrimary)), value: true, activeColor: KinnectColors.accent, onChanged: (_) {}),
-            SwitchListTile(title: const Text('Steward confirmation', style: TextStyle(color: KinnectColors.textPrimary)), value: true, activeColor: KinnectColors.accent, onChanged: (_) {}),
-            SwitchListTile(title: const Text('Biometric inactivity threshold', style: TextStyle(color: KinnectColors.textPrimary)), value: false, activeColor: KinnectColors.accent, onChanged: (_) {}),
+            SwitchListTile(title: const Text('SSDI / DeathMaster match', style: TextStyle(color: KinnectColors.textPrimary)), value: true, activeThumbColor: KinnectColors.accent, onChanged: (_) {}),
+            SwitchListTile(title: const Text('Obituary ingestion (LexisNexis)', style: TextStyle(color: KinnectColors.textPrimary)), value: true, activeThumbColor: KinnectColors.accent, onChanged: (_) {}),
+            SwitchListTile(title: const Text('Steward confirmation', style: TextStyle(color: KinnectColors.textPrimary)), value: true, activeThumbColor: KinnectColors.accent, onChanged: (_) {}),
+            SwitchListTile(title: const Text('Biometric inactivity threshold', style: TextStyle(color: KinnectColors.textPrimary)), value: false, activeThumbColor: KinnectColors.accent, onChanged: (_) {}),
             const SizedBox(height: 12),
-            Text('Require multiple signals for higher confidence.', style: TextStyle(color: KinnectColors.textMuted, fontSize: 12)),
+            const Text('Require multiple signals for higher confidence.', style: TextStyle(color: KinnectColors.textMuted, fontSize: 12)),
           ],
         ),
       ),
@@ -196,7 +196,7 @@ class _MemoryBoxSettingsScreenState extends State<MemoryBoxSettingsScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Kinship Alert Radius', style: KinnectTextStyles.headlineSmall),
+              const Text('Kinship Alert Radius', style: KinnectTextStyles.headlineSmall),
               const SizedBox(height: 16),
               Text('${(radius * 1000).round()}m', style: KinnectTextStyles.headlineMedium.copyWith(color: KinnectColors.accent)),
               Slider(
@@ -207,7 +207,7 @@ class _MemoryBoxSettingsScreenState extends State<MemoryBoxSettingsScreen> {
                 activeColor: KinnectColors.accent,
                 onChanged: (v) => setSheetState(() => radius = v),
               ),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              const Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                 Text('100m', style: TextStyle(color: KinnectColors.textMuted, fontSize: 12)),
                 Text('5km', style: TextStyle(color: KinnectColors.textMuted, fontSize: 12)),
               ]),
@@ -233,7 +233,7 @@ class _MemoryBoxSettingsScreenState extends State<MemoryBoxSettingsScreen> {
 
 class _SettingsTile extends StatelessWidget {
   const _SettingsTile({required this.icon, required this.title, required this.subtitle, required this.onTap});
-  final IconData Function() icon;
+  final IconData icon;
   final String title;
   final String subtitle;
   final VoidCallback onTap;
@@ -241,9 +241,9 @@ class _SettingsTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Icon(icon(), color: KinnectColors.accent),
+      leading: Icon(icon, color: KinnectColors.accent),
       title: Text(title, style: const TextStyle(color: KinnectColors.textPrimary)),
-      subtitle: Text(subtitle, style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
+      subtitle: Text(subtitle, style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
       trailing: Icon(PhosphorIcons.caretRight(), color: KinnectColors.textMuted),
       onTap: onTap,
     );

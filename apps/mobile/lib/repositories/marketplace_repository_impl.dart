@@ -30,9 +30,9 @@ class MarketplaceRepositoryImpl implements MarketplaceRepository {
       queryParameters: {
         if (query != null && query.isNotEmpty) 'query': query,
         if (category != null && category.isNotEmpty) 'category': category,
-        if (minPrice != null) 'min_price': minPrice,
-        if (maxPrice != null) 'max_price': maxPrice,
-        if (minRating != null) 'min_rating': minRating,
+        'min_price': ?minPrice,
+        'max_price': ?maxPrice,
+        'min_rating': ?minRating,
         'sort_by': sortBy,
         if (cursor != null && cursor.isNotEmpty) 'after': cursor,
         'limit': limit,
@@ -148,7 +148,7 @@ class MarketplaceRepositoryImpl implements MarketplaceRepository {
     final response = await _dio.get<Map<String, dynamic>>(
       '$basePath/marketplace/products/$productId/reviews',
       queryParameters: {
-        if (cursor != null) 'after': cursor,
+        'after': ?cursor,
         'limit': limit,
       },
     );
@@ -162,8 +162,8 @@ class MarketplaceRepositoryImpl implements MarketplaceRepository {
       '$basePath/marketplace/products/$productId/reviews',
       data: {
         'rating': rating,
-        if (title != null) 'title': title,
-        if (body != null) 'body': body,
+        'title': ?title,
+        'body': ?body,
       },
     );
     final data = (response.data?['data'] as Map<String, dynamic>?) ?? response.data ?? <String, dynamic>{};

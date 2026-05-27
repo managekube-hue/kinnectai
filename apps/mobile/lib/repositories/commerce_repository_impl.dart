@@ -38,5 +38,6 @@ class CommerceRepositoryImpl implements CommerceRepository {
   @override
   Future<double> getBloomCreditBalance() async {
     final response = await _dio.get<Map<String, dynamic>>('$basePath/payments/balance');
+    return (response.data?['balance'] as num?)?.toDouble() ?? 0;
   }
 }

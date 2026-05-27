@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../theme/colors.dart';
@@ -80,7 +80,7 @@ class _MemoryEditScreenState extends State<MemoryEditScreen> {
       backgroundColor: KinnectColors.background,
       appBar: AppBar(
         backgroundColor: KinnectColors.surface,
-        title: Text('Edit Memory', style: KinnectTextStyles.headlineSmall),
+        title: const Text('Edit Memory', style: KinnectTextStyles.headlineSmall),
         leading: IconButton(
           icon: const Icon(Icons.close, color: KinnectColors.textPrimary),
           onPressed: () => Navigator.pop(context),
@@ -112,7 +112,7 @@ class _MemoryEditScreenState extends State<MemoryEditScreen> {
           const SizedBox(height: 20),
 
           // Caption
-          _SectionLabel('Caption'),
+          const _SectionLabel('Caption'),
           const SizedBox(height: 8),
           TextField(
             controller: _captionController,
@@ -123,7 +123,7 @@ class _MemoryEditScreenState extends State<MemoryEditScreen> {
           const SizedBox(height: 24),
 
           // Visibility
-          _SectionLabel('Visibility'),
+          const _SectionLabel('Visibility'),
           const SizedBox(height: 8),
           _RadioOption(
             label: 'All Kin',
@@ -149,7 +149,7 @@ class _MemoryEditScreenState extends State<MemoryEditScreen> {
           const SizedBox(height: 24),
 
           // Reuse permissions (PRD 12.1)
-          _SectionLabel('Reuse Permissions'),
+          const _SectionLabel('Reuse Permissions'),
           const SizedBox(height: 8),
           _ToggleTile(
             icon: PhosphorIcons.scissors(),
@@ -191,7 +191,7 @@ class _MemoryEditScreenState extends State<MemoryEditScreen> {
   InputDecoration _inputDecoration(String hint) {
     return InputDecoration(
       hintText: hint,
-      hintStyle: TextStyle(color: KinnectColors.textMuted),
+      hintStyle: const TextStyle(color: KinnectColors.textMuted),
       filled: true,
       fillColor: KinnectColors.surfaceElevated,
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
@@ -228,7 +228,7 @@ class _RadioOption extends StatelessWidget {
       activeColor: KinnectColors.accent,
       contentPadding: EdgeInsets.zero,
       title: Text(label, style: const TextStyle(color: KinnectColors.textPrimary, fontSize: 14)),
-      subtitle: Text(subtitle, style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
+      subtitle: Text(subtitle, style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
     );
   }
 }
@@ -247,11 +247,11 @@ class _ToggleTile extends StatelessWidget {
     return SwitchListTile(
       value: value,
       onChanged: onChanged,
-      activeColor: KinnectColors.accent,
+      activeThumbColor: KinnectColors.accent,
       contentPadding: EdgeInsets.zero,
       secondary: Icon(icon, color: KinnectColors.textSecondary),
       title: Text(label, style: const TextStyle(color: KinnectColors.textPrimary, fontSize: 14)),
-      subtitle: Text(subtitle, style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
+      subtitle: Text(subtitle, style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
     );
   }
 }

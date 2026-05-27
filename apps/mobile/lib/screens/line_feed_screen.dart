@@ -86,18 +86,18 @@ class _LineFeedScreenState extends State<LineFeedScreen> {
                   ),
                 )
               : _memories.isEmpty
-                  ? Center(
+                  ? const Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(Icons.feed_outlined, size: 80, color: Colors.grey),
-                          const SizedBox(height: 16),
-                          const Text(
+                          Icon(Icons.feed_outlined, size: 80, color: Colors.grey),
+                          SizedBox(height: 16),
+                          Text(
                             'No memories yet',
                             style: TextStyle(fontSize: 20, color: Colors.grey),
                           ),
-                          const SizedBox(height: 8),
-                          const Text(
+                          SizedBox(height: 8),
+                          Text(
                             'Be the first to share a memory!',
                             style: TextStyle(color: Colors.grey),
                           ),
@@ -119,9 +119,7 @@ class _LineFeedScreenState extends State<LineFeedScreen> {
                       ),
                     ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _showPostMemoryDialog();
-        },
+        onPressed: _showPostMemoryDialog,
         backgroundColor: Colors.deepPurple,
         child: const Icon(Icons.add),
       ),

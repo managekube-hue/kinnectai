@@ -42,6 +42,13 @@ class KinnectTextStyles {
     fontWeight: FontWeight.w600,
     color: KinnectColors.textPrimary,
   );
+
+  static const titleMedium = TextStyle(
+    fontFamily: 'Inter',
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+    color: KinnectColors.textPrimary,
+  );
   
   // Body Styles
   static const bodyLarge = TextStyle(

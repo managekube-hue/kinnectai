@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-import '../blocs/tree_graph/tree_graph_bloc.dart';
-import '../models/dtos/graph_response_dto.dart';
 import '../router/app_nav.dart';
 import '../theme/colors.dart';
 import '../theme/typography.dart';
@@ -22,7 +19,7 @@ class BranchSubgraphScreen extends StatelessWidget {
       backgroundColor: KinnectColors.background,
       appBar: AppBar(
         backgroundColor: KinnectColors.surface,
-        title: Text('Branch Subgraph', style: KinnectTextStyles.headlineSmall),
+        title: const Text('Branch Subgraph', style: KinnectTextStyles.headlineSmall),
         leading: IconButton(
           icon: const Icon(Icons.close, color: KinnectColors.textPrimary),
           onPressed: () => Navigator.pop(context),
@@ -50,9 +47,9 @@ class BranchSubgraphScreen extends StatelessWidget {
           children: [
             Icon(PhosphorIcons.treeStructure(), size: 64, color: KinnectColors.textMuted),
             const SizedBox(height: 16),
-            Text('Join a Branch to activate', style: KinnectTextStyles.headlineSmall),
+            const Text('Join a Branch to activate', style: KinnectTextStyles.headlineSmall),
             const SizedBox(height: 8),
-            Text(
+            const Text(
               'This Memory doesn\'t belong to a Branch yet. Explore Discovery to find your ancestral lines.',
               textAlign: TextAlign.center,
               style: TextStyle(color: KinnectColors.textSecondary, fontSize: 14),
@@ -90,7 +87,7 @@ class BranchSubgraphScreen extends StatelessWidget {
                   children: [
                     Icon(PhosphorIcons.mapPin(), size: 40, color: KinnectColors.primary),
                     const SizedBox(height: 8),
-                    Text('Branch Geographic View', style: TextStyle(color: KinnectColors.textSecondary)),
+                    const Text('Branch Geographic View', style: TextStyle(color: KinnectColors.textSecondary)),
                   ],
                 ),
               ),
@@ -112,13 +109,13 @@ class BranchSubgraphScreen extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           color: KinnectColors.surface,
-          child: Row(
+          child: const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _LegendDot(color: KinnectColors.success, label: 'Living'),
-              const SizedBox(width: 20),
+              SizedBox(width: 20),
               _LegendDot(color: Colors.grey, label: 'Deceased'),
-              const SizedBox(width: 20),
+              SizedBox(width: 20),
               _LegendDot(color: KinnectColors.accent, label: 'Historical'),
             ],
           ),
@@ -129,7 +126,7 @@ class BranchSubgraphScreen extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
           child: Row(
             children: [
-              Text('Subgraph Members', style: KinnectTextStyles.headlineSmall),
+              const Text('Subgraph Members', style: KinnectTextStyles.headlineSmall),
               const Spacer(),
               TextButton(
                 onPressed: () => AppNav.push(context, '/branch/$branchId/members'),
@@ -160,7 +157,7 @@ class BranchSubgraphScreen extends StatelessWidget {
                   child: Icon(PhosphorIcons.user(), size: 18, color: nodeColors[i]),
                 ),
                 title: Text(names[i], style: const TextStyle(color: KinnectColors.textPrimary, fontWeight: FontWeight.w600, fontSize: 14)),
-                subtitle: Text(types[i], style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
+                subtitle: Text(types[i], style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
                 trailing: i == 0 ? null : Icon(PhosphorIcons.caretRight(), size: 16, color: KinnectColors.textMuted),
                 onTap: i == 0 ? null : () => AppNav.push(context, '/root/user_$i'),
               );
@@ -211,7 +208,7 @@ class _LegendDot extends StatelessWidget {
       children: [
         Container(width: 10, height: 10, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
         const SizedBox(width: 4),
-        Text(label, style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
+        Text(label, style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
       ],
     );
   }

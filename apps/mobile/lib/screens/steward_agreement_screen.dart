@@ -1,9 +1,6 @@
-﻿import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-import '../cubits/steward_consent_cubit.dart';
-import '../router/app_nav.dart';
 import '../theme/colors.dart';
 import '../theme/typography.dart';
 
@@ -24,13 +21,11 @@ class _StewardAgreementScreenState extends State<StewardAgreementScreen> {
   String _selectedStewardName = '';
   bool _consentChecked = false;
 
-  static const _stepLabels = ['Select Steward', 'Agreement', 'Confirmation', 'Complete'];
-
   static final _kinnections = [
-    _KinOption(id: 'user_1', name: 'Emily Harrington', relationship: 'Parent', kinScore: 0.50),
-    _KinOption(id: 'user_2', name: 'James Harrington', relationship: '1st Cousin', kinScore: 0.25),
-    _KinOption(id: 'user_3', name: 'Sarah Vance', relationship: 'Sibling', kinScore: 0.50),
-    _KinOption(id: 'user_4', name: 'Michael O\'Brien', relationship: '2nd Cousin', kinScore: 0.125),
+    const _KinOption(id: 'user_1', name: 'Emily Harrington', relationship: 'Parent', kinScore: 0.50),
+    const _KinOption(id: 'user_2', name: 'James Harrington', relationship: '1st Cousin', kinScore: 0.25),
+    const _KinOption(id: 'user_3', name: 'Sarah Vance', relationship: 'Sibling', kinScore: 0.50),
+    const _KinOption(id: 'user_4', name: 'Michael O\'Brien', relationship: '2nd Cousin', kinScore: 0.125),
   ];
 
   @override
@@ -39,7 +34,7 @@ class _StewardAgreementScreenState extends State<StewardAgreementScreen> {
       backgroundColor: KinnectColors.background,
       appBar: AppBar(
         backgroundColor: KinnectColors.surface,
-        title: Text('Steward Designation', style: KinnectTextStyles.headlineSmall),
+        title: const Text('Steward Designation', style: KinnectTextStyles.headlineSmall),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: KinnectColors.textPrimary),
           onPressed: _step > 0 ? () => setState(() => _step--) : () => Navigator.pop(context),
@@ -48,7 +43,7 @@ class _StewardAgreementScreenState extends State<StewardAgreementScreen> {
           Padding(
             padding: const EdgeInsets.only(right: 16),
             child: Center(
-              child: Text('${_step + 1}/4', style: TextStyle(color: KinnectColors.textSecondary)),
+              child: Text('${_step + 1}/4', style: const TextStyle(color: KinnectColors.textSecondary)),
             ),
           ),
         ],
@@ -82,9 +77,9 @@ class _StewardAgreementScreenState extends State<StewardAgreementScreen> {
             children: [
               Icon(PhosphorIcons.shield(), size: 48, color: KinnectColors.accent),
               const SizedBox(height: 12),
-              Text('Select a Steward', style: KinnectTextStyles.headlineMedium),
+              const Text('Select a Steward', style: KinnectTextStyles.headlineMedium),
               const SizedBox(height: 8),
-              Text(
+              const Text(
                 'Choose a confirmed Kinnection to serve as Steward for your Memory Box.',
                 textAlign: TextAlign.center,
                 style: TextStyle(color: KinnectColors.textSecondary, fontSize: 14),
@@ -117,7 +112,7 @@ class _StewardAgreementScreenState extends State<StewardAgreementScreen> {
                       Container(
                         width: 44,
                         height: 44,
-                        decoration: BoxDecoration(shape: BoxShape.circle, color: KinnectColors.surfaceElevated),
+                        decoration: const BoxDecoration(shape: BoxShape.circle, color: KinnectColors.surfaceElevated),
                         child: Icon(PhosphorIcons.user(), size: 22, color: KinnectColors.textMuted),
                       ),
                       const SizedBox(width: 12),
@@ -126,7 +121,7 @@ class _StewardAgreementScreenState extends State<StewardAgreementScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(kin.name, style: const TextStyle(color: KinnectColors.textPrimary, fontWeight: FontWeight.w600, fontSize: 15)),
-                            Text('${kin.relationship} -- ${(kin.kinScore * 100).round()}% Kin Score', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 13)),
+                            Text('${kin.relationship} -- ${(kin.kinScore * 100).round()}% Kin Score', style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 13)),
                           ],
                         ),
                       ),
@@ -166,9 +161,9 @@ class _StewardAgreementScreenState extends State<StewardAgreementScreen> {
       children: [
         Icon(PhosphorIcons.fileText(), size: 48, color: KinnectColors.primary),
         const SizedBox(height: 16),
-        Text('Steward Agreement', style: KinnectTextStyles.headlineMedium, textAlign: TextAlign.center),
+        const Text('Steward Agreement', style: KinnectTextStyles.headlineMedium, textAlign: TextAlign.center),
         const SizedBox(height: 8),
-        Text('for Posthumous Memory Delivery', style: TextStyle(color: KinnectColors.textSecondary), textAlign: TextAlign.center),
+        const Text('for Posthumous Memory Delivery', style: TextStyle(color: KinnectColors.textSecondary), textAlign: TextAlign.center),
         const SizedBox(height: 24),
         Container(
           padding: const EdgeInsets.all(16),
@@ -192,7 +187,7 @@ class _StewardAgreementScreenState extends State<StewardAgreementScreen> {
         const SizedBox(height: 16),
         TextButton(
           onPressed: () {},
-          child: Text('View full Steward Agreement (PDF)', style: TextStyle(color: KinnectColors.primary)),
+          child: const Text('View full Steward Agreement (PDF)', style: TextStyle(color: KinnectColors.primary)),
         ),
         const SizedBox(height: 16),
         CheckboxListTile(
@@ -243,14 +238,14 @@ class _StewardAgreementScreenState extends State<StewardAgreementScreen> {
               child: Icon(PhosphorIcons.clock(), size: 40, color: KinnectColors.warning),
             ),
             const SizedBox(height: 24),
-            Text('Waiting for Confirmation', style: KinnectTextStyles.headlineMedium),
+            const Text('Waiting for Confirmation', style: KinnectTextStyles.headlineMedium),
             const SizedBox(height: 12),
             Text(
               '$_selectedStewardName has been notified via push notification, in-app alert, and email.\n\n'
               'They must log in, review the agreement, and confirm via biometric re-authentication.\n\n'
               'Request expires in 14 days.',
               textAlign: TextAlign.center,
-              style: TextStyle(color: KinnectColors.textSecondary, height: 1.6),
+              style: const TextStyle(color: KinnectColors.textSecondary, height: 1.6),
             ),
             const SizedBox(height: 32),
             // Simulate confirmation for demo
@@ -288,12 +283,12 @@ class _StewardAgreementScreenState extends State<StewardAgreementScreen> {
           children: [
             Icon(PhosphorIcons.checkCircle(), size: 80, color: KinnectColors.success),
             const SizedBox(height: 24),
-            Text('Steward Designated', style: KinnectTextStyles.headlineMedium),
+            const Text('Steward Designated', style: KinnectTextStyles.headlineMedium),
             const SizedBox(height: 12),
             Text(
               '$_selectedStewardName has confirmed the Steward designation. Your Memory can now be sealed.',
               textAlign: TextAlign.center,
-              style: TextStyle(color: KinnectColors.textSecondary, height: 1.5),
+              style: const TextStyle(color: KinnectColors.textSecondary, height: 1.5),
             ),
             const SizedBox(height: 32),
             SizedBox(

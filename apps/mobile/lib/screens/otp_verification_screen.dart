@@ -76,8 +76,8 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Verification code resent'),
+          const SnackBar(
+            content: Text('Verification code resent'),
             backgroundColor: KinnectColors.success,
           ),
         );
@@ -122,7 +122,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: KinnectSpacing.xl),
-                Text(
+                const Text(
                   'Verify your email',
                   style: KinnectTextStyles.headline,
                 ),
@@ -167,7 +167,11 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                 AuthButton(
                   type: AuthButtonType.email,
                   text: _isLoading ? 'Verifying...' : 'Verify',
-                  onPressed: _isLoading ? null : _handleVerify,
+                  onPressed: () {
+                    if (!_isLoading) {
+                      _handleVerify();
+                    }
+                  },
                   isPrimary: true,
                 ),
                 const SizedBox(height: KinnectSpacing.md),

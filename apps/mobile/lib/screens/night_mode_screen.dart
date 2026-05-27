@@ -27,7 +27,7 @@ class _NightModeScreenState extends State<NightModeScreen> {
             title: const Text('Enable Night Mode', style: TextStyle(color: KinnectColors.textPrimary)),
             subtitle: const Text('Grayscale + mute notifications', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
             value: _enabled,
-            activeColor: KinnectColors.accent,
+            activeThumbColor: KinnectColors.accent,
             onChanged: (value) => setState(() => _enabled = value),
           ),
           ListTile(

@@ -5,7 +5,6 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../blocs/discovery/discovery_bloc.dart';
 import '../models/dtos/discovery_candidate_dto.dart';
-import '../repositories/feed_repository.dart';
 import '../repositories/feed_repository_impl.dart';
 import '../router/app_nav.dart';
 import '../theme/colors.dart';
@@ -39,7 +38,7 @@ class _DiscoveryContentState extends State<_DiscoveryContent> {
 
   void _onFilterTap(int index) {
     setState(() => _filterIndex = index);
-    context.read<DiscoveryBloc>().add(ApplyFilter(filter: _filters[index]));
+    context.read<DiscoveryBloc>().add(ApplyFilter({'filter': _filters[index]}));
   }
 
   @override
@@ -56,7 +55,7 @@ class _DiscoveryContentState extends State<_DiscoveryContent> {
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 itemCount: _filters.length,
-                separatorBuilder: (_, __) => const SizedBox(width: 8),
+                separatorBuilder: (_, _) => const SizedBox(width: 8),
                 itemBuilder: (context, i) => _FilterChip(
                   label: _filters[i],
                   selected: i == _filterIndex,
@@ -122,7 +121,7 @@ class _DiscoveryContentState extends State<_DiscoveryContent> {
                         itemCount: state.candidates.length + (state.hasMore ? 1 : 0),
                         itemBuilder: (context, i) {
                           if (i >= state.candidates.length) {
-                            context.read<DiscoveryBloc>().add(const FetchCandidates(isLoadMore: true));
+                            context.read<DiscoveryBloc>().add(const FetchCandidates(loadMore: true));
                             return const Padding(
                               padding: EdgeInsets.all(24),
                               child: Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(KinnectColors.accent))),
@@ -176,9 +175,9 @@ class _DiscoveryCard extends StatelessWidget {
               Container(
                 height: 200,
                 width: double.infinity,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: KinnectColors.surfaceElevated,
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
                 ),
                 child: candidate.previewMediaUrl != null
                     ? ClipRRect(
@@ -253,7 +252,7 @@ class _DiscoveryCard extends StatelessWidget {
                     Expanded(
                       child: ElevatedButton.icon(
                         onPressed: () {
-                          context.read<DiscoveryBloc>().add(KinnectRequest(userId: candidate.userId));
+                          context.read<DiscoveryBloc>().add(KinnectRequest(candidate.userId));
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text('Kinnection request sent to ${candidate.displayName}'),

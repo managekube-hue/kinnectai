@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/gestures.dart';
 import '../theme/colors.dart';
-import 'dart:math' as math;
 
 class TreeGraphScreen extends StatefulWidget {
   const TreeGraphScreen({super.key});
@@ -143,7 +141,7 @@ class _TreeGraphScreenState extends State<TreeGraphScreen> {
             width: 800,
             height: 1000,
             child: Stack(
-              children: _nodes.map((node) => _buildNodeWidget(node)).toList(),
+              children: _nodes.map(_buildNodeWidget).toList(),
             ),
           ),
         ),

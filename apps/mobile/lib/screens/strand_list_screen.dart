@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../router/app_nav.dart';
@@ -16,12 +16,12 @@ class StrandListScreen extends StatefulWidget {
 
 class _StrandListScreenState extends State<StrandListScreen> {
   static final _strands = [
-    _StrandData(id: 's_1', name: 'Wedding Memories', count: 24, coverColor: const Color(0xFFD4A5A5)),
-    _StrandData(id: 's_2', name: 'Summer Reunion 2025', count: 18, coverColor: const Color(0xFFA5C4D4)),
-    _StrandData(id: 's_3', name: 'Grandma\'s Kitchen', count: 12, coverColor: const Color(0xFFA5D4A8)),
-    _StrandData(id: 's_4', name: 'Holiday Traditions', count: 31, coverColor: const Color(0xFFD4CCA5)),
-    _StrandData(id: 's_5', name: 'Baby\'s First Year', count: 47, coverColor: const Color(0xFFCDA5D4)),
-    _StrandData(id: 's_6', name: 'Road Trip 2024', count: 9, coverColor: const Color(0xFFD4A5C0)),
+    const _StrandData(id: 's_1', name: 'Wedding Memories', count: 24, coverColor: Color(0xFFD4A5A5)),
+    const _StrandData(id: 's_2', name: 'Summer Reunion 2025', count: 18, coverColor: Color(0xFFA5C4D4)),
+    const _StrandData(id: 's_3', name: 'Grandma\'s Kitchen', count: 12, coverColor: Color(0xFFA5D4A8)),
+    const _StrandData(id: 's_4', name: 'Holiday Traditions', count: 31, coverColor: Color(0xFFD4CCA5)),
+    const _StrandData(id: 's_5', name: 'Baby\'s First Year', count: 47, coverColor: Color(0xFFCDA5D4)),
+    const _StrandData(id: 's_6', name: 'Road Trip 2024', count: 9, coverColor: Color(0xFFD4A5C0)),
   ];
 
   @override
@@ -30,7 +30,7 @@ class _StrandListScreenState extends State<StrandListScreen> {
       backgroundColor: KinnectColors.background,
       appBar: AppBar(
         backgroundColor: KinnectColors.surface,
-        title: Text('Strands', style: KinnectTextStyles.headlineSmall),
+        title: const Text('Strands', style: KinnectTextStyles.headlineSmall),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: KinnectColors.textPrimary),
           onPressed: () => Navigator.pop(context),
@@ -64,9 +64,9 @@ class _StrandListScreenState extends State<StrandListScreen> {
         children: [
           Icon(PhosphorIcons.bookmarkSimple(), size: 64, color: KinnectColors.textMuted),
           const SizedBox(height: 16),
-          Text('No Strands created', style: KinnectTextStyles.headlineSmall),
+          const Text('No Strands created', style: KinnectTextStyles.headlineSmall),
           const SizedBox(height: 8),
-          Text(
+          const Text(
             'Strands are themed Memory collections.\nTap + to create your first.',
             textAlign: TextAlign.center,
             style: TextStyle(color: KinnectColors.textSecondary, fontSize: 14),
@@ -89,7 +89,7 @@ class _StrandListScreenState extends State<StrandListScreen> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('New Strand', style: KinnectTextStyles.headlineSmall),
+            const Text('New Strand', style: KinnectTextStyles.headlineSmall),
             const SizedBox(height: 16),
             TextField(
               controller: nameController,
@@ -97,7 +97,7 @@ class _StrandListScreenState extends State<StrandListScreen> {
               style: const TextStyle(color: KinnectColors.textPrimary),
               decoration: InputDecoration(
                 hintText: 'Strand name (e.g. "Wedding Memories")',
-                hintStyle: TextStyle(color: KinnectColors.textMuted),
+                hintStyle: const TextStyle(color: KinnectColors.textMuted),
                 filled: true,
                 fillColor: KinnectColors.surfaceElevated,
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
@@ -171,7 +171,7 @@ class _StrandCard extends StatelessWidget {
                 children: [
                   Text(strand.name, style: const TextStyle(color: KinnectColors.textPrimary, fontWeight: FontWeight.w600, fontSize: 14), maxLines: 1, overflow: TextOverflow.ellipsis),
                   const SizedBox(height: 2),
-                  Text('${strand.count} memories', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
+                  Text('${strand.count} memories', style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
                 ],
               ),
             ),

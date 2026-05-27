@@ -17,7 +17,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
   final _controller = TextEditingController();
   final _scrollController = ScrollController();
   final _messages = <_ChatMessage>[
-    _ChatMessage(
+    const _ChatMessage(
       text: 'Hi! I\'m the KinnectAI support assistant. How can I help you today?',
       isUser: false,
       time: '2:30 PM',
@@ -100,7 +100,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('Support', style: KinnectTextStyles.headlineSmall.copyWith(fontSize: 16)),
-                Text('Typically replies in 2h', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 11)),
+                const Text('Typically replies in 2h', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 11)),
               ],
             ),
           ],
@@ -155,7 +155,7 @@ class _SupportChatScreenState extends State<SupportChatScreen> {
                     style: const TextStyle(color: KinnectColors.textPrimary),
                     decoration: InputDecoration(
                       hintText: 'Type a message...',
-                      hintStyle: TextStyle(color: KinnectColors.textMuted),
+                      hintStyle: const TextStyle(color: KinnectColors.textMuted),
                       filled: true,
                       fillColor: KinnectColors.surfaceElevated,
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: BorderSide.none),
@@ -261,7 +261,7 @@ class _QuickAction extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
             border: Border.all(color: KinnectColors.dividerSubtle),
           ),
-          child: Text(label, style: TextStyle(color: KinnectColors.textSecondary, fontSize: 13)),
+          child: Text(label, style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 13)),
         ),
       ),
     );

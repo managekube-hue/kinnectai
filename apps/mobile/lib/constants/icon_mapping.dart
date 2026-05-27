@@ -7,13 +7,13 @@ class IconMapping {
   IconMapping._();
 
   static final Map<String, IconFactory> glyphs = {
-    'send': () => PhosphorIcons.paperPlaneTilt(),
-    'message': () => PhosphorIcons.chatCircleDots(),
-    'family': () => PhosphorIcons.users(),
-    'marketplace': () => PhosphorIcons.storefront(),
-    'record': () => PhosphorIcons.microphone(),
-    'consent': () => PhosphorIcons.handshake(),
-    'security': () => PhosphorIcons.shieldCheck(),
-    'error': () => PhosphorIcons.warningCircle(),
+    'send': PhosphorIcons.paperPlaneTilt,
+    'message': PhosphorIcons.chatCircleDots,
+    'family': PhosphorIcons.users,
+    'marketplace': PhosphorIcons.storefront,
+    'record': PhosphorIcons.microphone,
+    'consent': PhosphorIcons.handshake,
+    'security': PhosphorIcons.shieldCheck,
+    'error': PhosphorIcons.warningCircle,
   };
 }

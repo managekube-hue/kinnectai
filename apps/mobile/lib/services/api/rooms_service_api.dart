@@ -1,14 +1,20 @@
 import 'package:dio/dio.dart';
 import 'package:kinnectai_app/models/room_create_request.dart';
 import 'package:kinnectai_app/models/room_token_response.dart';
-import 'package:retrofit/retrofit.dart';
 
-part 'rooms_service_api.g.dart';
+class RoomsServiceApi {
+  RoomsServiceApi(this._dio, {String? baseUrl})
+      : _baseUrl = baseUrl ?? 'https://api.kinnectai.app/v1';
 
-@RestApi(baseUrl: 'https://api.kinnectai.app/v1')
-abstract class RoomsServiceApi {
-  factory RoomsServiceApi(Dio dio, {String baseUrl}) = _RoomsServiceApi;
+  final Dio _dio;
+  final String _baseUrl;
 
-  @POST('/rooms')
-  Future<RoomTokenResponse> createRoom(@Body() RoomCreateRequest request);
+  Future<RoomTokenResponse> createRoom(RoomCreateRequest request) async {
+    final response = await _dio.post<Map<String, dynamic>>(
+      '$_baseUrl/rooms',
+      data: request.toJson(),
+    );
+    final data = response.data ?? <String, dynamic>{};
+    return RoomTokenResponse.fromJson(data);
+  }
 }

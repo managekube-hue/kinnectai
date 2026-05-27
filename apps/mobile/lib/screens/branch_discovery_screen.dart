@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import '../router/app_nav.dart';
@@ -44,7 +44,7 @@ class _BranchDiscoveryScreenState extends State<BranchDiscoveryScreen> {
       backgroundColor: KinnectColors.background,
       appBar: AppBar(
         backgroundColor: KinnectColors.surface,
-        title: Text('Discover Branches', style: KinnectTextStyles.headlineSmall),
+        title: const Text('Discover Branches', style: KinnectTextStyles.headlineSmall),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: KinnectColors.textPrimary),
           onPressed: () => Navigator.pop(context),
@@ -142,7 +142,7 @@ class _BranchCard extends StatelessWidget {
               const SizedBox(height: 6),
               Text(
                 '${branch.memberCount} members',
-                style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12),
+                style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 12),
               ),
               const SizedBox(height: 2),
               Row(
@@ -151,7 +151,7 @@ class _BranchCard extends StatelessWidget {
                   const SizedBox(width: 3),
                   Text(
                     '${branch.countryCount} countries',
-                    style: TextStyle(color: KinnectColors.textMuted, fontSize: 11),
+                    style: const TextStyle(color: KinnectColors.textMuted, fontSize: 11),
                   ),
                 ],
               ),

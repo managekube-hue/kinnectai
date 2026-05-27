@@ -155,10 +155,32 @@ class TreeGraphBloc extends Bloc<TreeGraphEvent, TreeGraphState> {
     FetchBranchMerge event,
     Emitter<TreeGraphState> emit,
   ) async {
-    // Placeholder hook for branch merge evidence fetching.
     final current = state;
-    if (current is TreeGraphLoaded) {
-      emit(current);
+    if (current is! TreeGraphLoaded) {
+      return;
+    }
+
+    try {
+      final branchGraph = await _repository.loadSubgraph(
+        event.branchId,
+        depthLimit: 2,
+      );
+      final mergedNodes = <GraphNodeDTO>{
+        ...current.graph.nodes,
+        ...branchGraph.nodes,
+      }.toList();
+      final mergedEdges = <GraphEdgeDTO>{
+        ...current.graph.edges,
+        ...branchGraph.edges,
+      }.toList();
+
+      emit(
+        current.copyWith(
+          graph: GraphResponseDTO(nodes: mergedNodes, edges: mergedEdges),
+        ),
+      );
+    } catch (error) {
+      emit(TreeGraphError(error.toString()));
     }
   }
 }

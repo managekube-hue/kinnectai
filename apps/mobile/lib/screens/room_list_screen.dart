@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-import '../router/app_nav.dart';
 import '../theme/colors.dart';
 import '../theme/typography.dart';
 
@@ -34,7 +33,7 @@ class _RoomListScreenState extends State<RoomListScreen> with SingleTickerProvid
       backgroundColor: KinnectColors.background,
       appBar: AppBar(
         backgroundColor: KinnectColors.surface,
-        title: Text('Rooms', style: KinnectTextStyles.headlineSmall),
+        title: const Text('Rooms', style: KinnectTextStyles.headlineSmall),
         leading: IconButton(icon: const Icon(Icons.arrow_back, color: KinnectColors.textPrimary), onPressed: () => Navigator.pop(context)),
         bottom: TabBar(
           controller: _tabController,
@@ -52,7 +51,7 @@ class _RoomListScreenState extends State<RoomListScreen> with SingleTickerProvid
         backgroundColor: KinnectColors.accent,
         onPressed: () {},
         icon: Icon(PhosphorIcons.plus(), color: KinnectColors.background),
-        label: Text('Start Room', style: TextStyle(color: KinnectColors.background)),
+        label: const Text('Start Room', style: TextStyle(color: KinnectColors.background)),
       ),
     );
   }
@@ -64,8 +63,8 @@ class _ActiveTab extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        _RoomCard(name: 'Harrington Family Call', host: 'James Harrington', participants: 4, duration: '12 min', isLive: false),
-        _RoomCard(name: 'Sunday Catch-up', host: 'Emily Harrington', participants: 8, duration: '45 min', isLive: true),
+        const _RoomCard(name: 'Harrington Family Call', host: 'James Harrington', participants: 4, duration: '12 min', isLive: false),
+        const _RoomCard(name: 'Sunday Catch-up', host: 'Emily Harrington', participants: 8, duration: '45 min', isLive: true),
       ],
     );
   }
@@ -77,8 +76,8 @@ class _ScheduledTab extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        _GatheringCard(name: 'Monthly Branch Meeting', date: 'May 15, 2026 at 7:00 PM', invitedCount: 23, hasRsvp: true),
-        _GatheringCard(name: 'Reunion Planning', date: 'May 22, 2026 at 3:00 PM', invitedCount: 12, hasRsvp: false),
+        const _GatheringCard(name: 'Monthly Branch Meeting', date: 'May 15, 2026 at 7:00 PM', invitedCount: 23, hasRsvp: true),
+        const _GatheringCard(name: 'Reunion Planning', date: 'May 22, 2026 at 3:00 PM', invitedCount: 12, hasRsvp: false),
       ],
     );
   }
@@ -90,7 +89,7 @@ class _PastTab extends StatelessWidget {
     return Center(child: Column(mainAxisSize: MainAxisSize.min, children: [
       Icon(PhosphorIcons.videoCamera(), size: 48, color: KinnectColors.textMuted),
       const SizedBox(height: 12),
-      Text('No past recordings', style: TextStyle(color: KinnectColors.textSecondary)),
+      const Text('No past recordings', style: TextStyle(color: KinnectColors.textSecondary)),
     ]));
   }
 }
@@ -113,7 +112,7 @@ class _RoomCard extends StatelessWidget {
           if (isLive) Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3), decoration: BoxDecoration(color: KinnectColors.error, borderRadius: BorderRadius.circular(8)), child: const Text('LIVE', style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold))),
         ]),
         const SizedBox(height: 6),
-        Text('Hosted by $host -- $participants participants -- $duration', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 13)),
+        Text('Hosted by $host -- $participants participants -- $duration', style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 13)),
         const SizedBox(height: 12),
         SizedBox(width: double.infinity, child: ElevatedButton(onPressed: () {}, style: ElevatedButton.styleFrom(backgroundColor: KinnectColors.accent, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))), child: const Text('Join'))),
       ]),
@@ -136,9 +135,9 @@ class _GatheringCard extends StatelessWidget {
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(name, style: const TextStyle(color: KinnectColors.textPrimary, fontWeight: FontWeight.w600, fontSize: 16)),
         const SizedBox(height: 4),
-        Row(children: [Icon(PhosphorIcons.calendarBlank(), size: 14, color: KinnectColors.textSecondary), const SizedBox(width: 4), Text(date, style: TextStyle(color: KinnectColors.textSecondary, fontSize: 13))]),
+        Row(children: [Icon(PhosphorIcons.calendarBlank(), size: 14, color: KinnectColors.textSecondary), const SizedBox(width: 4), Text(date, style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 13))]),
         const SizedBox(height: 4),
-        Text('$invitedCount Kin invited', style: TextStyle(color: KinnectColors.textMuted, fontSize: 12)),
+        Text('$invitedCount Kin invited', style: const TextStyle(color: KinnectColors.textMuted, fontSize: 12)),
         const SizedBox(height: 12),
         SizedBox(width: double.infinity, child: hasRsvp
           ? OutlinedButton(onPressed: () {}, style: OutlinedButton.styleFrom(foregroundColor: KinnectColors.success, side: const BorderSide(color: KinnectColors.success)), child: const Text('RSVP\'d'))

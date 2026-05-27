@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -8,6 +8,7 @@ import 'package:share_plus/share_plus.dart';
 import '../cubits/cart_cubit.dart';
 import '../cubits/marketplace_cubit.dart';
 import '../models/dtos/marketplace_product_dto.dart';
+import '../repositories/marketplace_repository.dart';
 import '../theme/colors.dart';
 import '../theme/typography.dart';
 
@@ -47,7 +48,7 @@ class _MarketplaceProductDetailScreenState extends State<MarketplaceProductDetai
             return const Center(child: CircularProgressIndicator(color: KinnectColors.accent));
           }
           if (state is MarketplaceError) {
-            return Center(child: Text(state.message, style: TextStyle(color: KinnectColors.textSecondary)));
+            return Center(child: Text(state.message, style: const TextStyle(color: KinnectColors.textSecondary)));
           }
           if (state is MarketplaceProductDetail) {
             return _ProductDetailBody(
@@ -119,7 +120,7 @@ class _ProductDetailBody extends StatelessWidget {
                       img.url,
                       fit: BoxFit.cover,
                       width: double.infinity,
-                      errorBuilder: (_, __, ___) => _placeholder(),
+                      errorBuilder: (_, _, _) => _placeholder(),
                     )).toList(),
                   )
                 : _placeholder(),
@@ -141,16 +142,16 @@ class _ProductDetailBody extends StatelessWidget {
                   children: [
                     Icon(PhosphorIcons.storefront(), size: 16, color: KinnectColors.textSecondary),
                     const SizedBox(width: 6),
-                    Expanded(child: Text(product.sellerName ?? 'Unknown', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 14))),
+                    Expanded(child: Text(product.sellerName ?? 'Unknown', style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 14))),
                     RatingBarIndicator(
                       rating: product.ratingAvg,
-                      itemBuilder: (_, __) => const Icon(Icons.star, color: KinnectColors.warning),
+                      itemBuilder: (_, _) => const Icon(Icons.star, color: KinnectColors.warning),
                       itemCount: 5,
                       itemSize: 16,
                     ),
                     const SizedBox(width: 6),
                     Text('${product.ratingAvg.toStringAsFixed(1)} (${product.ratingCount})',
-                        style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
+                        style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -186,7 +187,7 @@ class _ProductDetailBody extends StatelessWidget {
                         fontSize: 28, fontWeight: FontWeight.bold)),
                       if (product.compareAtCents != null && product.compareAtCents! > 0) ...[
                         const SizedBox(width: 12),
-                        Text(onPrice(product.compareAtCents!), style: TextStyle(
+                        Text(onPrice(product.compareAtCents!), style: const TextStyle(
                             color: KinnectColors.textMuted, fontSize: 18, decoration: TextDecoration.lineThrough)),
                         const SizedBox(width: 8),
                         Container(
@@ -204,9 +205,9 @@ class _ProductDetailBody extends StatelessWidget {
 
                 // Description
                 if (product.description != null && product.description!.isNotEmpty) ...[
-                  Text('About this product', style: KinnectTextStyles.titleMedium),
+                  const Text('About this product', style: KinnectTextStyles.titleMedium),
                   const SizedBox(height: 8),
-                  Text(product.description!, style: TextStyle(color: KinnectColors.textSecondary, fontSize: 14, height: 1.6)),
+                  Text(product.description!, style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 14, height: 1.6)),
                   const SizedBox(height: 24),
                 ],
 
@@ -279,7 +280,7 @@ class _ProductDetailBody extends StatelessWidget {
                       color: KinnectColors.surface,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Center(child: Text('No reviews yet. Be the first!', style: TextStyle(color: KinnectColors.textMuted))),
+                    child: const Center(child: Text('No reviews yet. Be the first!', style: TextStyle(color: KinnectColors.textMuted))),
                   )
                 else
                   ...reviews.map((r) => _ReviewCard(review: r)),
@@ -298,7 +299,7 @@ class _ProductDetailBody extends StatelessWidget {
         color: KinnectColors.accent.withOpacity(0.1),
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Text(label, style: TextStyle(color: KinnectColors.accent, fontSize: 11, fontWeight: FontWeight.w600)),
+      child: Text(label, style: const TextStyle(color: KinnectColors.accent, fontSize: 11, fontWeight: FontWeight.w600)),
     );
   }
 
@@ -323,7 +324,7 @@ class _ProductDetailBody extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Write a Review', style: KinnectTextStyles.headlineSmall),
+            const Text('Write a Review', style: KinnectTextStyles.headlineSmall),
             const SizedBox(height: 16),
             Center(
               child: RatingBar.builder(
@@ -333,7 +334,7 @@ class _ProductDetailBody extends StatelessWidget {
                 itemCount: 5,
                 itemSize: 36,
                 unratedColor: KinnectColors.surfaceElevated,
-                itemBuilder: (_, __) => const Icon(Icons.star, color: KinnectColors.warning),
+                itemBuilder: (_, _) => const Icon(Icons.star, color: KinnectColors.warning),
                 onRatingUpdate: (r) => rating = r,
               ),
             ),
@@ -342,7 +343,7 @@ class _ProductDetailBody extends StatelessWidget {
               controller: titleCtrl,
               style: const TextStyle(color: KinnectColors.textPrimary),
               decoration: InputDecoration(
-                hintText: 'Review title (optional)', hintStyle: TextStyle(color: KinnectColors.textMuted),
+                hintText: 'Review title (optional)', hintStyle: const TextStyle(color: KinnectColors.textMuted),
                 filled: true, fillColor: KinnectColors.surfaceElevated,
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
               ),
@@ -353,7 +354,7 @@ class _ProductDetailBody extends StatelessWidget {
               maxLines: 4,
               style: const TextStyle(color: KinnectColors.textPrimary),
               decoration: InputDecoration(
-                hintText: 'Share your experience...', hintStyle: TextStyle(color: KinnectColors.textMuted),
+                hintText: 'Share your experience...', hintStyle: const TextStyle(color: KinnectColors.textMuted),
                 filled: true, fillColor: KinnectColors.surfaceElevated,
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
               ),
@@ -409,7 +410,7 @@ class _ReviewCard extends StatelessWidget {
           Row(
             children: [
               RatingBarIndicator(
-                itemBuilder: (_, __) => const Icon(Icons.star, color: KinnectColors.warning),
+                itemBuilder: (_, _) => const Icon(Icons.star, color: KinnectColors.warning),
                 itemCount: 5,
                 itemSize: 14,
               ),
@@ -418,10 +419,10 @@ class _ReviewCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(color: KinnectColors.success.withOpacity(0.15), borderRadius: BorderRadius.circular(4)),
-                  child: Text('Verified', style: TextStyle(color: KinnectColors.success, fontSize: 10, fontWeight: FontWeight.w600)),
+                  child: const Text('Verified', style: TextStyle(color: KinnectColors.success, fontSize: 10, fontWeight: FontWeight.w600)),
                 ),
               const Spacer(),
-              Text(review.reviewerName ?? 'Anonymous', style: TextStyle(color: KinnectColors.textMuted, fontSize: 12)),
+              Text(review.reviewerName ?? 'Anonymous', style: const TextStyle(color: KinnectColors.textMuted, fontSize: 12)),
             ],
           ),
           if (review.title != null && review.title!.isNotEmpty) ...[
@@ -430,7 +431,7 @@ class _ReviewCard extends StatelessWidget {
           ],
           if (review.body != null && review.body!.isNotEmpty) ...[
             const SizedBox(height: 6),
-            Text(review.body!, style: TextStyle(color: KinnectColors.textSecondary, fontSize: 13, height: 1.4)),
+            Text(review.body!, style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 13, height: 1.4)),
           ],
         ],
       ),

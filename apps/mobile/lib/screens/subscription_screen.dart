@@ -1,8 +1,6 @@
-﻿import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-import '../cubits/subscription_cubit.dart';
 import '../router/app_nav.dart';
 import '../theme/colors.dart';
 import '../theme/typography.dart';
@@ -17,7 +15,7 @@ class SubscriptionScreen extends StatelessWidget {
       backgroundColor: KinnectColors.background,
       appBar: AppBar(
         backgroundColor: KinnectColors.surface,
-        title: Text('Vault+ Subscription', style: KinnectTextStyles.headlineSmall),
+        title: const Text('Vault+ Subscription', style: KinnectTextStyles.headlineSmall),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: KinnectColors.textPrimary),
           onPressed: () => Navigator.pop(context),
@@ -27,11 +25,11 @@ class SubscriptionScreen extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         children: [
           // Current plan card
-          _PlanCard(
+          const _PlanCard(
             title: 'Vault+ Premium',
             price: '\$4.99/month',
             isActive: true,
-            features: const [
+            features: [
               '500 GB Memory Box storage',
               'Priority Photplay rendering',
               'Extended Legacy Reel duration',
@@ -50,11 +48,11 @@ class SubscriptionScreen extends StatelessWidget {
               children: [
                 Icon(PhosphorIcons.calendarBlank(), size: 18, color: KinnectColors.textSecondary),
                 const SizedBox(width: 8),
-                Text('Renews May 15, 2026', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 13)),
+                const Text('Renews May 15, 2026', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 13)),
                 const Spacer(),
                 TextButton(
                   onPressed: () {},
-                  child: Text('Manage', style: TextStyle(color: KinnectColors.primary, fontSize: 13)),
+                  child: const Text('Manage', style: TextStyle(color: KinnectColors.primary, fontSize: 13)),
                 ),
               ],
             ),
@@ -62,7 +60,7 @@ class SubscriptionScreen extends StatelessWidget {
           const SizedBox(height: 32),
 
           // Available plans
-          Text('All Plans', style: KinnectTextStyles.headlineSmall),
+          const Text('All Plans', style: KinnectTextStyles.headlineSmall),
           const SizedBox(height: 16),
 
           // Free plan
@@ -82,11 +80,11 @@ class SubscriptionScreen extends StatelessWidget {
           const SizedBox(height: 16),
 
           // Vault+ Monthly
-          _PlanCard(
+          const _PlanCard(
             title: 'Vault+ Monthly',
             price: '\$4.99/mo',
             isActive: true,
-            features: const [
+            features: [
               '500 GB Memory Box storage',
               'Priority Photplay rendering (D-ID)',
               'Extended Legacy Reel duration',
@@ -115,21 +113,21 @@ class SubscriptionScreen extends StatelessWidget {
           const SizedBox(height: 32),
 
           // Photplay Credits section
-          Text('Photplay Credits', style: KinnectTextStyles.headlineSmall),
+          const Text('Photplay Credits', style: KinnectTextStyles.headlineSmall),
           const SizedBox(height: 12),
-          Text(
+          const Text(
             'Consumable credits for Premium Photplay animations. 1 credit = 1 Premium Photplay.',
             style: TextStyle(color: KinnectColors.textSecondary, fontSize: 14),
           ),
           const SizedBox(height: 16),
-          Row(
+          const Row(
             children: [
               Expanded(child: _CreditOption(amount: '1', price: '\$0.99')),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Expanded(child: _CreditOption(amount: '5', price: '\$4.49')),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Expanded(child: _CreditOption(amount: '10', price: '\$8.99')),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Expanded(child: _CreditOption(amount: '20', price: '\$16.99')),
             ],
           ),
@@ -224,7 +222,7 @@ class _PlanCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 4),
-          Text(price, style: TextStyle(color: KinnectColors.textSecondary, fontSize: 16)),
+          Text(price, style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 16)),
           const SizedBox(height: 12),
           ...features.map((f) => Padding(
             padding: const EdgeInsets.only(bottom: 6),
@@ -294,7 +292,7 @@ class _CreditOption extends StatelessWidget {
             const SizedBox(height: 4),
             Text(amount, style: const TextStyle(color: KinnectColors.textPrimary, fontWeight: FontWeight.bold, fontSize: 18)),
             const SizedBox(height: 2),
-            Text(price, style: TextStyle(color: KinnectColors.textSecondary, fontSize: 11)),
+            Text(price, style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 11)),
           ],
         ),
       ),

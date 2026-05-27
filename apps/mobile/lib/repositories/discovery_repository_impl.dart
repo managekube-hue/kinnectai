@@ -19,7 +19,7 @@ class DiscoveryRepositoryImpl implements DiscoveryRepository {
     final response = await _dio.post<Map<String, dynamic>>(
       '$basePath/discovery/candidates',
       data: {
-        if (cursor != null) 'after': cursor,
+        'after': ?cursor,
         if (filter != null && filter != 'All') 'filter': filter,
         'limit': limit,
       },

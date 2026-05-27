@@ -26,7 +26,7 @@ class _GedcomImportScreenState extends State<GedcomImportScreen> {
       backgroundColor: KinnectColors.background,
       appBar: AppBar(
         backgroundColor: KinnectColors.surface,
-        title: Text('Import GEDCOM', style: KinnectTextStyles.headlineSmall),
+        title: const Text('Import GEDCOM', style: KinnectTextStyles.headlineSmall),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: KinnectColors.textPrimary),
           onPressed: () => Navigator.pop(context),
@@ -60,7 +60,7 @@ class _GedcomImportScreenState extends State<GedcomImportScreen> {
         const Spacer(),
         Icon(PhosphorIcons.fileArrowUp(), size: 80, color: KinnectColors.primary),
         const SizedBox(height: 24),
-        Text('Upload GEDCOM File', style: KinnectTextStyles.headlineMedium),
+        const Text('Upload GEDCOM File', style: KinnectTextStyles.headlineMedium),
         const SizedBox(height: 12),
         Text(
           'Import your family tree from Ancestry, FamilySearch, or any GEDCOM-compatible platform.',
@@ -72,24 +72,24 @@ class _GedcomImportScreenState extends State<GedcomImportScreen> {
           icon: PhosphorIcons.treeStructure(),
           label: 'Upload .ged File',
           subtitle: 'From device storage',
-          onTap: () => _startImport(),
+          onTap: _startImport,
         ),
         const SizedBox(height: 12),
         _SourceButton(
           icon: PhosphorIcons.globe(),
           label: 'Connect FamilySearch',
           subtitle: 'OAuth import',
-          onTap: () => _startImport(),
+          onTap: _startImport,
         ),
         const SizedBox(height: 12),
         _SourceButton(
           icon: PhosphorIcons.dna(),
           label: 'Connect Ancestry',
           subtitle: 'OAuth import',
-          onTap: () => _startImport(),
+          onTap: _startImport,
         ),
         const Spacer(),
-        Text(
+        const Text(
           'Supported formats: GEDCOM 5.5, 5.5.1, 7.0',
           style: TextStyle(color: KinnectColors.textMuted, fontSize: 12),
         ),
@@ -113,9 +113,9 @@ class _GedcomImportScreenState extends State<GedcomImportScreen> {
             ),
           ),
           const SizedBox(height: 24),
-          Text('Uploading file...', style: KinnectTextStyles.headlineSmall),
+          const Text('Uploading file...', style: KinnectTextStyles.headlineSmall),
           const SizedBox(height: 8),
-          Text('${(_progress * 100).round()}%', style: TextStyle(color: KinnectColors.textSecondary)),
+          Text('${(_progress * 100).round()}%', style: const TextStyle(color: KinnectColors.textSecondary)),
         ],
       ),
     );
@@ -128,9 +128,9 @@ class _GedcomImportScreenState extends State<GedcomImportScreen> {
         children: [
           const CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(KinnectColors.accent)),
           const SizedBox(height: 24),
-          Text('Parsing tree data...', style: KinnectTextStyles.headlineSmall),
+          const Text('Parsing tree data...', style: KinnectTextStyles.headlineSmall),
           const SizedBox(height: 8),
-          Text('$_nodesFound nodes found so far', style: TextStyle(color: KinnectColors.textSecondary)),
+          Text('$_nodesFound nodes found so far', style: const TextStyle(color: KinnectColors.textSecondary)),
         ],
       ),
     );
@@ -180,7 +180,7 @@ class _GedcomImportScreenState extends State<GedcomImportScreen> {
         children: [
           Icon(PhosphorIcons.checkCircle(), size: 80, color: KinnectColors.success),
           const SizedBox(height: 24),
-          Text('Import Complete', style: KinnectTextStyles.headlineMedium),
+          const Text('Import Complete', style: KinnectTextStyles.headlineMedium),
           const SizedBox(height: 8),
           Text(
             '$_nodesFound nodes added to your Tree.',
@@ -256,7 +256,7 @@ class _SourceButton extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(label, style: KinnectTextStyles.bodyLarge.copyWith(fontWeight: FontWeight.w600)),
-                Text(subtitle, style: TextStyle(color: KinnectColors.textSecondary, fontSize: 13)),
+                Text(subtitle, style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 13)),
               ],
             ),
             const Spacer(),
@@ -292,7 +292,7 @@ class _ConflictTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(names[index], style: const TextStyle(color: KinnectColors.textPrimary, fontWeight: FontWeight.w600, fontSize: 14)),
-                Text('85% match with existing node', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
+                const Text('85% match with existing node', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
               ],
             ),
           ),

@@ -32,7 +32,7 @@ class _TimeLimitPickerState extends State<TimeLimitPicker> {
     return AlertDialog(
       backgroundColor: KinnectColors.surface,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      title: Text('Set Daily Limit', style: DesignTextStyles.headlineMedium),
+      title: const Text('Set Daily Limit', style: DesignTextStyles.headlineMedium),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -46,7 +46,7 @@ class _TimeLimitPickerState extends State<TimeLimitPicker> {
                 onChanged: (val) => setState(() => _hours = val),
               ),
               const SizedBox(width: 20),
-              Text(':', style: DesignTextStyles.headlineLarge),
+              const Text(':', style: DesignTextStyles.headlineLarge),
               const SizedBox(width: 20),
               _buildPicker(
                 value: _minutes,

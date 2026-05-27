@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
@@ -10,7 +10,6 @@ import '../screens/ancestral_marketplace_screen.dart';
 import '../screens/balance_screen.dart';
 import '../features/create/screens/photplay_studio_screen.dart';
 import '../screens/branch_detail_screen.dart';
-import '../screens/branch_discovery_screen.dart';
 import '../screens/branch_members_screen.dart';
 import '../screens/branch_subgraph_screen.dart';
 import '../screens/business_tools_screen.dart';
@@ -18,7 +17,6 @@ import '../screens/comment_thread_screen.dart';
 import '../screens/content_preferences_screen.dart';
 import '../screens/data_deletion_screen.dart';
 import '../screens/data_export_screen.dart';
-import '../screens/deep_link_handler_screen.dart';
 import '../screens/discovery_card_screen.dart';
 import '../screens/discovery_page_screen.dart';
 import '../screens/dm_thread_screen.dart';
@@ -72,15 +70,18 @@ import '../screens/steward_consent_screen_1.dart';
 import '../screens/strand_detail_screen.dart';
 import '../screens/strand_list_screen.dart';
 import '../screens/subscription_screen.dart';
-import '../screens/support_chat_screen.dart';
 import '../screens/time_wellbeing_screen.dart';
-import '../screens/tree_graph_screen.dart';
 import '../screens/tree_screen.dart';
 import '../screens/voiceprint_capture_screen.dart';
 import '../screens/welcome_screen.dart';
 import '../services/auth_service.dart';
 import '../theme/colors.dart';
 import '../widgets/create_bottom_sheet.dart';
+import '../widgets/comment_composer_sheet.dart';
+import '../widgets/kinship_badge_sheet.dart';
+import '../widgets/pulse_reaction_sheet.dart';
+import '../widgets/share_sheet.dart';
+import '../widgets/strand_manager_sheet.dart';
 
 final _rootKey = GlobalKey<NavigatorState>();
 final _shellKey = GlobalKey<NavigatorState>();
@@ -97,64 +98,64 @@ GoRouter buildAppRouter(AuthService authService) {
   return GoRouter(
     navigatorKey: _rootKey,
     initialLocation: '/splash',
-    redirect: (context, state) => AuthRouteGuard.redirect(context, state),
+    redirect: AuthRouteGuard.redirect,
     refreshListenable: authService,
     routes: [
       // â”€â”€ Splash â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
       GoRoute(
         path: '/splash',
-        builder: (_, __) => const SplashScreen(),
+        builder: (_, _) => const SplashScreen(),
       ),
 
       // â”€â”€ Bottom Navigation Shell (PRD Â§11.4) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
       ShellRoute(
         navigatorKey: _shellKey,
-        builder: (_, __, child) => _MainShell(child: child),
+        builder: (_, _, child) => _MainShell(child: child),
         routes: [
           GoRoute(
             path: '/line',
-            pageBuilder: (_, __) => const NoTransitionPage(child: LineScreen()),
+            pageBuilder: (_, _) => const NoTransitionPage(child: LineScreen()),
           ),
           GoRoute(
             path: '/discover',
-            pageBuilder: (_, __) =>
+            pageBuilder: (_, _) =>
                 const NoTransitionPage(child: DiscoveryPageScreen()),
           ),
           GoRoute(
             path: '/tree',
-            pageBuilder: (_, __) => const NoTransitionPage(child: TreeScreen()),
+            pageBuilder: (_, _) => const NoTransitionPage(child: TreeScreen()),
           ),
           GoRoute(
             path: '/root',
-            pageBuilder: (_, __) => const NoTransitionPage(child: RootScreen()),
+            pageBuilder: (_, _) => const NoTransitionPage(child: RootScreen()),
           ),
         ],
       ),
 
       // â”€â”€ Authentication â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-      GoRoute(path: '/welcome', builder: (_, __) => const WelcomeScreen()),
-      GoRoute(path: '/onboarding', builder: (_, __) => const WelcomeScreen()),
-      GoRoute(path: '/login', builder: (_, __) => const LoginScreen()),
-      GoRoute(path: '/register', builder: (_, __) => const RegisterScreen()),
+      GoRoute(path: '/welcome', builder: (_, _) => const WelcomeScreen()),
+      GoRoute(path: '/onboarding', builder: (_, _) => const WelcomeScreen()),
+      GoRoute(path: '/login', builder: (_, _) => const LoginScreen()),
+      GoRoute(path: '/register', builder: (_, _) => const RegisterScreen()),
       GoRoute(
         path: '/email-signup',
-        builder: (_, __) => const EmailSignUpScreen(),
+        builder: (_, _) => const EmailSignUpScreen(),
       ),
       GoRoute(
         path: '/phone-signup',
-        builder: (_, __) => const PhoneSignUpScreen(),
+        builder: (_, _) => const PhoneSignUpScreen(),
       ),
       GoRoute(
         path: '/otp-verification',
-        builder: (_, __) => const OTPVerificationScreen(),
+        builder: (_, _) => const OTPVerificationScreen(),
       ),
       GoRoute(
         path: '/voiceprint-capture',
-        builder: (_, __) => const VoiceprintCaptureScreen(),
+        builder: (_, _) => const VoiceprintCaptureScreen(),
       ),
       GoRoute(
         path: '/time-wellbeing',
-        builder: (_, __) => const TimeWellbeingScreen(),
+        builder: (_, _) => const TimeWellbeingScreen(),
       ),
       GoRoute(
         path: '/kin-score-required',
@@ -174,15 +175,14 @@ GoRouter buildAppRouter(AuthService authService) {
       ),
       GoRoute(
         path: '/vault/seal',
-        builder: (_, __) => const StepUpRouteGuard(
+        builder: (_, _) => const StepUpRouteGuard(
           reason: 'Sealing a Memory Box requires additional verification.',
           child: MemoryBoxScreen(),
         ),
       ),
       GoRoute(
         path: '/vault/:memoryId',
-        builder: (_, state) =>
-            MemoryBoxScreen(memoryId: state.pathParameters['memoryId']),
+        builder: (_, _) => const MemoryBoxScreen(),
       ),
       GoRoute(
         path: '/discovery/:candidateId',
@@ -196,14 +196,23 @@ GoRouter buildAppRouter(AuthService authService) {
             RoomsScreen(roomId: state.pathParameters['roomId']!),
       ),
       GoRoute(
+        path: '/root/:userId',
+        builder: (_, state) =>
+            RootProfileScreen(userId: state.pathParameters['userId']),
+      ),
+      GoRoute(
         path: '/rooms',
-        builder: (_, __) => const RoomListScreen(),
+        builder: (_, _) => const RoomListScreen(),
+      ),
+      GoRoute(
+        path: '/repost',
+        builder: (_, _) => const RepostStitchScreen(),
       ),
 
       // â”€â”€ Memory Box â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
       GoRoute(
         path: '/memory-box',
-        builder: (_, __) => const MemoryBoxScreen(),
+        builder: (_, _) => const MemoryBoxScreen(),
       ),
       GoRoute(
         path: '/memory/:memoryId/comments',
@@ -219,7 +228,7 @@ GoRouter buildAppRouter(AuthService authService) {
       ),
       GoRoute(
         path: '/settings/memory-box',
-        builder: (_, __) => const MemoryBoxSettingsScreen(),
+        builder: (_, _) => const MemoryBoxSettingsScreen(),
       ),
 
       // â”€â”€ Discovery & Community â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -248,13 +257,13 @@ GoRouter buildAppRouter(AuthService authService) {
       ),
       GoRoute(
         path: '/strands',
-        builder: (_, __) => const StrandListScreen(),
+        builder: (_, _) => const StrandListScreen(),
       ),
 
       // â”€â”€ Commerce (Marketplace & E-commerce) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
       GoRoute(
         path: '/marketplace',
-        builder: (_, __) => const AncestralMarketplaceScreen(),
+        builder: (_, _) => const AncestralMarketplaceScreen(),
       ),
       GoRoute(
         path: '/marketplace/product/:id',
@@ -264,39 +273,39 @@ GoRouter buildAppRouter(AuthService authService) {
       ),
       GoRoute(
         path: '/marketplace/cart',
-        builder: (_, __) => const MarketplaceCartScreen(),
+        builder: (_, _) => const MarketplaceCartScreen(),
       ),
       GoRoute(
         path: '/marketplace/orders',
-        builder: (_, __) => const MarketplaceOrdersScreen(),
+        builder: (_, _) => const MarketplaceOrdersScreen(),
       ),
       GoRoute(
         path: '/marketplace/wishlist',
-        builder: (_, __) => const MarketplaceWishlistScreen(),
+        builder: (_, _) => const MarketplaceWishlistScreen(),
       ),
       GoRoute(
         path: '/marketplace/seller',
-        builder: (_, __) => const MarketplaceSellerDashboardScreen(),
+        builder: (_, _) => const MarketplaceSellerDashboardScreen(),
       ),
       GoRoute(
         path: '/marketplace/create-listing',
-        builder: (_, __) => const MarketplaceCreateListingScreen(),
+        builder: (_, _) => const MarketplaceCreateListingScreen(),
       ),
       GoRoute(
         path: '/settings/balance',
-        builder: (_, __) => const BalanceScreen(),
+        builder: (_, _) => const BalanceScreen(),
       ),
       GoRoute(
         path: '/subscription',
-        builder: (_, __) => const SubscriptionScreen(),
+        builder: (_, _) => const SubscriptionScreen(),
       ),
       GoRoute(
         path: '/payment-history',
-        builder: (_, __) => const PaymentHistoryScreen(),
+        builder: (_, _) => const PaymentHistoryScreen(),
       ),
       GoRoute(
         path: '/photplay',
-        builder: (_, __) => const PhotplayStudioScreen(),
+        builder: (_, _) => const PhotplayStudioScreen(),
       ),
 
       // â”€â”€ Messaging & Rooms â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -315,88 +324,88 @@ GoRouter buildAppRouter(AuthService authService) {
       ),
       GoRoute(
         path: '/pulse-inbox',
-        builder: (_, __) => const PulseInboxScreen(),
+        builder: (_, _) => const PulseInboxScreen(),
       ),
 
       // â”€â”€ Settings & Account â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
       GoRoute(
         path: '/settings',
-        builder: (_, __) => const SettingsScreen(),
+        builder: (_, _) => const SettingsScreen(),
       ),
       GoRoute(
         path: '/settings/account',
-        builder: (_, __) => const AccountSettingsScreen(),
+        builder: (_, _) => const AccountSettingsScreen(),
       ),
       GoRoute(
         path: '/settings/privacy',
-        builder: (_, __) => const PrivacySettingsScreen(),
+        builder: (_, _) => const PrivacySettingsScreen(),
       ),
       GoRoute(
         path: '/settings/security',
-        builder: (_, __) => const SecuritySettingsScreen(),
+        builder: (_, _) => const SecuritySettingsScreen(),
       ),
       GoRoute(
         path: '/settings/notifications',
-        builder: (_, __) => const NotificationsSettingsScreen(),
+        builder: (_, _) => const NotificationsSettingsScreen(),
       ),
       GoRoute(
         path: '/settings/content-preferences',
-        builder: (_, __) => const ContentPreferencesScreen(),
+        builder: (_, _) => const ContentPreferencesScreen(),
       ),
       GoRoute(
         path: '/settings/business-tools',
-        builder: (_, __) => const BusinessToolsScreen(),
+        builder: (_, _) => const BusinessToolsScreen(),
       ),
       GoRoute(
         path: '/settings/personal-tools',
-        builder: (_, __) => const PersonalToolsScreen(),
+        builder: (_, _) => const PersonalToolsScreen(),
       ),
       GoRoute(
         path: '/settings/offline-videos',
-        builder: (_, __) => const OfflineVideosScreen(),
+        builder: (_, _) => const OfflineVideosScreen(),
       ),
       GoRoute(
         path: '/settings/night-mode',
-        builder: (_, __) => const NightModeScreen(),
+        builder: (_, _) => const NightModeScreen(),
       ),
       GoRoute(
         path: '/settings/activity-center',
-        builder: (_, __) => const ActivityCenterScreen(),
+        builder: (_, _) => const ActivityCenterScreen(),
       ),
       GoRoute(
         path: '/settings/family-pairing',
-        builder: (_, __) => const FamilyPairingScreen(),
+        builder: (_, _) => const FamilyPairingScreen(),
       ),
       GoRoute(
         path: '/settings/family-pairing/setup',
-        builder: (_, __) => const FamilyPairingSetupScreen(),
+        builder: (_, _) => const FamilyPairingSetupScreen(),
       ),
       GoRoute(
         path: '/settings/help-center',
-        builder: (_, __) => const HelpCenterScreen(),
+        builder: (_, _) => const HelpCenterScreen(),
       ),
       GoRoute(
         path: '/settings/guidelines',
-        builder: (_, __) => const GuidelinesScreen(),
+        builder: (_, _) => const GuidelinesScreen(),
       ),
       GoRoute(
         path: '/settings/data-export',
-        builder: (_, __) => const DataExportScreen(),
+        builder: (_, _) => const DataExportScreen(),
       ),
       GoRoute(
         path: '/settings/delete',
-        builder: (_, __) => const StepUpRouteGuard(
+        builder: (_, _) => const StepUpRouteGuard(
           reason: 'Account deletion requires additional verification.',
           child: DataDeletionScreen(),
         ),
       ),
       GoRoute(
         path: '/settings/delete-account',
-        builder: (_, __) => const DataDeletionScreen(),
+        builder: (_, _) => const DataDeletionScreen(),
       ),
       GoRoute(
         path: '/profile-edit',
-        builder: (_, __) => const ProfileEditScreen(),
+        builder: (_, _) => const ProfileEditScreen(),
       ),
 
       // â”€â”€ Metadata & Info â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -409,11 +418,11 @@ GoRouter buildAppRouter(AuthService authService) {
       ),
       GoRoute(
         path: '/steward-agreement',
-        builder: (_, __) => const StewardAgreementScreen(),
+        builder: (_, _) => const StewardAgreementScreen(),
       ),
       GoRoute(
         path: '/steward-consent-1',
-        builder: (_, __) => const StewardConsentScreen1(
+        builder: (_, _) => const StewardConsentScreen1(
           userId: 'current_user',
           ipAddress: '0.0.0.0',
           userAgent: 'mobile-app',
@@ -421,25 +430,23 @@ GoRouter buildAppRouter(AuthService authService) {
       ),
       GoRoute(
         path: '/kinnections',
-        builder: (_, __) => const KinnectionsFeedScreen(),
+        builder: (_, _) => const KinnectionsFeedScreen(),
       ),
 
       // â”€â”€ Genomics â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
       GoRoute(
         path: '/gedcom-import',
-        builder: (_, __) => const GedcomImportScreen(),
+        builder: (_, _) => const GedcomImportScreen(),
       ),
       GoRoute(
         path: '/dna-kit',
-        builder: (_, __) => const VoiceprintCaptureScreen(),
+        builder: (_, _) => const VoiceprintCaptureScreen(),
       ),
 
       // â”€â”€ Alert & Map â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
       GoRoute(
         path: '/alert/:alertId/map',
-        builder: (_, state) => KinshipAlertMapScreen(
-          alertId: state.pathParameters['alertId']!,
-        ),
+        builder: (_, _) => const KinshipAlertMapScreen(),
       ),
 
       // â”€â”€ Kin Score â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -459,7 +466,7 @@ GoRouter buildAppRouter(AuthService authService) {
       ),
       GoRoute(
         path: '/echoes',
-        builder: (_, __) => const EchoesFeedScreen(),
+        builder: (_, _) => const EchoesFeedScreen(),
       ),
 
       // â”€â”€ Catch-all 404 â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€

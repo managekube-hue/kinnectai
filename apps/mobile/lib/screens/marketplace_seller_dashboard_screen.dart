@@ -30,7 +30,7 @@ class _State extends State<MarketplaceSellerDashboardScreen> {
       backgroundColor: KinnectColors.background,
       appBar: AppBar(
         backgroundColor: KinnectColors.surface,
-        title: Text('Seller Dashboard', style: KinnectTextStyles.headlineSmall),
+        title: const Text('Seller Dashboard', style: KinnectTextStyles.headlineSmall),
         leading: IconButton(icon: const Icon(Icons.arrow_back, color: KinnectColors.textPrimary), onPressed: () => Navigator.pop(context)),
         actions: [
           IconButton(
@@ -112,7 +112,7 @@ class _DashboardBody extends StatelessWidget {
                           ),
                           const SizedBox(width: 6),
                           Text(dashboard.stripeOnboarded ? 'Stripe Connected' : 'Stripe Pending',
-                              style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
+                              style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
                         ],
                       ),
                     ],
@@ -123,7 +123,7 @@ class _DashboardBody extends StatelessWidget {
                     children: [
                       Icon(PhosphorIcons.star(PhosphorIconsStyle.fill), size: 16, color: KinnectColors.warning),
                       const SizedBox(width: 4),
-                      Text('${dashboard.ratingAvg.toStringAsFixed(1)}',
+                      Text(dashboard.ratingAvg.toStringAsFixed(1),
                           style: const TextStyle(color: KinnectColors.textPrimary, fontWeight: FontWeight.bold)),
                     ],
                   ),
@@ -171,7 +171,7 @@ class _DashboardBody extends StatelessWidget {
           const SizedBox(height: 24),
 
           // Actions
-          Text('Quick Actions', style: KinnectTextStyles.titleMedium),
+          const Text('Quick Actions', style: KinnectTextStyles.titleMedium),
           const SizedBox(height: 12),
           _ActionTile(icon: PhosphorIcons.package, label: 'My Listings', subtitle: '${dashboard.activeListings} active',
               onTap: () => AppNav.push(context, '/marketplace')),
@@ -210,9 +210,9 @@ class _StatCard extends StatelessWidget {
         children: [
           Icon(icon(), size: 20, color: color),
           const SizedBox(height: 12),
-          Text(value, style: TextStyle(color: KinnectColors.textPrimary, fontWeight: FontWeight.bold, fontSize: 20)),
+          Text(value, style: const TextStyle(color: KinnectColors.textPrimary, fontWeight: FontWeight.bold, fontSize: 20)),
           const SizedBox(height: 4),
-          Text(label, style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
+          Text(label, style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
         ],
       ),
     );
@@ -248,8 +248,8 @@ class _ActionTile extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(label, style: TextStyle(color: KinnectColors.textPrimary, fontWeight: FontWeight.w600, fontSize: 14)),
-                  Text(subtitle, style: TextStyle(color: KinnectColors.textMuted, fontSize: 12)),
+                  Text(label, style: const TextStyle(color: KinnectColors.textPrimary, fontWeight: FontWeight.w600, fontSize: 14)),
+                  Text(subtitle, style: const TextStyle(color: KinnectColors.textMuted, fontSize: 12)),
                 ],
               ),
             ),
@@ -274,16 +274,16 @@ class _SellerOnboarding extends StatelessWidget {
           const SizedBox(height: 40),
           Icon(PhosphorIcons.storefront(), size: 80, color: KinnectColors.accent),
           const SizedBox(height: 24),
-          Text('Start Selling', style: KinnectTextStyles.headlineMedium),
+          const Text('Start Selling', style: KinnectTextStyles.headlineMedium),
           const SizedBox(height: 8),
-          Text('Set up your store and start selling ancestral products to the Kinnect community.',
+          const Text('Set up your store and start selling ancestral products to the Kinnect community.',
               style: TextStyle(color: KinnectColors.textSecondary, fontSize: 14), textAlign: TextAlign.center),
           const SizedBox(height: 32),
           TextField(
             controller: nameCtrl,
             style: const TextStyle(color: KinnectColors.textPrimary),
             decoration: InputDecoration(
-              labelText: 'Store Name', labelStyle: TextStyle(color: KinnectColors.textMuted),
+              labelText: 'Store Name', labelStyle: const TextStyle(color: KinnectColors.textMuted),
               filled: true, fillColor: KinnectColors.surface,
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
             ),
@@ -293,7 +293,7 @@ class _SellerOnboarding extends StatelessWidget {
             controller: slugCtrl,
             style: const TextStyle(color: KinnectColors.textPrimary),
             decoration: InputDecoration(
-              labelText: 'Store URL slug (e.g. heritage-press)', labelStyle: TextStyle(color: KinnectColors.textMuted),
+              labelText: 'Store URL slug (e.g. heritage-press)', labelStyle: const TextStyle(color: KinnectColors.textMuted),
               filled: true, fillColor: KinnectColors.surface,
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
             ),
@@ -320,7 +320,7 @@ class _SellerOnboarding extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          Text('You\'ll be redirected to Stripe to verify your identity and set up payouts.',
+          const Text('You\'ll be redirected to Stripe to verify your identity and set up payouts.',
               style: TextStyle(color: KinnectColors.textMuted, fontSize: 12), textAlign: TextAlign.center),
         ],
       ),

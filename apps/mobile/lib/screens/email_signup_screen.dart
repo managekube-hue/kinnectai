@@ -77,12 +77,12 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: KinnectSpacing.xl),
-                Text(
+                const Text(
                   'Sign up with Email',
                   style: KinnectTextStyles.headline,
                 ),
                 const SizedBox(height: KinnectSpacing.sm),
-                Text(
+                const Text(
                   'We\'ll send you a verification code',
                   style: KinnectTextStyles.subtitle,
                 ),
@@ -121,7 +121,11 @@ class _EmailSignUpScreenState extends State<EmailSignUpScreen> {
                 AuthButton(
                   type: AuthButtonType.email,
                   text: _isLoading ? 'Sending...' : 'Continue',
-                  onPressed: _isLoading ? null : _handleContinue,
+                  onPressed: () {
+                    if (!_isLoading) {
+                      _handleContinue();
+                    }
+                  },
                   isPrimary: true,
                 ),
                 const SizedBox(height: KinnectSpacing.lg),

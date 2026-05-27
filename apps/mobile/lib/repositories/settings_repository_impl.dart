@@ -44,8 +44,8 @@ class SettingsRepositoryImpl implements SettingsRepository {
     final response = await _dio.put<Map<String, dynamic>>(
       '$basePath/user/preferences/privacy',
       data: {
-        if (privateAccount != null) 'private_account': privateAccount,
-        if (discoveryEnabled != null) 'discovery_enabled': discoveryEnabled,
+        'private_account': ?privateAccount,
+        'discovery_enabled': ?discoveryEnabled,
       },
     );
 

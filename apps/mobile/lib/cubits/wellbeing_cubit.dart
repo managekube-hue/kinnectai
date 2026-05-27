@@ -1,4 +1,4 @@
-﻿import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
@@ -57,7 +57,7 @@ class WellbeingCubit extends Cubit<WellbeingState> {
     final existing = prefs.getInt(key) ?? 0;
     await prefs.setInt(key, existing + sessionDuration.inMinutes);
     
-    final weeklyKey = 'weekly_usage';
+    const weeklyKey = 'weekly_usage';
     final weeklyData = prefs.getStringList(weeklyKey) ?? [];
     weeklyData.add(sessionDuration.inMinutes.toString());
     

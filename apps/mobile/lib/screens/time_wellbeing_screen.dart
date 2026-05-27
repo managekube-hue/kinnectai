@@ -30,10 +30,7 @@ class _TimeWellbeingContentState extends State<_TimeWellbeingContent> {
   bool _dailyLimitEnabled = false;
   Duration _dailyLimit = const Duration(hours: 2, minutes: 30);
   bool _breakRemindersEnabled = false;
-  Duration _breakInterval = const Duration(minutes: 20);
   bool _nightModeEnabled = false;
-  final TimeOfDay _nightModeStart = const TimeOfDay(hour: 22, minute: 0);
-  final TimeOfDay _nightModeEnd = const TimeOfDay(hour: 7, minute: 0);
 
   @override
   void initState() {
@@ -47,7 +44,6 @@ class _TimeWellbeingContentState extends State<_TimeWellbeingContent> {
       _dailyLimitEnabled = prefs.getBool('daily_limit_enabled') ?? false;
       _dailyLimit = Duration(minutes: prefs.getInt('daily_limit_minutes') ?? 150);
       _breakRemindersEnabled = prefs.getBool('break_reminders_enabled') ?? false;
-      _breakInterval = Duration(minutes: prefs.getInt('break_interval_minutes') ?? 20);
       _nightModeEnabled = prefs.getBool('night_mode_enabled') ?? false;
     });
   }
@@ -80,7 +76,7 @@ class _TimeWellbeingContentState extends State<_TimeWellbeingContent> {
       backgroundColor: KinnectColors.background,
       appBar: AppBar(
         backgroundColor: KinnectColors.surface,
-        title: Text('Time & Well-being', style: KinnectTextStyles.headlineSmall),
+        title: const Text('Time & Well-being', style: KinnectTextStyles.headlineSmall),
         centerTitle: true,
       ),
       body: BlocListener<WellbeingCubit, WellbeingState>(

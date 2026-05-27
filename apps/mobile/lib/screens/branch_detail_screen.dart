@@ -1,7 +1,6 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-import '../router/app_nav.dart';
 import '../theme/colors.dart';
 import '../theme/typography.dart';
 
@@ -87,7 +86,7 @@ class _BranchDetailScreenState extends State<BranchDetailScreen> with SingleTick
                                   const SizedBox(height: 4),
                                   Text(
                                     '$_memberCount members -- $_activeCount active in last 30 days',
-                                    style: TextStyle(color: KinnectColors.textSecondary, fontSize: 13),
+                                    style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 13),
                                   ),
                                 ],
                               ),
@@ -101,14 +100,14 @@ class _BranchDetailScreenState extends State<BranchDetailScreen> with SingleTick
                             const SizedBox(width: 4),
                             Text(
                               'Members in $_countryCount countries',
-                              style: TextStyle(color: KinnectColors.primary, fontSize: 13),
+                              style: const TextStyle(color: KinnectColors.primary, fontSize: 13),
                             ),
                             const SizedBox(width: 16),
                             Icon(PhosphorIcons.shield(), size: 14, color: KinnectColors.accent),
                             const SizedBox(width: 4),
                             Text(
                               'Steward: $_stewardName',
-                              style: TextStyle(color: KinnectColors.textSecondary, fontSize: 13),
+                              style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 13),
                             ),
                           ],
                         ),
@@ -185,7 +184,7 @@ class _MemoriesTab extends StatelessWidget {
                   children: [
                     Text('Memory from Kin ${i + 1}', style: const TextStyle(color: KinnectColors.textPrimary, fontWeight: FontWeight.w600, fontSize: 14)),
                     const SizedBox(height: 4),
-                    Text('Shared 3 days ago', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
+                    const Text('Shared 3 days ago', style: TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
                   ],
                 ),
               ),
@@ -209,9 +208,9 @@ class _MapTab extends StatelessWidget {
         children: [
           Icon(PhosphorIcons.mapPin(), size: 64, color: KinnectColors.primary),
           const SizedBox(height: 16),
-          Text('Branch Map', style: KinnectTextStyles.headlineSmall),
+          const Text('Branch Map', style: KinnectTextStyles.headlineSmall),
           const SizedBox(height: 8),
-          Text(
+          const Text(
             'Members pinned by location, colour-coded by haplogroup.',
             textAlign: TextAlign.center,
             style: TextStyle(color: KinnectColors.textSecondary, fontSize: 13),
@@ -240,9 +239,9 @@ class _MergeTab extends StatelessWidget {
           children: [
             Icon(PhosphorIcons.gitMerge(), size: 64, color: KinnectColors.accent),
             const SizedBox(height: 16),
-            Text('Pending Merges', style: KinnectTextStyles.headlineSmall),
+            const Text('Pending Merges', style: KinnectTextStyles.headlineSmall),
             const SizedBox(height: 8),
-            Text(
+            const Text(
               'No pending Branch Merge requests.\nTwo biologically related Branches can be unified here.',
               textAlign: TextAlign.center,
               style: TextStyle(color: KinnectColors.textSecondary, fontSize: 13),
@@ -306,11 +305,11 @@ class _MarkerTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(title, style: const TextStyle(color: KinnectColors.textPrimary, fontWeight: FontWeight.w600, fontSize: 14)),
-                Text(subtitle, style: TextStyle(color: KinnectColors.textSecondary, fontSize: 13)),
+                Text(subtitle, style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 13)),
               ],
             ),
           ),
-          Text(date, style: TextStyle(color: KinnectColors.textMuted, fontSize: 12)),
+          Text(date, style: const TextStyle(color: KinnectColors.textMuted, fontSize: 12)),
         ],
       ),
     );
@@ -329,9 +328,9 @@ class _GatheringsTab extends StatelessWidget {
         children: [
           Icon(PhosphorIcons.videoCamera(), size: 64, color: KinnectColors.primary),
           const SizedBox(height: 16),
-          Text('Gatherings', style: KinnectTextStyles.headlineSmall),
+          const Text('Gatherings', style: KinnectTextStyles.headlineSmall),
           const SizedBox(height: 8),
-          Text(
+          const Text(
             'No upcoming Gatherings for this Branch.',
             style: TextStyle(color: KinnectColors.textSecondary, fontSize: 13),
           ),

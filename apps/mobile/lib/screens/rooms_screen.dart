@@ -43,7 +43,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
           appBar: AppBar(
             backgroundColor: Colors.black,
             foregroundColor: KinnectColors.textPrimary,
-            title: Text('Room', style: KinnectTextStyles.headlineSmall),
+            title: const Text('Room', style: KinnectTextStyles.headlineSmall),
             actions: [
               if (state is RoomJoined)
                 IconButton(

@@ -66,8 +66,8 @@ class SubscriptionCubit extends Cubit<SubscriptionState> {
   Future<void> subscribe(Package package) async {
     emit(SubscriptionLoading());
     try {
-      final info = await Purchases.purchasePackage(package);
-      _emitFromCustomerInfo(info);
+      final result = await Purchases.purchasePackage(package);
+      _emitFromCustomerInfo(result.customerInfo);
     } catch (e) {
       emit(SubscriptionError('Subscribe failed: $e'));
     }

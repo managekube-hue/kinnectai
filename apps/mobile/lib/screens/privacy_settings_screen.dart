@@ -83,7 +83,7 @@ class PrivacySettingsScreen extends StatelessWidget {
       title: Text(title, style: const TextStyle(color: KinnectColors.textPrimary)),
       subtitle: Text(subtitle, style: const TextStyle(color: KinnectColors.textSecondary, fontSize: 12)),
       value: value,
-      activeColor: KinnectColors.accent,
+      activeThumbColor: KinnectColors.accent,
       onChanged: onChanged,
     );
   }
@@ -106,9 +106,9 @@ class PrivacySettingsScreen extends StatelessWidget {
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           const Text('Interaction Permissions', style: TextStyle(color: KinnectColors.textPrimary, fontSize: 20, fontWeight: FontWeight.bold)),
           const SizedBox(height: 24),
-          SwitchListTile(title: const Text('Allow Pulses', style: TextStyle(color: KinnectColors.textPrimary)), value: s.allowPulses, activeColor: KinnectColors.accent, onChanged: (v) => cubit.updatePrivacy(allowPulses: v)),
-          SwitchListTile(title: const Text('Allow DMs', style: TextStyle(color: KinnectColors.textPrimary)), value: s.allowDMs, activeColor: KinnectColors.accent, onChanged: (v) => cubit.updatePrivacy(allowDMs: v)),
-          SwitchListTile(title: const Text('Allow Stitch/Rewind', style: TextStyle(color: KinnectColors.textPrimary)), value: s.allowStitch, activeColor: KinnectColors.accent, onChanged: (v) => cubit.updatePrivacy(allowStitch: v)),
+          SwitchListTile(title: const Text('Allow Pulses', style: TextStyle(color: KinnectColors.textPrimary)), value: s.allowPulses, activeThumbColor: KinnectColors.accent, onChanged: (v) => cubit.updatePrivacy(allowPulses: v)),
+          SwitchListTile(title: const Text('Allow DMs', style: TextStyle(color: KinnectColors.textPrimary)), value: s.allowDMs, activeThumbColor: KinnectColors.accent, onChanged: (v) => cubit.updatePrivacy(allowDMs: v)),
+          SwitchListTile(title: const Text('Allow Stitch/Rewind', style: TextStyle(color: KinnectColors.textPrimary)), value: s.allowStitch, activeThumbColor: KinnectColors.accent, onChanged: (v) => cubit.updatePrivacy(allowStitch: v)),
         ]),
       ),
     );

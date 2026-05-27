@@ -1,13 +1,18 @@
 import 'package:dio/dio.dart';
 import 'package:kinnectai_app/models/kc_explain_response.dart';
-import 'package:retrofit/retrofit.dart';
 
-part 'kernel_service_api.g.dart';
+class KernelServiceApi {
+  KernelServiceApi(this._dio, {String? baseUrl})
+      : _baseUrl = baseUrl ?? 'https://api.kinnectai.app/v1';
 
-@RestApi(baseUrl: 'https://api.kinnectai.app/v1')
-abstract class KernelServiceApi {
-  factory KernelServiceApi(Dio dio, {String baseUrl}) = _KernelServiceApi;
+  final Dio _dio;
+  final String _baseUrl;
 
-  @GET('/kc/explain/{pairId}')
-  Future<KCExplainResponse> explainKC(@Path('pairId') String pairId);
+  Future<KCExplainResponse> explainKC(String pairId) async {
+    final response = await _dio.get<Map<String, dynamic>>(
+      '$_baseUrl/kc/explain/$pairId',
+    );
+    final data = response.data ?? <String, dynamic>{};
+    return KCExplainResponse.fromJson(data);
+  }
 }

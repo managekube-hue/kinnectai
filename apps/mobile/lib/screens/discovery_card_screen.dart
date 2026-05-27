@@ -35,7 +35,7 @@ class DiscoveryCardScreen extends StatelessWidget {
           backgroundColor: KinnectColors.background,
           appBar: AppBar(
             backgroundColor: KinnectColors.surface,
-            title: Text('Kin Discovery', style: KinnectTextStyles.headlineSmall),
+            title: const Text('Kin Discovery', style: KinnectTextStyles.headlineSmall),
             leading: const BackButton(color: KinnectColors.textPrimary),
           ),
           body: switch (state) {
