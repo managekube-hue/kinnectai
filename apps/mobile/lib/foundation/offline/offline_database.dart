@@ -234,4 +234,6 @@ class OfflineDatabase extends _$OfflineDatabase {
       return NativeDatabase.createInBackground(file);
     });
   }
+
+  static QueryExecutor openConnection() => _openConnection();
 }

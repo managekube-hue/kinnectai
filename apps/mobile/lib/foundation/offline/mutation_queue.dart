@@ -2,8 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+
+import '../../services/network/dio_client.dart';
 
 /// Type-aware mutation queue with per-item retry and dead-letter box
 /// (PRD §11.4 — Offline-First, Addendum 2.0 §S5).
@@ -29,16 +32,10 @@ abstract class MutationQueue {
   // ── Public API ──────────────────────────────────────────────────────────
 
   /// Enqueue a mutation. Immediately tries to flush if online.
-  static Future<void> enqueue(
-    String type,
-    Map<String, dynamic> payload,
-  ) async {
+  static Future<void> enqueue(String type, Map<String, dynamic> payload) async {
     final box = Hive.box<String>(_queueBox);
     final id = '${DateTime.now().microsecondsSinceEpoch}';
-    await box.put(
-      id,
-      jsonEncode({'id': id, 'type': type, 'payload': payload}),
-    );
+    await box.put(id, jsonEncode({'id': id, 'type': type, 'payload': payload}));
     debugPrint('[MutationQueue] enqueued $type ($id)');
     await flush();
   }
@@ -84,14 +81,18 @@ abstract class MutationQueue {
         debugPrint('[MutationQueue] dispatched ${item['type']} ($id)');
       } catch (e) {
         if (attempts + 1 >= _maxAttempts) {
-          debugPrint('[MutationQueue] DLQ ${item['type']} ($id) after $attempts attempts: $e');
+          debugPrint(
+            '[MutationQueue] DLQ ${item['type']} ($id) after $attempts attempts: $e',
+          );
           await dlq.put(key, raw);
           await box.delete(key);
           _attempts.remove(id);
         } else {
           _attempts[id] = attempts + 1;
           final backoffMs = 100 * (1 << attempts); // 100 ms, 200 ms, 400 ms
-          debugPrint('[MutationQueue] retry ${attempts + 1}/$_maxAttempts for ${item['type']} in ${backoffMs}ms');
+          debugPrint(
+            '[MutationQueue] retry ${attempts + 1}/$_maxAttempts for ${item['type']} in ${backoffMs}ms',
+          );
           await Future<void>.delayed(Duration(milliseconds: backoffMs));
         }
       }
@@ -103,16 +104,37 @@ abstract class MutationQueue {
   /// Override this via [MutationQueue.setDispatcher] to wire up actual repos
   /// without creating a circular dependency on the DI container.
   static Future<void> Function(String type, Map<String, dynamic> payload)
-      _dispatcher = _defaultDispatcher;
+  _dispatcher = _defaultDispatcher;
 
   static Future<void> _defaultDispatcher(
     String type,
     Map<String, dynamic> payload,
   ) async {
-    throw UnimplementedError(
-      'MutationQueue dispatcher not configured. '
-      'Call MutationQueue.setDispatcher() during app bootstrap.',
+    final endpoint = payload['endpoint']?.toString();
+    if (endpoint == null || endpoint.isEmpty) {
+      throw ArgumentError(
+        'MutationQueue dispatcher not configured and payload.endpoint is missing for "$type".',
+      );
+    }
+
+    final method = (payload['method']?.toString() ?? 'POST').toUpperCase();
+    final data = payload['body'];
+    final queryParameters = _toStringDynamicMap(payload['query']);
+    final headers = _toStringDynamicMap(payload['headers']);
+
+    final response = await DioClient.instance().request<dynamic>(
+      endpoint,
+      data: data,
+      queryParameters: queryParameters,
+      options: Options(method: method, headers: headers),
     );
+
+    final statusCode = response.statusCode ?? 0;
+    if (statusCode < 200 || statusCode >= 300) {
+      throw StateError(
+        'MutationQueue dispatch failed: $method $endpoint returned $statusCode for "$type".',
+      );
+    }
   }
 
   /// Register the application-level dispatch function.
@@ -132,11 +154,14 @@ abstract class MutationQueue {
     _dispatcher = fn;
   }
 
-  static Future<void> _dispatch(
-    String type,
-    Map<String, dynamic> payload,
-  ) =>
+  static Future<void> _dispatch(String type, Map<String, dynamic> payload) =>
       _dispatcher(type, payload);
+
+  static Map<String, dynamic>? _toStringDynamicMap(Object? value) {
+    if (value == null) return null;
+    if (value is! Map) return null;
+    return value.map((key, mapValue) => MapEntry(key.toString(), mapValue));
+  }
 
   // ── Box initialisation (call from AppBootstrap) ──────────────────────
 
