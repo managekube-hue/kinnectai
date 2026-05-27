@@ -5,15 +5,16 @@ import (
 	"database/sql"
 	"fmt"
 	"strings"
+	"time"
 
-	"github.com/redis/go-redis/v9"
-	"go.opentelemetry.io/trace"
+	redisv9 "github.com/redis/go-redis/v9"
+	"go.opentelemetry.io/otel/trace"
 
 	"github.com/managekube-hue/kinnectai/services/go/identity-service/internal/config"
 	"github.com/managekube-hue/kinnectai/services/go/identity-service/internal/infrastructure/kafka"
 	"github.com/managekube-hue/kinnectai/services/go/identity-service/internal/infrastructure/postgres"
 	"github.com/managekube-hue/kinnectai/services/go/identity-service/internal/infrastructure/redis"
-	"github.com/managekube-hue/kinnectai/pkg/telemetry"
+	"github.com/managekube-hue/kinnectai/services/go/identity-service/pkg"
 )
 
 // Infrastructure holds all infrastructure dependencies
@@ -22,12 +23,12 @@ type Infrastructure struct {
 	UserRepo  *postgres.Repository
 	Cache     *redis.Cache
 	Producer  *kafka.Producer
-	Logger    telemetry.Logger
+	Logger    pkg.Logger
 	Tracer    trace.Tracer
 }
 
 // New initializes infrastructure
-func New(ctx context.Context, cfg *config.Config, logger telemetry.Logger, tracer trace.Tracer, meter any) (*Infrastructure, error) {
+func New(ctx context.Context, cfg *config.Config, logger pkg.Logger, tracer trace.Tracer, meter any) (*Infrastructure, error) {
 	// Connect to PostgreSQL
 	db, err := sql.Open("postgres", cfg.DatabaseURL)
 	if err != nil {
@@ -42,17 +43,21 @@ func New(ctx context.Context, cfg *config.Config, logger telemetry.Logger, trace
 	userRepo := postgres.New(db)
 
 	// Connect to Redis
-	redisOpts, err := redis.ParseURL(cfg.RedisURL)
+	redisOpts, err := redisv9.ParseURL(cfg.RedisURL)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse redis url: %w", err)
 	}
 
-	redisClient := redis.NewClient(redisOpts)
+	redisClient := redisv9.NewClient(redisOpts)
 	if err := redisClient.Ping(ctx).Err(); err != nil {
 		return nil, fmt.Errorf("failed to ping redis: %w", err)
 	}
 
-	cache := redis.New(redisClient, 0) // TODO: make TTL configurable
+	cacheTTL := cfg.TokenExpiry
+	if cacheTTL <= 0 {
+		cacheTTL = 15 * time.Minute
+	}
+	cache := redis.New(redisClient, cacheTTL)
 
 	// Initialize Kafka producer
 	brokers := strings.Split(cfg.KafkaBrokers, ",")

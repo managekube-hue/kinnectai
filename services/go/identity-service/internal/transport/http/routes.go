@@ -3,15 +3,15 @@ package http
 import (
 	"github.com/gin-gonic/gin"
 	"go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin"
-	"go.opentelemetry.io/trace"
+	"go.opentelemetry.io/otel/trace"
 
 	"github.com/managekube-hue/kinnectai/services/go/identity-service/internal/infrastructure"
 	"github.com/managekube-hue/kinnectai/services/go/identity-service/internal/transport/http/handlers"
-	"github.com/managekube-hue/kinnectai/pkg/telemetry"
+	"github.com/managekube-hue/kinnectai/services/go/identity-service/pkg"
 )
 
 // NewRouter creates HTTP router with all routes
-func NewRouter(infra *infrastructure.Infrastructure, logger telemetry.Logger, tracer trace.Tracer) *gin.Engine {
+func NewRouter(infra *infrastructure.Infrastructure, logger pkg.Logger, tracer trace.Tracer) *gin.Engine {
 	router := gin.New()
 
 	// Add OpenTelemetry middleware

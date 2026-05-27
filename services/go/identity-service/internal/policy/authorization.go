@@ -3,7 +3,8 @@ package policy
 import (
 	"context"
 	"fmt"
-	"identityservice/internal/domain/user"
+
+	"github.com/managekube-hue/kinnectai/services/go/identity-service/internal/domain/user"
 )
 
 // AuthorizationEngine enforces access control policies.

@@ -3,18 +3,32 @@ package telemetry
 import (
 	"context"
 	"log"
+	"os"
+	"sync"
+	"sync/atomic"
 
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/metric"
 	"go.opentelemetry.io/otel/trace"
 )
 
+var (
+	metricCounter = struct {
+		sync.RWMutex
+		values map[string]float64
+	}{values: make(map[string]float64)}
+
+	requestTotal     atomic.Int64
+	errorTotal       atomic.Int64
+	serviceHealthMap = struct {
+		sync.RWMutex
+		values map[string]ServiceHealthStatus
+	}{values: make(map[string]ServiceHealthStatus)}
+)
+
 // InitializeOTel initializes OpenTelemetry components for the gateway
 func InitializeOTel() (trace.Tracer, metric.Meter, *log.Logger) {
-	// TODO: Initialize actual OpenTelemetry exporter
-	// For now, return no-op implementations
-
-	logger := log.New(nil, "", 0)
+	logger := log.New(os.Stdout, "[telemetry] ", log.LstdFlags)
 
 	// Get global tracer and meter
 	tracer := otel.Tracer("gateway")
@@ -30,13 +44,9 @@ func StartSpan(ctx context.Context, tracer trace.Tracer, spanName string) (conte
 
 // RecordMetric records a metric value
 func RecordMetric(meter metric.Meter, name string, value float64) {
-	// TODO: Implement metric recording
-	// Metrics should include:
-	// - Request count per endpoint
-	// - Request latency (histogram)
-	// - Error count per service
-	// - Cache hit/miss ratio
-	// - Queue depth
+	metricCounter.Lock()
+	metricCounter.values[name] += value
+	metricCounter.Unlock()
 }
 
 // RequestMetrics tracks per-request metrics
@@ -53,10 +63,16 @@ type RequestMetrics struct {
 
 // RecordRequest logs a request with metrics
 func RecordRequest(meter metric.Meter, metrics RequestMetrics) {
-	// TODO: Record to metrics backend
-	// - Increment request_total{service, endpoint, method, status}
-	// - Record request_duration_ms{service, endpoint, method}
-	// - Increment errors{service, status_code}
+	requestTotal.Add(1)
+	if metrics.StatusCode >= 400 {
+		errorTotal.Add(1)
+	}
+
+	metricCounter.Lock()
+	metricCounter.values["request.duration.ms.sum"] += float64(metrics.DurationMs)
+	metricCounter.values["request.duration.ms.count"] += 1
+	metricCounter.values["request."+metrics.Service+"."+metrics.Method] += 1
+	metricCounter.Unlock()
 }
 
 // ServiceHealthStatus tracks service health
@@ -70,8 +86,17 @@ type ServiceHealthStatus struct {
 
 // RecordServiceHealth records service health metrics
 func RecordServiceHealth(meter metric.Meter, status ServiceHealthStatus) {
-	// TODO: Record service health
-	// - service_healthy{service} = 1/0
-	// - service_error_rate{service}
-	// - service_p99_latency_ms{service}
+	serviceHealthMap.Lock()
+	serviceHealthMap.values[status.Service] = status
+	serviceHealthMap.Unlock()
+
+	metricCounter.Lock()
+	if status.Healthy {
+		metricCounter.values["service."+status.Service+".healthy"] = 1
+	} else {
+		metricCounter.values["service."+status.Service+".healthy"] = 0
+	}
+	metricCounter.values["service."+status.Service+".error_rate"] = status.ErrorRate
+	metricCounter.values["service."+status.Service+".p99_latency"] = status.P99Latency
+	metricCounter.Unlock()
 }

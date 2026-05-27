@@ -3,6 +3,8 @@ package feed
 import (
 	"context"
 	"errors"
+	"sort"
+	"strings"
 	"time"
 )
 
@@ -106,7 +108,19 @@ func (f *Feed) RemoveItem(contentID string) {
 
 // Rerank reorders feed items by score (highest first)
 func (f *Feed) Rerank() {
-	// TODO: Implement sorting by score with rank recalculation
+	sort.SliceStable(f.Items, func(i, j int) bool {
+		if f.Items[i].Score == f.Items[j].Score {
+			if f.Items[i].RankedAt.Equal(f.Items[j].RankedAt) {
+				return f.Items[i].ContentID < f.Items[j].ContentID
+			}
+			return f.Items[i].RankedAt.After(f.Items[j].RankedAt)
+		}
+		return f.Items[i].Score > f.Items[j].Score
+	})
+
+	for i := range f.Items {
+		f.Items[i].Rank = i + 1
+	}
 	f.UpdatedAt = time.Now()
 	f.Version++
 }
@@ -122,7 +136,31 @@ func (f *Feed) Truncate(limit int) {
 
 // ApplyPolicy applies content policies (consent, moderation, lineage)
 func (f *Feed) ApplyPolicy(ctx context.Context, policy Policy) error {
-	// TODO: Filter items based on policy constraints
+	if policy == nil || len(f.Items) == 0 {
+		return nil
+	}
+
+	contentIDs := make([]string, 0, len(f.Items))
+	itemByContentID := make(map[string]FeedItem, len(f.Items))
+	for _, item := range f.Items {
+		contentIDs = append(contentIDs, item.ContentID)
+		itemByContentID[item.ContentID] = item
+	}
+
+	allowedIDs, err := policy.Filter(ctx, contentIDs, f.UserID)
+	if err != nil {
+		return err
+	}
+
+	filtered := make([]FeedItem, 0, len(allowedIDs))
+	for _, contentID := range allowedIDs {
+		if item, ok := itemByContentID[contentID]; ok {
+			filtered = append(filtered, item)
+		}
+	}
+
+	f.Items = filtered
+	f.Rerank()
 	return nil
 }
 
@@ -152,6 +190,7 @@ type Policy interface {
 
 // Helper functions
 func generateFeedID(userID string) string {
-	// TODO: Implement deterministic ID generation
-	return "feed_" + userID + "_" + time.Now().Format("20060102150405")
+	normalized := strings.TrimSpace(strings.ToLower(userID))
+	normalized = strings.ReplaceAll(normalized, " ", "_")
+	return "feed_" + normalized
 }

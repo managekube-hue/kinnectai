@@ -2,8 +2,9 @@ package v1
 
 import (
 	"encoding/json"
-	"identityservice/internal/domain/user"
 	"net/http"
+
+	"github.com/managekube-hue/kinnectai/services/go/identity-service/internal/domain/user"
 )
 
 // RegisterRequest represents a user registration request.

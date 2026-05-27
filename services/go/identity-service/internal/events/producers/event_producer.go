@@ -4,9 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"identityservice/internal/domain/user"
 	"log"
 
+	"github.com/managekube-hue/kinnectai/services/go/identity-service/internal/domain/user"
 	"github.com/segmentio/kafka-go"
 )
 

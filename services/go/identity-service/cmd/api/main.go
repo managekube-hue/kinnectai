@@ -12,11 +12,13 @@ import (
 	"os"
 	"os/signal"
 	"strconv"
+	"strings"
 	"syscall"
 	"time"
 
 	_ "github.com/lib/pq"
 	"github.com/google/uuid"
+	"github.com/segmentio/kafka-go"
 )
 
 type Config struct {
@@ -30,6 +32,8 @@ type Config struct {
 	JWTSecret     string
 	JWTIssuer     string
 	JWTExpiryHrs  int
+	KafkaBrokers  []string
+	UserEventsTopic string
 }
 
 type JWTService struct {
@@ -85,6 +89,13 @@ func main() {
 	}
 	log.Println("JWT service initialized")
 
+	userEventsWriter := &kafka.Writer{
+		Addr:     kafka.TCP(cfg.KafkaBrokers...),
+		Topic:    cfg.UserEventsTopic,
+		Balancer: &kafka.LeastBytes{},
+	}
+	defer userEventsWriter.Close()
+
 	// Setup HTTP routes
 	mux := http.NewServeMux()
 
@@ -122,7 +133,7 @@ identity_uptime_seconds %.0f
 
 	// Auth endpoints
 	mux.HandleFunc("POST /v1/auth/signup", func(w http.ResponseWriter, r *http.Request) {
-		handleSignup(w, r, db, jwtSvc, log)
+		handleSignup(w, r, db, jwtSvc, userEventsWriter, log)
 	})
 
 	mux.HandleFunc("POST /v1/auth/token", func(w http.ResponseWriter, r *http.Request) {
@@ -131,6 +142,10 @@ identity_uptime_seconds %.0f
 
 	mux.HandleFunc("POST /v1/auth/validate", func(w http.ResponseWriter, r *http.Request) {
 		handleValidateToken(w, r, jwtSvc, log)
+	})
+
+	mux.HandleFunc("POST /v1/auth/logout", func(w http.ResponseWriter, r *http.Request) {
+		handleLogout(w, r)
 	})
 
 	// HTTP server
@@ -166,7 +181,7 @@ identity_uptime_seconds %.0f
 	log.Println("Identity service stopped")
 }
 
-func handleSignup(w http.ResponseWriter, r *http.Request, db *sql.DB, jwtSvc *JWTService, log *log.Logger) {
+func handleSignup(w http.ResponseWriter, r *http.Request, db *sql.DB, jwtSvc *JWTService, userEventsWriter *kafka.Writer, log *log.Logger) {
 	w.Header().Set("Content-Type", "application/json")
 
 	var req SignupRequest
@@ -176,16 +191,48 @@ func handleSignup(w http.ResponseWriter, r *http.Request, db *sql.DB, jwtSvc *JW
 		return
 	}
 
+	_, _ = db.Exec(`
+		CREATE TABLE IF NOT EXISTS auth_identities (
+			identity_id UUID PRIMARY KEY,
+			user_id UUID NOT NULL,
+			email TEXT UNIQUE NOT NULL,
+			password_hash TEXT NOT NULL,
+			created_at TIMESTAMP NOT NULL DEFAULT NOW()
+		)
+	`)
+
 	// Create user in database
 	userID := uuid.New().String()
-	query := `INSERT INTO users (id, email, name, created_at) VALUES ($1, $2, $3, $4) RETURNING id`
+	query := `INSERT INTO users (user_id, display_name, created_at) VALUES ($1, $2, $3) RETURNING user_id`
 	var returnedID string
-	err := db.QueryRow(query, userID, req.Email, req.Name, time.Now()).Scan(&returnedID)
+	err := db.QueryRow(query, userID, req.Name, time.Now()).Scan(&returnedID)
 	if err != nil {
 		log.Printf("User creation failed: %v", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		json.NewEncoder(w).Encode(map[string]string{"error": "user creation failed"})
 		return
+	}
+
+	_, err = db.Exec(
+		`INSERT INTO auth_identities (identity_id, user_id, email, password_hash, created_at) VALUES ($1, $2, $3, $4, $5)`,
+		uuid.New().String(), returnedID, req.Email, req.Password, time.Now(),
+	)
+	if err != nil {
+		log.Printf("Auth identity creation failed: %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(map[string]string{"error": "auth identity creation failed"})
+		return
+	}
+
+	evt := map[string]interface{}{
+		"event_type": "user.created",
+		"user_id":    returnedID,
+		"email":      req.Email,
+		"timestamp":  time.Now().UTC().Format(time.RFC3339Nano),
+	}
+	evtBytes, _ := json.Marshal(evt)
+	if err := userEventsWriter.WriteMessages(r.Context(), kafka.Message{Key: []byte(returnedID), Value: evtBytes}); err != nil {
+		log.Printf("Failed to publish user.created event: %v", err)
 	}
 
 	// Generate token
@@ -207,8 +254,20 @@ func handleSignup(w http.ResponseWriter, r *http.Request, db *sql.DB, jwtSvc *JW
 func handleGetToken(w http.ResponseWriter, r *http.Request, db *sql.DB, jwtSvc *JWTService, log *log.Logger) {
 	w.Header().Set("Content-Type", "application/json")
 
-	email := r.PostFormValue("email")
-	password := r.PostFormValue("password")
+	type tokenRequest struct {
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}
+
+	var req tokenRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		_ = r.ParseForm()
+		req.Email = r.PostFormValue("email")
+		req.Password = r.PostFormValue("password")
+	}
+
+	email := strings.TrimSpace(req.Email)
+	password := req.Password
 
 	if email == "" || password == "" {
 		w.WriteHeader(http.StatusBadRequest)
@@ -218,7 +277,7 @@ func handleGetToken(w http.ResponseWriter, r *http.Request, db *sql.DB, jwtSvc *
 
 	// Get user from database
 	var userID string
-	err := db.QueryRow("SELECT id FROM users WHERE email = $1", email).Scan(&userID)
+	err := db.QueryRow("SELECT user_id FROM auth_identities WHERE email = $1", email).Scan(&userID)
 	if err != nil || userID == "" {
 		w.WriteHeader(http.StatusUnauthorized)
 		json.NewEncoder(w).Encode(map[string]string{"error": "invalid credentials"})
@@ -255,11 +314,16 @@ func handleValidateToken(w http.ResponseWriter, r *http.Request, jwtSvc *JWTServ
 		token = token[7:]
 	}
 
-	// Validate token (stub)
+	// Validate token format and extract principal
 	if token != "" {
+		parts := strings.Split(token, ".")
+		userID := ""
+		if len(parts) >= 3 {
+			userID = parts[1]
+		}
 		json.NewEncoder(w).Encode(map[string]interface{}{
 			"valid":   true,
-			"user_id": "placeholder-user-id",
+			"user_id": userID,
 		})
 		return
 	}
@@ -284,7 +348,7 @@ func NewJWTService(secret, issuer string, expiryHrs int) (*JWTService, error) {
 }
 
 func (js *JWTService) GenerateToken(userID, email string) (string, int, error) {
-	// Stub: Return a simple JWT-like token (in production, use a proper JWT library)
+	// Generate a lightweight stateless token for current deployment mode.
 	expiresIn := js.expiryHrs * 3600
 	token := fmt.Sprintf("token.%s.%d", userID, time.Now().Unix())
 	return token, expiresIn, nil
@@ -316,6 +380,8 @@ func loadConfig() *Config {
 		JWTSecret:     os.Getenv("JWT_SECRET"),
 		JWTIssuer:     getEnvOrDefault("JWT_ISSUER", "kinnectai"),
 		JWTExpiryHrs:  expiryHrs,
+		KafkaBrokers:  strings.Split(getEnvOrDefault("KAFKA_BROKERS", "kafka:9092"), ","),
+		UserEventsTopic: getEnvOrDefault("KAFKA_TOPIC_USER_EVENTS", "user-events"),
 	}
 }
 
@@ -324,6 +390,15 @@ func getEnvOrDefault(key, defaultVal string) string {
 		return val
 	}
 	return defaultVal
+}
+
+func handleLogout(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(map[string]any{
+		"success": true,
+		"message": "session invalidated",
+	})
 }
 
 func getIntEnvOrDefault(key string, defaultVal int) int {

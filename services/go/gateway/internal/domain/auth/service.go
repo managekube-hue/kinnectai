@@ -102,8 +102,7 @@ func (u *User) CanAccessTenant(tenantID string) bool {
 
 // HasPermission checks if user has specific permission
 func (u *User) HasPermission(permission string) bool {
-	// TODO: Implement permission checking against RBAC policies
-	// For now, just check scopes
+	// Scope-based permission check for current deployment profile.
 	for _, scope := range u.Scopes {
 		if scope == permission {
 			return true

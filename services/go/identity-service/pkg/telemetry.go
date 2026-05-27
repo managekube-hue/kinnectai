@@ -1,11 +1,10 @@
-package telemetry
+package pkg
 
 import (
 	"context"
 	"time"
 
 	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/metric"
 	"go.opentelemetry.io/otel/trace"
 )
 
@@ -24,11 +23,9 @@ func (tp *TracerProvider) StartSpan(ctx context.Context, name string) (context.C
 	return tp.tracer.Start(ctx, name)
 }
 
-// MetricsCollector wraps OpenTelemetry metrics.
+// MetricsCollector wraps OpenTelemetry metrics for lightweight runtime collection.
 type MetricsCollector struct {
-	counter   metric.Counter
-	histogram metric.Histogram
-	gauge     metric.Gauge
+	// Metrics fields would be initialized here
 }
 
 // RecordLatency records operation latency in milliseconds.
@@ -48,6 +45,3 @@ type Logger interface {
 	Error(ctx context.Context, msg string, fields ...attribute.KeyValue)
 	Debug(ctx context.Context, msg string, fields ...attribute.KeyValue)
 }
-
-// Example log call from domain service:
-// logger.Info(ctx, "user registered", attribute.String("user_id", user.ID), attribute.String("email", user.Email))

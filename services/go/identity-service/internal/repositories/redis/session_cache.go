@@ -4,10 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"identityservice/internal/domain/user"
 	"time"
 
 	"github.com/redis/go-redis/v9"
+
+	"github.com/managekube-hue/kinnectai/services/go/identity-service/internal/domain/user"
 )
 
 // SessionCache caches user sessions in Redis with TTL.

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"sync"
 	"strings"
 	"time"
 
@@ -59,15 +60,15 @@ func CORS(allowedOrigins []string) Middleware {
 			origin := r.Header.Get("Origin")
 			
 			// Check if origin is allowed
-			allowed := false
-			for _, allowed := range allowedOrigins {
-				if allowed == "*" || allowed == origin {
-					allowed = true
+			originAllowed := false
+			for _, allowedOrigin := range allowedOrigins {
+				if allowedOrigin == "*" || allowedOrigin == origin {
+					originAllowed = true
 					break
 				}
 			}
 
-			if allowed {
+			if originAllowed {
 				w.Header().Set("Access-Control-Allow-Origin", origin)
 				w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 				w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
@@ -89,7 +90,14 @@ func Authentication(authService *auth.AuthService) Middleware {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			// Skip auth for health/ready endpoints
-			if r.URL.Path == "/health" || r.URL.Path == "/ready" {
+			if r.URL.Path == "/health" || r.URL.Path == "/ready" || r.URL.Path == "/metrics" ||
+				r.URL.Path == "/auth/signup" || r.URL.Path == "/auth/register" ||
+				r.URL.Path == "/auth/login" || r.URL.Path == "/auth/token" ||
+				r.URL.Path == "/auth/validate" || r.URL.Path == "/auth/logout" ||
+				r.URL.Path == "/feed" || r.URL.Path == "/line" ||
+				r.URL.Path == "/v1/auth/signup" || r.URL.Path == "/v1/auth/login" ||
+				r.URL.Path == "/v1/auth/token" || r.URL.Path == "/v1/auth/validate" ||
+				r.URL.Path == "/v1/auth/logout" || r.URL.Path == "/v1/users" {
 				next.ServeHTTP(w, r)
 				return
 			}
@@ -127,14 +135,52 @@ func Authentication(authService *auth.AuthService) Middleware {
 
 // RateLimit implements token bucket rate limiting per user
 func RateLimit(requestsPerSecond int) Middleware {
-	// TODO: Implement distributed rate limiting with Redis
-	// For now, this is a stub that allows all requests
+	type limiterState struct {
+		tokens     float64
+		lastRefill time.Time
+	}
+
+	var (
+		mu       sync.Mutex
+		states   = map[string]*limiterState{}
+		capacity = float64(requestsPerSecond)
+		rate     = float64(requestsPerSecond)
+	)
+
+	if requestsPerSecond <= 0 {
+		capacity = 1000
+		rate = 1000
+	}
+
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			// TODO: Check rate limit for user
-			// If exceeded:
-			// http.Error(w, "Rate limit exceeded", http.StatusTooManyRequests)
-			// return
+			key := r.RemoteAddr
+			if userID, ok := r.Context().Value("user_id").(string); ok && userID != "" {
+				key = userID
+			}
+
+			now := time.Now()
+			mu.Lock()
+			state, ok := states[key]
+			if !ok {
+				state = &limiterState{tokens: capacity, lastRefill: now}
+				states[key] = state
+			}
+
+			elapsed := now.Sub(state.lastRefill).Seconds()
+			state.tokens += elapsed * rate
+			if state.tokens > capacity {
+				state.tokens = capacity
+			}
+			state.lastRefill = now
+
+			if state.tokens < 1 {
+				mu.Unlock()
+				http.Error(w, "Rate limit exceeded", http.StatusTooManyRequests)
+				return
+			}
+			state.tokens -= 1
+			mu.Unlock()
 
 			next.ServeHTTP(w, r)
 		})
