@@ -1,7 +1,7 @@
 package testutils
 
 import (
-	"identityservice/internal/domain/user"
+	"github.com/managekube-hue/kinnectai/services/go/identity-service/internal/domain/user"
 	"time"
 )
 
@@ -23,7 +23,7 @@ func NewUserFactory() *UserFactory {
 		phoneNumber:  "+1234567890",
 		passwordHash: "$2a$12$N9qo8uLOickgx2ZMRZoMyeIjZAgcg7b3XeKeQaJ7P18nJ6o.Gvaq2", // bcrypt
 		status:       user.StatusActive,
-		mfAEnabled:   false,
+		mfaEnabled:   false,
 	}
 }
 

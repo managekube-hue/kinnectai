@@ -1,10 +1,6 @@
 package user
 
-import (
-	"fmt"
-	"net/mail"
-	"regexp"
-)
+import "golang.org/x/crypto/bcrypt"
 
 // Email is a value object for email addresses.
 // Immutable once created; enforces invariants.
@@ -60,8 +56,10 @@ func NewPasswordHash(hash string) (PasswordHash, error) {
 // Match checks if a plaintext password matches this hash.
 // Implementation depends on your hashing strategy (bcrypt, argon2, etc).
 func (ph PasswordHash) Match(plaintext string) bool {
-	// TODO: Implement actual hash comparison
-	return false
+	if plaintext == "" || ph.value == "" {
+		return false
+	}
+	return bcrypt.CompareHashAndPassword([]byte(ph.value), []byte(plaintext)) == nil
 }
 
 // UserID is a value object for user identifiers.

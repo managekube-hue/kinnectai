@@ -1,4 +1,4 @@
-package resilience
+package pkg
 
 import (
 	"context"

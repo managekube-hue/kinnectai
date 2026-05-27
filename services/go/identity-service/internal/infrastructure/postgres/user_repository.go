@@ -3,8 +3,8 @@ package postgres
 import (
 	"context"
 	"database/sql"
-	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/managekube-hue/kinnectai/services/go/identity-service/internal/domain/user"
 )
@@ -22,12 +22,12 @@ func New(db *sql.DB) *Repository {
 // Create persists a new user
 func (r *Repository) Create(ctx context.Context, u *user.User) error {
 	query := `
-		INSERT INTO users (id, email, password_hash, status, mfa_enabled, created_at, updated_at)
-		VALUES ($1, $2, $3, $4, $5, $6, $7)
+		INSERT INTO users (id, email, password_hash, status, mfa_enabled, mfa_type, created_at, updated_at)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
 	`
 
 	_, err := r.db.ExecContext(ctx, query,
-		u.ID, u.Email, u.PasswordHash, u.Status, u.MFAEnabled, u.CreatedAt, u.UpdatedAt,
+		u.ID, u.Email, u.PasswordHash, u.Status, u.MFAEnabled, u.MFAType, u.CreatedAt, u.UpdatedAt,
 	)
 	if err != nil {
 		return fmt.Errorf("failed to create user: %w", err)
@@ -39,14 +39,14 @@ func (r *Repository) Create(ctx context.Context, u *user.User) error {
 // GetByID retrieves user by ID
 func (r *Repository) GetByID(ctx context.Context, id string) (*user.User, error) {
 	query := `
-		SELECT id, email, password_hash, mfa_secret, mfa_enabled, status, created_at, updated_at, last_login_at
+		SELECT id, email, password_hash, mfa_enabled, mfa_type, status, created_at, updated_at, last_login_at
 		FROM users
 		WHERE id = $1
 	`
 
 	u := &user.User{}
 	err := r.db.QueryRowContext(ctx, query, id).Scan(
-		&u.ID, &u.Email, &u.PasswordHash, &u.MFASecret, &u.MFAEnabled, &u.Status,
+		&u.ID, &u.Email, &u.PasswordHash, &u.MFAEnabled, &u.MFAType, &u.Status,
 		&u.CreatedAt, &u.UpdatedAt, &u.LastLoginAt,
 	)
 
@@ -63,14 +63,14 @@ func (r *Repository) GetByID(ctx context.Context, id string) (*user.User, error)
 // GetByEmail retrieves user by email
 func (r *Repository) GetByEmail(ctx context.Context, email string) (*user.User, error) {
 	query := `
-		SELECT id, email, password_hash, mfa_secret, mfa_enabled, status, created_at, updated_at, last_login_at
+		SELECT id, email, password_hash, mfa_enabled, mfa_type, status, created_at, updated_at, last_login_at
 		FROM users
 		WHERE email = $1
 	`
 
 	u := &user.User{}
 	err := r.db.QueryRowContext(ctx, query, email).Scan(
-		&u.ID, &u.Email, &u.PasswordHash, &u.MFASecret, &u.MFAEnabled, &u.Status,
+		&u.ID, &u.Email, &u.PasswordHash, &u.MFAEnabled, &u.MFAType, &u.Status,
 		&u.CreatedAt, &u.UpdatedAt, &u.LastLoginAt,
 	)
 
@@ -88,13 +88,13 @@ func (r *Repository) GetByEmail(ctx context.Context, email string) (*user.User, 
 func (r *Repository) Update(ctx context.Context, u *user.User) error {
 	query := `
 		UPDATE users
-		SET email = $1, password_hash = $2, mfa_secret = $3, mfa_enabled = $4,
+		SET email = $1, password_hash = $2, mfa_enabled = $3, mfa_type = $4,
 		    status = $5, updated_at = $6, last_login_at = $7
 		WHERE id = $8
 	`
 
 	result, err := r.db.ExecContext(ctx, query,
-		u.Email, u.PasswordHash, u.MFASecret, u.MFAEnabled, u.Status, u.UpdatedAt, u.LastLoginAt, u.ID,
+		u.Email, u.PasswordHash, u.MFAEnabled, u.MFAType, u.Status, u.UpdatedAt, u.LastLoginAt, u.ID,
 	)
 	if err != nil {
 		return fmt.Errorf("failed to update user: %w", err)
@@ -133,11 +133,30 @@ func (r *Repository) Delete(ctx context.Context, id string) error {
 
 // List retrieves users with filters
 func (r *Repository) List(ctx context.Context, filters map[string]interface{}) ([]*user.User, error) {
-	query := `SELECT id, email, password_hash, mfa_secret, mfa_enabled, status, created_at, updated_at, last_login_at FROM users`
+	query := `SELECT id, email, password_hash, mfa_enabled, mfa_type, status, created_at, updated_at, last_login_at FROM users`
 
-	// TODO: build dynamic WHERE clause from filters
+	var (
+		clauses []string
+		args    []interface{}
+	)
 
-	rows, err := r.db.QueryContext(ctx, query)
+	idx := 1
+	if v, ok := filters["status"]; ok {
+		clauses = append(clauses, fmt.Sprintf("status = $%d", idx))
+		args = append(args, v)
+		idx++
+	}
+	if v, ok := filters["email"]; ok {
+		clauses = append(clauses, fmt.Sprintf("email = $%d", idx))
+		args = append(args, v)
+		idx++
+	}
+
+	if len(clauses) > 0 {
+		query += " WHERE " + strings.Join(clauses, " AND ")
+	}
+
+	rows, err := r.db.QueryContext(ctx, query, args...)
 	if err != nil {
 		return nil, fmt.Errorf("failed to list users: %w", err)
 	}
@@ -147,7 +166,7 @@ func (r *Repository) List(ctx context.Context, filters map[string]interface{}) (
 	for rows.Next() {
 		u := &user.User{}
 		err := rows.Scan(
-			&u.ID, &u.Email, &u.PasswordHash, &u.MFASecret, &u.MFAEnabled, &u.Status,
+			&u.ID, &u.Email, &u.PasswordHash, &u.MFAEnabled, &u.MFAType, &u.Status,
 			&u.CreatedAt, &u.UpdatedAt, &u.LastLoginAt,
 		)
 		if err != nil {

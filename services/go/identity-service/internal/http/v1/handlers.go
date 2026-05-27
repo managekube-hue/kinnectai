@@ -1,10 +1,10 @@
 package v1
 
 import (
-	"context"
-	"identityservice/internal/domain/user"
 	"log"
 	"net/http"
+
+	"github.com/managekube-hue/kinnectai/services/go/identity-service/internal/domain/user"
 )
 
 // Handler encapsulates HTTP v1 handlers for identity operations.

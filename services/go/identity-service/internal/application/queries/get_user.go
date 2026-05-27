@@ -23,6 +23,5 @@ func NewGetUserHandler(repo user.Repository) *GetUserHandler {
 
 // Handle executes the query
 func (h *GetUserHandler) Handle(ctx context.Context, q GetUserQuery) (*user.User, error) {
-	service := user.NewService(h.repo)
-	return service.GetUser(ctx, q.UserID)
+	return h.repo.FindByID(ctx, q.UserID)
 }

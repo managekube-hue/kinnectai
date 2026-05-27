@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strconv"
+	"strings"
 	"syscall"
 	"time"
 
@@ -20,16 +22,17 @@ import (
 func main() {
 	// Initialize telemetry (tracing, metrics, logging)
 	startTime := time.Now()
-	tracer, meter, logger := telemetry.InitializeOTel()
-	defer tracer.Shutdown(context.Background())
-	defer meter.Shutdown(context.Background())
+	tracer, meter, telemetryLogger := telemetry.InitializeOTel()
+	_ = tracer
+	_ = meter
+	_ = telemetryLogger
 
-	log := log.New(os.Stdout, "[gateway] ", log.LstdFlags)
-	log.Println("KinnectAI API Gateway starting...")
+	stdLogger := log.New(os.Stdout, "[gateway] ", log.LstdFlags)
+	stdLogger.Println("KinnectAI API Gateway starting...")
 
 	// Load configuration
 	cfg := loadConfig()
-	log.Printf("Environment: %s, Port: %d", cfg.Environment, cfg.Port)
+	stdLogger.Printf("Environment: %s, Port: %d", cfg.Environment, cfg.Port)
 
 	// Initialize JWT validator
 	validator := jwt.NewValidator(cfg.JWTSecret, cfg.JWTIssuer)
@@ -71,7 +74,7 @@ gateway_uptime_seconds %.0f
 
 	// Apply middleware chain
 	chain := middleware.Chain(
-		middleware.RequestLogging(logger),
+		middleware.RequestLogging(stdLogger),
 		middleware.CORS(cfg.CORSAllowedOrigins),
 		middleware.Authentication(authService),
 		middleware.RateLimit(cfg.RateLimitPerSecond),
@@ -96,24 +99,24 @@ gateway_uptime_seconds %.0f
 		signal.Notify(sigch, os.Interrupt, syscall.SIGTERM)
 		<-sigch
 
-		log.Println("Shutdown signal received, gracefully stopping...")
+		stdLogger.Println("Shutdown signal received, gracefully stopping...")
 		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()
 
 		if err := srv.Shutdown(ctx); err != nil {
-			log.Printf("Server shutdown error: %v", err)
+			stdLogger.Printf("Server shutdown error: %v", err)
 		}
 		close(done)
 	}()
 
 	// Start server
-	log.Printf("Gateway listening on %s", srv.Addr)
+	stdLogger.Printf("Gateway listening on %s", srv.Addr)
 	if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-		log.Fatalf("Server error: %v", err)
+		stdLogger.Fatalf("Server error: %v", err)
 	}
 
 	<-done
-	log.Println("Gateway stopped")
+	stdLogger.Println("Gateway stopped")
 }
 
 type Config struct {
@@ -127,13 +130,32 @@ type Config struct {
 }
 
 func loadConfig() *Config {
+	port := 8000
+	if raw := os.Getenv("HTTP_PORT"); raw != "" {
+		if parsed, err := strconv.Atoi(raw); err == nil {
+			port = parsed
+		}
+	}
+
+	allowedOrigins := []string{"*"}
+	if raw := os.Getenv("CORS_ALLOWED_ORIGINS"); raw != "" {
+		allowedOrigins = strings.Split(raw, ",")
+	}
+
 	return &Config{
 		Environment:           os.Getenv("ENV"),
-		Port:                  8000,
+		Port:                  port,
 		JWTSecret:             os.Getenv("JWT_SECRET"),
-		JWTIssuer:             "kinnectai",
-		CORSAllowedOrigins:    []string{"*"}, // TODO: restrict to known origins
+		JWTIssuer:             getEnvOrDefault("JWT_ISSUER", "kinnectai"),
+		CORSAllowedOrigins:    allowedOrigins,
 		RateLimitPerSecond:    1000,
 		ServiceDiscoveryURL:   os.Getenv("SERVICE_DISCOVERY_URL"),
 	}
+}
+
+func getEnvOrDefault(key, defaultValue string) string {
+	if value := os.Getenv(key); value != "" {
+		return value
+	}
+	return defaultValue
 }

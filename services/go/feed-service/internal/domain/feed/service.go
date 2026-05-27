@@ -84,12 +84,17 @@ func (fs *FeedService) GenerateFeed(ctx context.Context, req *FeedRankingRequest
 	}
 
 	// 8. Publish event for analytics/tracking
+	rankingModel := "v1"
+	if len(policyResp.AllowedItems) > 0 && policyResp.AllowedItems[0].RankingModel != "" {
+		rankingModel = policyResp.AllowedItems[0].RankingModel
+	}
+
 	event := &FeedGeneratedEvent{
 		FeedID:         feed.ID,
 		UserID:         feed.UserID,
 		ItemCount:      len(feed.Items),
 		GeneratedAt:    feed.CreatedAt,
-		RankingModel:   "v1", // TODO: make configurable
+		RankingModel:   rankingModel,
 		TotalCandidates: len(candidates),
 		FilteredCount:  len(candidates) - len(policyResp.AllowedItems),
 	}

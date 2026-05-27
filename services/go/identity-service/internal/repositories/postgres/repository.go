@@ -4,7 +4,8 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"identityservice/internal/domain/user"
+
+	"github.com/managekube-hue/kinnectai/services/go/identity-service/internal/domain/user"
 )
 
 // Repository implements user.Repository using PostgreSQL.
